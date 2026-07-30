@@ -6,7 +6,7 @@ import plotly.graph_objects as go
 import streamlit as st
 
 st.set_page_config(
-    page_title="Дашборд: ЄПам'ятка",
+    page_title="Дашборд: єПам'ятка",
     page_icon=":material/account_balance:",
     layout="wide",
 )
@@ -41,31 +41,25 @@ plot_config = {
 }
 
 # --- ШАПКА ТА ІНФОРМАЦІЯ ---
-st.title(
-    ":material/account_balance: Моніторинг внесення нерухомих пам'яток до ЄПам'ятки"
-)
+st.title(":material/account_balance: єПам'ятка")
 st.markdown("Аналітика наповнення Реєстру та карток в системі ЄПам'ятка.")
 st.caption(":material/calendar_today: **Дані актуальні на 27.07.2026**")
 
-st.markdown(
-    "**:material/info: Довідкова інформація щодо впровадження системи «ЄПам'ятка»:**"
-)
-
-# --- ПЕРЕМІЩЕНИЙ НАГОРУ БЛОК 1 (Нерухомі об'єкти на обліку - 145,175) ---
+# --- БЛОК 1 (Нерухомі об'єкти на обліку - 145,172) ---
 with st.container(border=True):
-    top_left3, top_right3 = st.columns([1.5, 3.5])
+    top_left1, top_right1 = st.columns([1.5, 3.5])
 
-    with top_left3:
+    with top_left1:
         st.markdown(
             "**:material/account_balance: <span style='color: #8c92a4; font-weight: normal; font-size: 14px;'>Нерухомі об'єкти культурної спадщини які знаходяться на обліку</span>**",
             unsafe_allow_html=True,
         )
         st.markdown(
-            "<h1 style='font-size: 4rem; font-weight: 900; margin-top: -15px; margin-bottom: 0px;'>145,175</h1>",
+            "<h1 style='font-size: 4rem; font-weight: 900; margin-top: -15px; margin-bottom: 0px;'>145,172</h1>",
             unsafe_allow_html=True,
         )
 
-    with top_right3:
+    with top_right1:
         st.markdown(
             """
         <div style='margin-top: 10px;'>
@@ -114,9 +108,35 @@ with st.container(border=True):
             unsafe_allow_html=True,
         )
 
+# --- БЛОК 3 (Користувачі - 227) ---
+with st.container(border=True):
+    top_left3, top_right3 = st.columns([1.5, 3.5])
+
+    with top_left3:
+        st.markdown(
+            "**:material/group: <span style='color: #8c92a4; font-weight: normal; font-size: 14px;'>Користувачі</span>**",
+            unsafe_allow_html=True,
+        )
+        st.markdown(
+            "<h1 style='font-size: 4rem; font-weight: 900; margin-top: -15px; margin-bottom: 0px;'>227</h1>",
+            unsafe_allow_html=True,
+        )
+
+    with top_right3:
+        st.markdown(
+            """
+        <div style='margin-top: 10px;'>
+            <ul style='font-size: 15px; opacity: 0.9; line-height: 1.7;'>
+                <li>Активних: <b>183</b></li>
+            </ul>
+        </div>
+        """,
+            unsafe_allow_html=True,
+        )
+
 # --- БЛОК ДЛЯ ІНШИХ МЕТРИК ---
 with st.container(border=True):
-    b_col1, b_col2, b_col3 = st.columns(3)
+    b_col1, b_col2 = st.columns(2)
 
     b_col1.metric(
         label=":material/how_to_reg: Внесено до Реєстру",
@@ -125,7 +145,6 @@ with st.container(border=True):
         delta_color="off",
     )
     b_col2.metric(":material/verified: Повністю верифіковано", "49")
-    b_col3.metric(":material/group: Підключено користувачів", "139")
 
 st.info(
     "Включає кількість об'єктів національного значення в реєстрі та Пам’ятка національного значення – взято на державний облік відповідно до законодавства, що діяло до набрання чинності Закону України «Про охорону культурної спадщини»",
