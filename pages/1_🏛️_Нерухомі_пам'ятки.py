@@ -189,7 +189,28 @@ with st.container(border=True):
             unsafe_allow_html=True,
         )
 
-# --- БЛОК 5 (Користувачі - 226) ---
+# --- БЛОК 5 (Картки, що підлягають верифікації - 1,043) ---
+with st.container(border=True):
+    top_left5, top_right5 = st.columns([1.5, 3.5], vertical_alignment="center")
+
+    with top_left5:
+        st.markdown(
+            "**:material/fact_check: <span style='color: #8c92a4; font-weight:"
+            " 600; font-size: 14px;'>Картки, що підлягають верифікації</span>**",
+            unsafe_allow_html=True,
+        )
+        st.markdown("<h1 class='big-number'>1,043</h1>", unsafe_allow_html=True)
+
+    with top_right5:
+        st.markdown(
+            """
+            <ul class='sub-list'>
+            </ul>
+            """,
+            unsafe_allow_html=True,
+        )
+
+# --- БЛОК 6 (Користувачі - 226) ---
 with st.container(border=True):
     top_left3, top_right3 = st.columns([1.5, 3.5], vertical_alignment="center")
 
@@ -216,6 +237,46 @@ with st.container(border=True):
             """,
             unsafe_allow_html=True,
         )
+
+# --- ВІЗУАЛІЗАЦІЯ КОРИСТУВАЧІВ ПО ОБЛАСТЯХ ---
+users_by_region_data = {
+    "Регіон": [
+        "Вінницька", "Волинська", "Дніпропетровська", "Донецька", "Житомирська",
+        "Закарпатська", "Запорізька", "Івано-Франківська", "Київська", "Кіровоградська",
+        "Луганська", "Львівська", "Миколаївська", "Одеська", "Полтавська",
+        "Рівненська", "Сумська", "Тернопільська", "Харківська", "Херсонська",
+        "Хмельницька", "Черкаська", "Чернівецька", "Чернігівська", "м. Київ"
+    ],
+    "Кількість користувачів": [
+        5, 8, 6, 3, 9, 5, 13, 6, 12, 4, 5, 8, 4, 4, 12, 4, 9, 10, 7, 8, 12, 5, 5, 7, 24
+    ]
+}
+
+df_users_reg = pd.DataFrame(users_by_region_data).sort_values(
+    by="Кількість користувачів", ascending=True
+)
+
+st.subheader(":material/badge: Розподіл користувачів ОВА та КП за регіонами")
+
+fig_users = px.bar(
+    df_users_reg,
+    x="Кількість користувачів",
+    y="Регіон",
+    orientation="h",
+    text="Кількість користувачів",
+    color="Кількість користувачів",
+    color_continuous_scale="Blues",
+    height=650,
+)
+fig_users.update_traces(textposition="outside")
+fig_users.update_layout(
+    template="plotly_white",
+    margin=dict(l=0, r=50, t=30, b=0),
+    xaxis_title="Кількість користувачів",
+    yaxis_title="",
+    coloraxis_showscale=False,
+)
+st.plotly_chart(fig_users, use_container_width=True, config=plot_config)
 
 st.divider()
 
