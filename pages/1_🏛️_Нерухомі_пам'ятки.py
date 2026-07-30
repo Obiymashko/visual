@@ -11,33 +11,14 @@ st.set_page_config(
     layout="wide",
 )
 
-# Підключення Montserrat та Google Material Symbols
+# Надійне підключення шрифту Montserrat через CSS
 st.markdown(
     """
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
 
-/* Глобальний шрифт Montserrat для всього тексту */
-html, body, [class*="css"], [class*="st-"], div, span, p, h1, h2, h3, h4, h5, h6, li, button, input {
+html, body, [class*="css"], [class*="st-"] {
     font-family: 'Montserrat', sans-serif !important;
-}
-
-/* Окремий стиль для іконок */
-.material-symbols-outlined {
-    font-family: 'Material Symbols Outlined' !important;
-    font-weight: normal;
-    font-style: normal;
-    font-size: 20px;
-    display: inline-block;
-    line-height: 1;
-    text-transform: none;
-    letter-spacing: normal;
-    word-wrap: normal;
-    white-space: nowrap;
-    direction: ltr;
-    vertical-align: middle;
-    margin-right: 6px;
 }
 
 /* Стилі для великих чисел */
@@ -108,19 +89,10 @@ def clean_chart_layout(fig, height=200):
 
 
 # --- ШАПКА ТА ІНФОРМАЦІЯ ---
-st.markdown(
-    "<h1><span class='material-symbols-outlined' style='font-size:"
-    " 36px;'>account_balance</span> єПам'ятка</h1>",
-    unsafe_allow_html=True,
-)
-st.markdown(
-    "<div style='margin-bottom: 20px;'><span"
-    " class='material-symbols-outlined'>calendar_today</span> <b>Дані актуальні"
-    " на 29.07.2026</b></div>",
-    unsafe_allow_html=True,
-)
+st.title("єПам'ятка")
+st.caption("**Дані актуальні на 29.07.2026**")
 
-# Палітри кольорів
+# Контрастні палітри кольорів
 colors1 = ["#2563EB", "#16A34A", "#EA580C", "#DC2626", "#9333EA", "#0284C7"]
 colors0 = [
     "#2563EB",
@@ -144,8 +116,7 @@ with st.container(border=True):
 
     with top_left1:
         st.markdown(
-            "<span class='material-symbols-outlined'>account_balance</span>"
-            " <span style='color: #8c92a4; font-weight: 600;"
+            "<span style='color: #8c92a4; font-weight: 600;"
             " font-size: 14px;'>Нерухомі об'єкти культурної спадщини які"
             " знаходяться на обліку</span>",
             unsafe_allow_html=True,
@@ -207,10 +178,8 @@ with st.container(border=True):
 
     with top_left0:
         st.markdown(
-            "<span class='material-symbols-outlined'>collections_bookmark</span>"
-            " <span style='color: #8c92a4; font-weight: 600;"
-            " font-size: 14px;'>Загальна кількість пам'яток, за"
-            " видом</span>",
+            "<span style='color: #8c92a4; font-weight: 600;"
+            " font-size: 14px;'>Загальна кількість пам'яток, за видом</span>",
             unsafe_allow_html=True,
         )
         st.markdown(
@@ -280,8 +249,7 @@ with st.container(border=True):
 
     with top_left2:
         st.markdown(
-            "<span class='material-symbols-outlined'>cloud_upload</span>"
-            " <span style='color: #8c92a4; font-weight: 600;"
+            "<span style='color: #8c92a4; font-weight: 600;"
             " font-size: 14px;'>Внесено до системи єПам'ятка</span>",
             unsafe_allow_html=True,
         )
@@ -339,8 +307,7 @@ with st.container(border=True):
 
     with top_left4:
         st.markdown(
-            "<span class='material-symbols-outlined'>map</span> <span"
-            " style='color: #8c92a4; font-weight: 600;"
+            "<span style='color: #8c92a4; font-weight: 600;"
             " font-size: 14px;'>Історико-культурні території</span>",
             unsafe_allow_html=True,
         )
@@ -378,10 +345,9 @@ with st.container(border=True):
 
     with top_left5:
         st.markdown(
-            "<span class='material-symbols-outlined'>fact_check</span> <span"
-            " style='color: #8c92a4; font-weight: 600; font-size: 14px;'>Картки"
-            " національного значення, що підлягають верифікації в"
-            " єПам'ятці</span>",
+            "<span style='color: #8c92a4; font-weight: 600;"
+            " font-size: 14px;'>Картки національного значення, що підлягають"
+            " верифікації в єПам'ятці</span>",
             unsafe_allow_html=True,
         )
         st.markdown("<h1 class='big-number'>1,043</h1>", unsafe_allow_html=True)
@@ -424,8 +390,7 @@ with st.container(border=True):
 
     with top_left3:
         st.markdown(
-            "<span class='material-symbols-outlined'>group</span> <span"
-            " style='color: #8c92a4; font-weight: 600;"
+            "<span style='color: #8c92a4; font-weight: 600;"
             " font-size: 14px;'>Користувачі</span>",
             unsafe_allow_html=True,
         )
@@ -527,11 +492,7 @@ df_users_reg = pd.DataFrame(users_by_region_data).sort_values(
     by="Кількість користувачів", ascending=True
 )
 
-st.markdown(
-    "<h3><span class='material-symbols-outlined'>badge</span> Розподіл"
-    " користувачів ОВА та КП за регіонами</h3>",
-    unsafe_allow_html=True,
-)
+st.subheader("Розподіл користувачів ОВА та КП за регіонами")
 
 fig_users = px.bar(
     df_users_reg,
@@ -686,11 +647,7 @@ if df.empty:
     st.stop()
 
 # --- ГРАФІК ---
-st.markdown(
-    "<h3><span class='material-symbols-outlined'>stacked_bar_chart</span>"
-    " Об'єкти національного значення в єПам'ятці</h3>",
-    unsafe_allow_html=True,
-)
+st.subheader("Об'єкти національного значення в єПам'ятці")
 df_sorted = df.sort_values(by=col_reestr, ascending=False)
 fig_comp = go.Figure(
     data=[
