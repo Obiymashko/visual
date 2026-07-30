@@ -11,12 +11,20 @@ st.set_page_config(
     layout="wide",
 )
 
-# CSS для красивих розмірів, відступів та кольорових маркерів
+# Підключення шрифту Montserrat та глобальне застосування CSS
 st.markdown(
     """
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap');
+
+/* Глобальне застосування шрифту Montserrat для всього додатку */
+html, body, [class*="css"], [class*="st-"], div, span, p, h1, h2, h3, h4, h5, h6, li, button, input {
+    font-family: 'Montserrat', sans-serif !important;
+}
+
 /* Стилі для великих чисел */
 .big-number {
+    font-family: 'Montserrat', sans-serif !important;
     font-size: 3.8rem !important;
     font-weight: 900 !important;
     margin: 0px 0px 4px 0px !important;
@@ -25,6 +33,7 @@ st.markdown(
 
 /* Стилі для підпунктів праворуч */
 .sub-list {
+    font-family: 'Montserrat', sans-serif !important;
     font-size: 15px !important;
     opacity: 0.95 !important;
     line-height: 1.8 !important;
@@ -54,6 +63,7 @@ st.markdown(
 
 /* Зелені підписи */
 .green-tag {
+    font-family: 'Montserrat', sans-serif !important;
     color: #00d26a;
     font-size: 14px;
     font-weight: 700;
@@ -74,6 +84,7 @@ def clean_chart_layout(fig, height=200):
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
         showlegend=False,
+        font=dict(family="Montserrat, sans-serif"),
     )
     return fig
 
@@ -82,21 +93,21 @@ def clean_chart_layout(fig, height=200):
 st.title(":material/account_balance: єПам'ятка")
 st.caption(":material/calendar_today: **Дані актуальні на 29.07.2026**")
 
-# Кольорові палітри для кожного блоку
-colors1 = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6", "#6b7280"]
+# Максимально контрастні палітри кольорів
+colors1 = ["#2563EB", "#16A34A", "#EA580C", "#DC2626", "#9333EA", "#0284C7"]
 colors0 = [
-    "#3b82f6",
-    "#10b981",
-    "#f59e0b",
-    "#ef4444",
-    "#8b5cf6",
-    "#ec4899",
-    "#14b8a6",
+    "#2563EB",
+    "#16A34A",
+    "#F59E0B",
+    "#DC2626",
+    "#9333EA",
+    "#EC4899",
+    "#06B6D4",
 ]
-colors2 = ["#3b82f6", "#60a5fa", "#93c5fd", "#f59e0b", "#6b7280"]
-colors4 = ["#10b981", "#3b82f6", "#f59e0b"]
-colors5 = ["#10b981", "#6b7280"]
-colors3 = ["#3b82f6", "#10b981", "#f59e0b"]
+colors2 = ["#2563EB", "#16A34A", "#F59E0B", "#DC2626", "#9333EA"]
+colors4 = ["#16A34A", "#2563EB", "#F59E0B"]
+colors5 = ["#16A34A", "#2563EB"]
+colors3 = ["#2563EB", "#16A34A", "#F59E0B"]
 
 # --- БЛОК 1 (Нерухомі об'єкти на обліку - 145,172) ---
 with st.container(border=True):
@@ -124,12 +135,12 @@ with st.container(border=True):
         st.markdown(
             f"""
             <ul class='sub-list'>
-                <li><span class='color-dot' style='background-color: {colors1[0]};'></span>Об'єкти всесвітньої спадщини ЮНЕСКО: <b>8</b></li>
-                <li><span class='color-dot' style='background-color: {colors1[1]};'></span>Внесено до державного реєстру нерухомих пам'яток нац. значення: <b>3,415</b></li>
-                <li><span class='color-dot' style='background-color: {colors1[2]};'></span>Внесено до державного реєстру нерухомих пам'яток місц. значення: <b>32,809</b></li>
-                <li><span class='color-dot' style='background-color: {colors1[3]};'></span>Щойно виявлені об'єкти: <b>28,772</b></li>
-                <li><span class='color-dot' style='background-color: {colors1[4]};'></span>Знято з обліку у 2025 році: <b>347</b></li>
-                <li><span class='color-dot' style='background-color: {colors1[5]};'></span>Не визначено категорію: <b>79,929</b></li>
+                <li><span class='color-dot' style='background-color: {colors1[0]};'></span>Внесено до державного реєстру нерухомих пам'яток національного значення: <b>3,415</b></li>
+                <li><span class='color-dot' style='background-color: {colors1[1]};'></span>Внесено до державного реєстру нерухомих пам'яток місцевого значення: <b>32,809</b></li>
+                <li><span class='color-dot' style='background-color: {colors1[2]};'></span>Щойно виявлені об'єкти: <b>28,772</b></li>
+                <li><span class='color-dot' style='background-color: {colors1[3]};'></span>Знято з обліку у 2025 році: <b>347</b></li>
+                <li><span class='color-dot' style='background-color: {colors1[4]};'></span>Не визначено категорію: <b>79,929</b></li>
+                <li><span class='color-dot' style='background-color: {colors1[5]};'></span>Об'єкти всесвітньої спадщини ЮНЕСКО: <b>8</b></li>
             </ul>
             """,
             unsafe_allow_html=True,
@@ -137,14 +148,14 @@ with st.container(border=True):
 
     with top_right1:
         labels1 = [
-            "ЮНЕСКО",
             "Реєстр нац.",
             "Реєстр місц.",
             "Щойно виявлені",
             "Знято з обліку",
             "Не визначено",
+            "ЮНЕСКО",
         ]
-        values1 = [8, 3415, 32809, 28772, 347, 79929]
+        values1 = [3415, 32809, 28772, 347, 79929, 8]
         fig1 = go.Figure(
             data=[
                 go.Pie(
@@ -346,7 +357,7 @@ with st.container(border=True):
             f"""
             <ul class='sub-list'>
                 <li><span class='color-dot' style='background-color: {colors5[0]};'></span>Верифіковано Спадщиною: <b>65</b></li>
-                <li><span class='color-dot' style='background-color: {colors5[1]};'></span>Верифіковано без зауважень Управлінням дозвільно-погоджувальної документації: <b>0</b></li>
+                <li><span class='color-dot' style='background-color: {colors5[1]};'></span>Верифіковано Управлінням дозвільно-погоджувальної документації: <b>65</b></li>
             </ul>
             """,
             unsafe_allow_html=True,
@@ -357,7 +368,7 @@ with st.container(border=True):
             go.Indicator(
                 mode="gauge+number",
                 value=65,
-                number={"suffix": " / 1,043", "font": {"size": 18}},
+                number={"suffix": " / 1,043", "font": {"size": 18, "family": "Montserrat"}},
                 gauge={
                     "axis": {"range": [None, 1043], "visible": False},
                     "bar": {"color": colors5[0]},
@@ -497,6 +508,7 @@ fig_users.update_layout(
     xaxis_title="Кількість користувачів",
     yaxis_title="",
     coloraxis_showscale=False,
+    font=dict(family="Montserrat, sans-serif"),
 )
 st.plotly_chart(fig_users, use_container_width=True, config=plot_config)
 
@@ -657,6 +669,7 @@ fig_comp.update_layout(
     template="plotly_white",
     height=500,
     xaxis_tickangle=-45,
+    font=dict(family="Montserrat, sans-serif"),
     legend=dict(
         orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1
     ),
