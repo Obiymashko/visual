@@ -57,7 +57,7 @@ plot_config = {
 
 # --- ШАПКА ТА ІНФОРМАЦІЯ ---
 st.title(":material/account_balance: єПам'ятка")
-st.caption(":material/calendar_today: **Дані актуальні на 27.07.2026**")
+st.caption(":material/calendar_today: **Дані актуальні на 29.07.2026**")
 
 # --- БЛОК 1 (Нерухомі об'єкти на обліку - 145,172) ---
 with st.container(border=True):
@@ -152,25 +152,13 @@ with st.container(border=True):
         <div style='margin-top: 5px;'>
             <ul class='sub-list'>
                 <li>Користувачі ОВА та КП: <b>195</b></li>
-                <li>Мінкульт: <b>13</b></li>
+                <li>Користувачі Мінкульт: <b>13</b></li>
                 <li>Адміністратори: <b>18</b></li>
             </ul>
         </div>
         """,
             unsafe_allow_html=True,
         )
-
-# --- БЛОК ДЛЯ ІНШИХ МЕТРИК ---
-with st.container(border=True):
-    b_col1, b_col2 = st.columns(2)
-
-    b_col1.metric(
-        label=":material/how_to_reg: Внесено до Реєстру",
-        value="30,192",
-        delta="Разом з адресами, верифіковані та підтверджені Мінрегіоном",
-        delta_color="off",
-    )
-    b_col2.metric(":material/verified: Повністю верифіковано", "49")
 
 st.info(
     "Включає кількість об'єктів національного значення в реєстрі та Пам’ятка національного значення – взято на державний облік відповідно до законодавства, що діяло до набрання чинності Закону України «Про охорону культурної спадщини»",
