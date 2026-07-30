@@ -165,7 +165,31 @@ with st.container(border=True):
             unsafe_allow_html=True,
         )
 
-# --- БЛОК 4 (Користувачі - 226) ---
+# --- БЛОК 4 (Історико-культурні території - 405) ---
+with st.container(border=True):
+    top_left4, top_right4 = st.columns([1.5, 3.5], vertical_alignment="center")
+
+    with top_left4:
+        st.markdown(
+            "**:material/map: <span style='color: #8c92a4; font-weight:"
+            " 600; font-size: 14px;'>Історико-культурні території</span>**",
+            unsafe_allow_html=True,
+        )
+        st.markdown("<h1 class='big-number'>405</h1>", unsafe_allow_html=True)
+
+    with top_right4:
+        st.markdown(
+            """
+            <ul class='sub-list'>
+                <li>Оцифровано історико-культурних територій: <b>178</b></li>
+                <li>Розгорнуто іст.-культ. територій в єПам'ятці з геоданими: <b>15</b></li>
+                <li>Підготовлено до завантаження: <b>158</b></li>
+            </ul>
+            """,
+            unsafe_allow_html=True,
+        )
+
+# --- БЛОК 5 (Користувачі - 226) ---
 with st.container(border=True):
     top_left3, top_right3 = st.columns([1.5, 3.5], vertical_alignment="center")
 
