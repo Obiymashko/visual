@@ -21,13 +21,39 @@ html, body, [class*="css"], [class*="st-"] {
     font-family: 'Montserrat', sans-serif !important;
 }
 
+/* Контейнер для лівого блоку (заголовок + число + примітка разом) */
+.left-stat-block {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+/* Заголовок картки */
+.stat-title {
+    color: #8c92a4;
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 6px;
+    line-height: 1.3;
+}
+
 /* Стилі для великих чисел */
 .big-number {
     font-family: 'Montserrat', sans-serif !important;
     font-size: 3.5rem !important;
     font-weight: 900 !important;
-    margin: 0px 0px 4px 0px !important;
+    margin: 0px 0px 6px 0px !important;
     line-height: 1 !important;
+}
+
+/* Зелені підписи строго під числом */
+.green-tag {
+    font-family: 'Montserrat', sans-serif !important;
+    color: #00d26a;
+    font-size: 13px;
+    font-weight: 700;
+    margin-top: 2px;
 }
 
 /* Стилі для підпунктів праворуч */
@@ -58,14 +84,6 @@ html, body, [class*="css"], [class*="st-"] {
     position: absolute;
     left: 0;
     top: 7px;
-}
-
-/* Зелені підписи */
-.green-tag {
-    font-family: 'Montserrat', sans-serif !important;
-    color: #00d26a;
-    font-size: 13px;
-    font-weight: 700;
 }
 </style>
 """,
@@ -111,22 +129,18 @@ colors3 = ["#2563EB", "#16A34A", "#F59E0B"]
 # --- БЛОК 1 (Нерухомі об'єкти на обліку - 145,172) ---
 with st.container(border=True):
     top_left1, top_mid1, top_right1 = st.columns(
-        [1.6, 2.1, 1.3], vertical_alignment="center"
+        [1.8, 2.0, 1.2], vertical_alignment="top"
     )
 
     with top_left1:
         st.markdown(
-            "<span style='color: #8c92a4; font-weight: 600;"
-            " font-size: 14px;'>Нерухомі об'єкти культурної спадщини які"
-            " знаходяться на обліку</span>",
-            unsafe_allow_html=True,
-        )
-        st.markdown(
-            "<h1 class='big-number'>145,172</h1>", unsafe_allow_html=True
-        )
-        st.markdown(
-            "<div class='green-tag'>за інформацією з офіційного звіту Мінкульту"
-            " до Держстату за 2025 рік</div>",
+            """
+            <div class='left-stat-block'>
+                <div class='stat-title'>Нерухомі об'єкти культурної спадщини які знаходяться на обліку</div>
+                <h1 class='big-number'>145,172</h1>
+                <div class='green-tag'>за інформацією з офіційного звіту Мінкульту до Держстату за 2025 рік</div>
+            </div>
+            """,
             unsafe_allow_html=True,
         )
 
@@ -173,21 +187,18 @@ with st.container(border=True):
 # --- БЛОК 2 (Загальна кількість пам'яток, за видом - 116,500) ---
 with st.container(border=True):
     top_left0, top_mid0, top_right0 = st.columns(
-        [1.6, 2.1, 1.3], vertical_alignment="center"
+        [1.8, 2.0, 1.2], vertical_alignment="top"
     )
 
     with top_left0:
         st.markdown(
-            "<span style='color: #8c92a4; font-weight: 600;"
-            " font-size: 14px;'>Загальна кількість пам'яток, за видом</span>",
-            unsafe_allow_html=True,
-        )
-        st.markdown(
-            "<h1 class='big-number'>116,500</h1>", unsafe_allow_html=True
-        )
-        st.markdown(
-            "<div class='green-tag'>за інформацією з офіційного звіту Мінкульту"
-            " до Держстату за 2025 рік</div>",
+            """
+            <div class='left-stat-block'>
+                <div class='stat-title'>Загальна кількість пам'яток, за видом</div>
+                <h1 class='big-number'>116,500</h1>
+                <div class='green-tag'>за інформацією з офіційного звіту Мінкульту до Держстату за 2025 рік</div>
+            </div>
+            """,
             unsafe_allow_html=True,
         )
 
@@ -244,20 +255,18 @@ with st.container(border=True):
 # --- БЛОК 3 (Внесено до системи єПам'ятка - 105,988) ---
 with st.container(border=True):
     top_left2, top_mid2, top_right2 = st.columns(
-        [1.6, 2.1, 1.3], vertical_alignment="center"
+        [1.8, 2.0, 1.2], vertical_alignment="top"
     )
 
     with top_left2:
         st.markdown(
-            "<span style='color: #8c92a4; font-weight: 600;"
-            " font-size: 14px;'>Внесено до системи єПам'ятка</span>",
-            unsafe_allow_html=True,
-        )
-        st.markdown(
-            "<h1 class='big-number'>105,988</h1>", unsafe_allow_html=True
-        )
-        st.markdown(
-            "<div class='green-tag'>↑ 73% від загальної кількості</div>",
+            """
+            <div class='left-stat-block'>
+                <div class='stat-title'>Внесено до системи єПам'ятка</div>
+                <h1 class='big-number'>105,988</h1>
+                <div class='green-tag'>↑ 73% від загальної кількості</div>
+            </div>
+            """,
             unsafe_allow_html=True,
         )
 
@@ -302,16 +311,19 @@ with st.container(border=True):
 # --- БЛОК 4 (Історико-культурні території - 405) ---
 with st.container(border=True):
     top_left4, top_mid4, top_right4 = st.columns(
-        [1.6, 2.1, 1.3], vertical_alignment="center"
+        [1.8, 2.0, 1.2], vertical_alignment="top"
     )
 
     with top_left4:
         st.markdown(
-            "<span style='color: #8c92a4; font-weight: 600;"
-            " font-size: 14px;'>Історико-культурні території</span>",
+            """
+            <div class='left-stat-block'>
+                <div class='stat-title'>Історико-культурні території</div>
+                <h1 class='big-number'>405</h1>
+            </div>
+            """,
             unsafe_allow_html=True,
         )
-        st.markdown("<h1 class='big-number'>405</h1>", unsafe_allow_html=True)
 
     with top_mid4:
         st.markdown(
@@ -340,17 +352,19 @@ with st.container(border=True):
 # --- БЛОК 5 (Картки національного значення - 1,043) ---
 with st.container(border=True):
     top_left5, top_mid5, top_right5 = st.columns(
-        [1.6, 2.1, 1.3], vertical_alignment="center"
+        [1.8, 2.0, 1.2], vertical_alignment="top"
     )
 
     with top_left5:
         st.markdown(
-            "<span style='color: #8c92a4; font-weight: 600;"
-            " font-size: 14px;'>Картки національного значення, що підлягають"
-            " верифікації в єПам'ятці</span>",
+            """
+            <div class='left-stat-block'>
+                <div class='stat-title'>Картки національного значення, що підлягають верифікації в єПам'ятці</div>
+                <h1 class='big-number'>1,043</h1>
+            </div>
+            """,
             unsafe_allow_html=True,
         )
-        st.markdown("<h1 class='big-number'>1,043</h1>", unsafe_allow_html=True)
 
     with top_mid5:
         st.markdown(
@@ -385,18 +399,18 @@ with st.container(border=True):
 # --- БЛОК 6 (Користувачі - 226) ---
 with st.container(border=True):
     top_left3, top_mid3, top_right3 = st.columns(
-        [1.6, 2.1, 1.3], vertical_alignment="center"
+        [1.8, 2.0, 1.2], vertical_alignment="top"
     )
 
     with top_left3:
         st.markdown(
-            "<span style='color: #8c92a4; font-weight: 600;"
-            " font-size: 14px;'>Користувачі</span>",
-            unsafe_allow_html=True,
-        )
-        st.markdown("<h1 class='big-number'>226</h1>", unsafe_allow_html=True)
-        st.markdown(
-            "<div class='green-tag'>↑ 86% користувачі ОВА та КП</div>",
+            """
+            <div class='left-stat-block'>
+                <div class='stat-title'>Користувачі</div>
+                <h1 class='big-number'>226</h1>
+                <div class='green-tag'>↑ 86% користувачі ОВА та КП</div>
+            </div>
+            """,
             unsafe_allow_html=True,
         )
 
