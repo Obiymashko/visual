@@ -143,7 +143,7 @@ st.title("єПам'ятка")
 st.caption("**Дані актуальні на 29.07.2026**")
 
 # Палітри кольорів
-colors1 = ["#2563EB", "#16A34A", "#EA580C", "#DC2626", "#9333EA", "#0284C7"]
+colors1 = ["#1E40AF", "#2563EB", "#16A34A", "#EA580C", "#DC2626", "#9333EA", "#0284C7"]
 colors0 = [
     "#2563EB",
     "#16A34A",
@@ -180,12 +180,13 @@ with st.container(border=True):
         st.markdown(
             f"""
             <ul class='sub-list'>
-                <li><span class='color-dot' style='background-color: {colors1[0]};'></span>Внесено до державного реєстру нерухомих пам'яток національного значення: <b>3,415</b></li>
-                <li><span class='color-dot' style='background-color: {colors1[1]};'></span>Внесено до державного реєстру нерухомих пам'яток місцевого значення: <b>32,809</b></li>
-                <li><span class='color-dot' style='background-color: {colors1[2]};'></span>Щойно виявлені об'єкти: <b>28,772</b></li>
-                <li><span class='color-dot' style='background-color: {colors1[3]};'></span>Знято з обліку у 2025 році: <b>347</b></li>
-                <li><span class='color-dot' style='background-color: {colors1[4]};'></span>Не визначено категорію: <b>79,929</b></li>
-                <li><span class='color-dot' style='background-color: {colors1[5]};'></span>Об'єкти всесвітньої спадщини ЮНЕСКО: <b>8</b></li>
+                <li><span class='color-dot' style='background-color: {colors1[0]};'></span>Внесено до Державного реєстру нерухомих пам'яток усього: <b>38,212</b></li>
+                <li><span class='color-dot' style='background-color: {colors1[1]};'></span>Внесено до Державного реєстру нерухомих пам'яток національного значення: <b>3,415</b></li>
+                <li><span class='color-dot' style='background-color: {colors1[2]};'></span>Внесено до Державного реєстру нерухомих пам'яток місцевого значення: <b>32,809</b></li>
+                <li><span class='color-dot' style='background-color: {colors1[3]};'></span>Щойно виявлені об'єкти: <b>28,772</b></li>
+                <li><span class='color-dot' style='background-color: {colors1[4]};'></span>Знято з обліку у 2025 році: <b>347</b></li>
+                <li><span class='color-dot' style='background-color: {colors1[5]};'></span>Не визначено категорію: <b>79,929</b></li>
+                <li><span class='color-dot' style='background-color: {colors1[6]};'></span>Об'єкти всесвітньої спадщини ЮНЕСКО: <b>8</b></li>
             </ul>
             """,
             unsafe_allow_html=True,
@@ -193,6 +194,7 @@ with st.container(border=True):
 
     with top_right1:
         labels1 = [
+            "Реєстр усього",
             "Реєстр нац.",
             "Реєстр місц.",
             "Щойно виявлені",
@@ -200,7 +202,7 @@ with st.container(border=True):
             "Не визначено",
             "ЮНЕСКО",
         ]
-        values1 = [3415, 32809, 28772, 347, 79929, 8]
+        values1 = [38212, 3415, 32809, 28772, 347, 79929, 8]
         fig1 = go.Figure(
             data=[
                 go.Pie(
@@ -213,7 +215,7 @@ with st.container(border=True):
                 )
             ]
         )
-        fig1 = clean_chart_layout(fig1, height=210)
+        fig1 = clean_chart_layout(fig1, height=230)
         st.plotly_chart(fig1, use_container_width=True, config=plot_config)
 
 # --- БЛОК 2 (Загальна кількість пам'яток, за видом - 116,500) ---
