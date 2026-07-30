@@ -61,7 +61,41 @@ plot_config = {
 st.title(":material/account_balance: єПам'ятка")
 st.caption(":material/calendar_today: **Дані актуальні на 29.07.2026**")
 
-# --- БЛОК 1 (Загальна кількість пам'яток у тому числі комплексів - 116,500) ---
+# --- БЛОК 1 (Нерухомі об'єкти на обліку - 145,172) ---
+with st.container(border=True):
+    top_left1, top_right1 = st.columns([1.5, 3.5], vertical_alignment="center")
+
+    with top_left1:
+        st.markdown(
+            "**:material/account_balance: <span style='color: #8c92a4;"
+            " font-weight: 600; font-size: 14px;'>Нерухомі об'єкти культурної"
+            " спадщини які знаходяться на обліку</span>**",
+            unsafe_allow_html=True,
+        )
+        st.markdown(
+            "<h1 class='big-number'>145,172</h1>", unsafe_allow_html=True
+        )
+        st.markdown(
+            "<div class='green-tag'>за інформацією з офіційного звіту Мінкульту"
+            " до Держстату за 2025 рік</div>",
+            unsafe_allow_html=True,
+        )
+
+    with top_right1:
+        st.markdown(
+            """
+            <ul class='sub-list'>
+                <li>Об'єкти всесвітньої спадщини ЮНЕСКО: <b>8</b></li>
+                <li>Внесено до державного реєстру нерухомих пам'яток нац. значення: <b>3,415</b></li>
+                <li>Внесено до державного реєстру нерухомих пам'яток місц. значення: <b>32,809</b></li>
+                <li>Щойно виявлені об'єкти: <b>28,772</b></li>
+                <li>Знято з обліку у 2025 році: <b>347</b></li>
+            </ul>
+            """,
+            unsafe_allow_html=True,
+        )
+
+# --- БЛОК 2 (Загальна кількість пам'яток, за видом - 116,500) ---
 with st.container(border=True):
     top_left0, top_right0 = st.columns([1.5, 3.5], vertical_alignment="center")
 
@@ -69,15 +103,14 @@ with st.container(border=True):
         st.markdown(
             "**:material/collections_bookmark: <span style='color: #8c92a4;"
             " font-weight: 600; font-size: 14px;'>Загальна кількість пам'яток,"
-            " ураховуючи ті, що входять до складу комплексів (ансамблів), які"
-            " перебувають на державному обліку</span>**",
+            " за видом</span>**",
             unsafe_allow_html=True,
         )
         st.markdown(
             "<h1 class='big-number'>116,500</h1>", unsafe_allow_html=True
         )
         st.markdown(
-            "<div class='green-tag'>за інформацією офіційного звіту Мінкульту"
+            "<div class='green-tag'>за інформацією з офіційного звіту Мінкульту"
             " до Держстату за 2025 рік</div>",
             unsafe_allow_html=True,
         )
@@ -93,39 +126,6 @@ with st.container(border=True):
                 <li>Ландшафтні: <b>198</b></li>
                 <li>Садово-паркового мистецтва: <b>177</b></li>
                 <li>Науки і техніки: <b>121</b></li>
-            </ul>
-            """,
-            unsafe_allow_html=True,
-        )
-
-# --- БЛОК 2 (Нерухомі об'єкти на обліку - 145,172) ---
-with st.container(border=True):
-    top_left1, top_right1 = st.columns([1.5, 3.5], vertical_alignment="center")
-
-    with top_left1:
-        st.markdown(
-            "**:material/account_balance: <span style='color: #8c92a4;"
-            " font-weight: 600; font-size: 14px;'>Нерухомі об'єкти культурної"
-            " спадщини які знаходяться на обліку</span>**",
-            unsafe_allow_html=True,
-        )
-        st.markdown(
-            "<h1 class='big-number'>145,172</h1>", unsafe_allow_html=True
-        )
-        st.markdown(
-            "<div class='green-tag'>за інформацією офіційного звіту Мінкульту"
-            " до Держстату за 2025 рік</div>",
-            unsafe_allow_html=True,
-        )
-
-    with top_right1:
-        st.markdown(
-            """
-            <ul class='sub-list'>
-                <li>Внесено до державного реєстру нерухомих пам'яток нац. значення: <b>3,415</b></li>
-                <li>Внесено до державного реєстру нерухомих пам'яток місц. значення: <b>32,809</b></li>
-                <li>Щойно виявлені об'єкти: <b>28,772</b></li>
-                <li>Знято з обліку у 2025 році: <b>347</b></li>
             </ul>
             """,
             unsafe_allow_html=True,
