@@ -25,7 +25,7 @@ st.markdown(
 
 /* Стилі для підпунктів праворуч */
 .sub-list {
-    font-size: 16px !important;
+    font-size: 15px !important;
     opacity: 0.95 !important;
     line-height: 1.8 !important;
     margin: 0 !important;
@@ -47,15 +47,19 @@ st.markdown(
 )
 
 plot_config = {
-    "displayModeBar": True,
-    "toImageButtonOptions": {
-        "format": "png",
-        "filename": "chart",
-        "height": 720,
-        "width": 1280,
-        "scale": 3,
-    },
+    "displayModeBar": False
 }
+
+def clean_chart_layout(fig, height=180):
+    fig.update_layout(
+        height=height,
+        margin=dict(l=10, r=10, t=10, b=10),
+        template="plotly_white",
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
+        showlegend=False
+    )
+    return fig
 
 # --- ШАПКА ТА ІНФОРМАЦІЯ ---
 st.title(":material/account_balance: єПам'ятка")
@@ -63,25 +67,17 @@ st.caption(":material/calendar_today: **Дані актуальні на 29.07.2
 
 # --- БЛОК 1 (Нерухомі об'єкти на обліку - 145,172) ---
 with st.container(border=True):
-    top_left1, top_right1 = st.columns([1.5, 3.5], vertical_alignment="center")
+    top_left1, top_mid1, top_right1 = st.columns([1.5, 2.2, 1.3], vertical_alignment="center")
 
     with top_left1:
         st.markdown(
-            "**:material/account_balance: <span style='color: #8c92a4;"
-            " font-weight: 600; font-size: 14px;'>Нерухомі об'єкти культурної"
-            " спадщини які знаходяться на обліку</span>**",
+            "**:material/account_balance: <span style='color: #8c92a4; font-weight: 600; font-size: 14px;'>Нерухомі об'єкти культурної спадщини які знаходяться на обліку</span>**",
             unsafe_allow_html=True,
         )
-        st.markdown(
-            "<h1 class='big-number'>145,172</h1>", unsafe_allow_html=True
-        )
-        st.markdown(
-            "<div class='green-tag'>за інформацією з офіційного звіту Мінкульту"
-            " до Держстату за 2025 рік</div>",
-            unsafe_allow_html=True,
-        )
+        st.markdown("<h1 class='big-number'>145,172</h1>", unsafe_allow_html=True)
+        st.markdown("<div class='green-tag'>за інформацією з офіційного звіту Мінкульту до Держстату за 2025 рік</div>", unsafe_allow_html=True)
 
-    with top_right1:
+    with top_mid1:
         st.markdown(
             """
             <ul class='sub-list'>
@@ -96,27 +92,26 @@ with st.container(border=True):
             unsafe_allow_html=True,
         )
 
+    with top_right1:
+        labels1 = ["ЮНЕСКО", "Нац. значення", "Місц. значення", "Щойно виявлені", "Не визначено"]
+        values1 = [8, 3415, 32809, 28772, 79929]
+        fig1 = go.Figure(data=[go.Pie(labels=labels1, values=values1, hole=.6, textinfo='none')])
+        fig1 = clean_chart_layout(fig1, height=200)
+        st.plotly_chart(fig1, use_container_width=True, config=plot_config)
+
 # --- БЛОК 2 (Загальна кількість пам'яток, за видом - 116,500) ---
 with st.container(border=True):
-    top_left0, top_right0 = st.columns([1.5, 3.5], vertical_alignment="center")
+    top_left0, top_mid0, top_right0 = st.columns([1.5, 2.2, 1.3], vertical_alignment="center")
 
     with top_left0:
         st.markdown(
-            "**:material/collections_bookmark: <span style='color: #8c92a4;"
-            " font-weight: 600; font-size: 14px;'>Загальна кількість пам'яток,"
-            " за видом</span>**",
+            "**:material/collections_bookmark: <span style='color: #8c92a4; font-weight: 600; font-size: 14px;'>Загальна кількість пам'яток, за видом</span>**",
             unsafe_allow_html=True,
         )
-        st.markdown(
-            "<h1 class='big-number'>116,500</h1>", unsafe_allow_html=True
-        )
-        st.markdown(
-            "<div class='green-tag'>за інформацією з офіційного звіту Мінкульту"
-            " до Держстату за 2025 рік</div>",
-            unsafe_allow_html=True,
-        )
+        st.markdown("<h1 class='big-number'>116,500</h1>", unsafe_allow_html=True)
+        st.markdown("<div class='green-tag'>за інформацією з офіційного звіту Мінкульту до Держстату за 2025 рік</div>", unsafe_allow_html=True)
 
-    with top_right0:
+    with top_mid0:
         st.markdown(
             """
             <ul class='sub-list'>
@@ -132,26 +127,29 @@ with st.container(border=True):
             unsafe_allow_html=True,
         )
 
+    with top_right0:
+        df_vyd = pd.DataFrame({
+            "Вид": ["Археол.", "Істор.", "Архіт.", "Монум.", "Інші"],
+            "Кількість": [65891, 35654, 11892, 2567, 198+177+121]
+        })
+        fig0 = px.bar(df_vyd, y="Вид", x="Кількість", orientation='h', color="Кількість", color_continuous_scale="Viridis")
+        fig0 = clean_chart_layout(fig0, height=220)
+        fig0.update_layout(coloraxis_showscale=False, xaxis=dict(visible=False), yaxis=dict(title=""))
+        st.plotly_chart(fig0, use_container_width=True, config=plot_config)
+
 # --- БЛОК 3 (Внесено до системи єПам'ятка - 105,988) ---
 with st.container(border=True):
-    top_left2, top_right2 = st.columns([1.5, 3.5], vertical_alignment="center")
+    top_left2, top_mid2, top_right2 = st.columns([1.5, 2.2, 1.3], vertical_alignment="center")
 
     with top_left2:
         st.markdown(
-            "**:material/cloud_upload: <span style='color: #8c92a4;"
-            " font-weight: 600; font-size: 14px;'>Внесено до системи"
-            " єПам'ятка</span>**",
+            "**:material/cloud_upload: <span style='color: #8c92a4; font-weight: 600; font-size: 14px;'>Внесено до системи єПам'ятка</span>**",
             unsafe_allow_html=True,
         )
-        st.markdown(
-            "<h1 class='big-number'>105,988</h1>", unsafe_allow_html=True
-        )
-        st.markdown(
-            "<div class='green-tag'>↑ 73% від загальної кількості</div>",
-            unsafe_allow_html=True,
-        )
+        st.markdown("<h1 class='big-number'>105,988</h1>", unsafe_allow_html=True)
+        st.markdown("<div class='green-tag'>↑ 73% від загальної кількості</div>", unsafe_allow_html=True)
 
-    with top_right2:
+    with top_mid2:
         st.markdown(
             """
             <ul class='sub-list'>
@@ -165,19 +163,25 @@ with st.container(border=True):
             unsafe_allow_html=True,
         )
 
+    with top_right2:
+        labels2 = ["Національні", "Місцеві", "Щойно виявлені", "ЮНЕСКО", "Не визначено"]
+        values2 = [4595, 79765, 470, 70, 20683]
+        fig2 = go.Figure(data=[go.Pie(labels=labels2, values=values2, hole=.6, marker_colors=['#3b82f6', '#60a5fa', '#93c5fd', '#f59e0b', '#d1d5db'])])
+        fig2 = clean_chart_layout(fig2, height=190)
+        st.plotly_chart(fig2, use_container_width=True, config=plot_config)
+
 # --- БЛОК 4 (Історико-культурні території - 405) ---
 with st.container(border=True):
-    top_left4, top_right4 = st.columns([1.5, 3.5], vertical_alignment="center")
+    top_left4, top_mid4, top_right4 = st.columns([1.5, 2.2, 1.3], vertical_alignment="center")
 
     with top_left4:
         st.markdown(
-            "**:material/map: <span style='color: #8c92a4; font-weight:"
-            " 600; font-size: 14px;'>Історико-культурні території</span>**",
+            "**:material/map: <span style='color: #8c92a4; font-weight: 600; font-size: 14px;'>Історико-культурні території</span>**",
             unsafe_allow_html=True,
         )
         st.markdown("<h1 class='big-number'>405</h1>", unsafe_allow_html=True)
 
-    with top_right4:
+    with top_mid4:
         st.markdown(
             """
             <ul class='sub-list'>
@@ -189,19 +193,27 @@ with st.container(border=True):
             unsafe_allow_html=True,
         )
 
+    with top_right4:
+        fig4 = go.Figure(go.Funnel(
+            y = ["Всього", "Оцифровано", "Підготовлено", "З геоданими"],
+            x = [405, 178, 158, 15],
+            textinfo = "value"
+        ))
+        fig4 = clean_chart_layout(fig4, height=160)
+        st.plotly_chart(fig4, use_container_width=True, config=plot_config)
+
 # --- БЛОК 5 (Картки національного значення, що підлягають верифікації в єПам'ятці - 1,043) ---
 with st.container(border=True):
-    top_left5, top_right5 = st.columns([1.5, 3.5], vertical_alignment="center")
+    top_left5, top_mid5, top_right5 = st.columns([1.5, 2.2, 1.3], vertical_alignment="center")
 
     with top_left5:
         st.markdown(
-            "**:material/fact_check: <span style='color: #8c92a4; font-weight:"
-            " 600; font-size: 14px;'>Картки національного значення, що підлягають верифікації в єПам'ятці</span>**",
+            "**:material/fact_check: <span style='color: #8c92a4; font-weight: 600; font-size: 14px;'>Картки національного значення, що підлягають верифікації в єПам'ятці</span>**",
             unsafe_allow_html=True,
         )
         st.markdown("<h1 class='big-number'>1,043</h1>", unsafe_allow_html=True)
 
-    with top_right5:
+    with top_mid5:
         st.markdown(
             """
             <ul class='sub-list'>
@@ -212,23 +224,33 @@ with st.container(border=True):
             unsafe_allow_html=True,
         )
 
+    with top_right5:
+        fig5 = go.Figure(go.Indicator(
+            mode = "gauge+number",
+            value = 65,
+            domain = {'x': [0, 1], 'y': [0, 1]},
+            gauge = {
+                'axis': {'range': [None, 1043], 'visible': False},
+                'bar': {'color': "#10b981"},
+                'bgcolor': "#e5e7eb",
+            }
+        ))
+        fig5 = clean_chart_layout(fig5, height=140)
+        st.plotly_chart(fig5, use_container_width=True, config=plot_config)
+
 # --- БЛОК 6 (Користувачі - 226) ---
 with st.container(border=True):
-    top_left3, top_right3 = st.columns([1.5, 3.5], vertical_alignment="center")
+    top_left3, top_mid3, top_right3 = st.columns([1.5, 2.2, 1.3], vertical_alignment="center")
 
     with top_left3:
         st.markdown(
-            "**:material/group: <span style='color: #8c92a4; font-weight:"
-            " 600; font-size: 14px;'>Користувачі</span>**",
+            "**:material/group: <span style='color: #8c92a4; font-weight: 600; font-size: 14px;'>Користувачі</span>**",
             unsafe_allow_html=True,
         )
         st.markdown("<h1 class='big-number'>226</h1>", unsafe_allow_html=True)
-        st.markdown(
-            "<div class='green-tag'>↑ 86% користувачі ОВА та КП</div>",
-            unsafe_allow_html=True,
-        )
+        st.markdown("<div class='green-tag'>↑ 86% користувачі ОВА та КП</div>", unsafe_allow_html=True)
 
-    with top_right3:
+    with top_mid3:
         st.markdown(
             """
             <ul class='sub-list'>
@@ -239,6 +261,13 @@ with st.container(border=True):
             """,
             unsafe_allow_html=True,
         )
+
+    with top_right3:
+        labels3 = ["ОВА та КП", "Мінкульт", "Адміни"]
+        values3 = [195, 13, 18]
+        fig3 = go.Figure(data=[go.Pie(labels=labels3, values=values3, hole=.5, marker_colors=['#3b82f6', '#10b981', '#f59e0b'])])
+        fig3 = clean_chart_layout(fig3, height=150)
+        st.plotly_chart(fig3, use_container_width=True, config=plot_config)
 
 # --- ВІЗУАЛІЗАЦІЯ КОРИСТУВАЧІВ ПО ОБЛАСТЯХ ---
 users_by_region_data = {
