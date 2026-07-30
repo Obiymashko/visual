@@ -66,9 +66,20 @@ with st.container(border=True):
     top_left1, top_right1 = st.columns([1.5, 3.5], vertical_alignment="center")
 
     with top_left1:
-        st.markdown("**:material/account_balance: <span style='color: #8c92a4; font-weight: 600; font-size: 14px;'>Нерухомі об'єкти культурної спадщини які знаходяться на обліку</span>**", unsafe_allow_html=True)
-        st.markdown("<h1 class='big-number'>145,172</h1>", unsafe_allow_html=True)
-        st.markdown("<div class='green-tag'>за інформацією офіційного звіту Мінкульту до Держстату за 2025 рік</div>", unsafe_allow_html=True)
+        st.markdown(
+            "**:material/account_balance: <span style='color: #8c92a4;"
+            " font-weight: 600; font-size: 14px;'>Нерухомі об'єкти культурної"
+            " спадщини які знаходяться на обліку</span>**",
+            unsafe_allow_html=True,
+        )
+        st.markdown(
+            "<h1 class='big-number'>145,172</h1>", unsafe_allow_html=True
+        )
+        st.markdown(
+            "<div class='green-tag'>за інформацією офіційного звіту Мінкульту"
+            " до Держстату за 2025 рік</div>",
+            unsafe_allow_html=True,
+        )
 
     with top_right1:
         st.markdown(
@@ -88,20 +99,29 @@ with st.container(border=True):
     top_left2, top_right2 = st.columns([1.5, 3.5], vertical_alignment="center")
 
     with top_left2:
-        st.markdown("**:material/cloud_upload: <span style='color: #8c92a4; font-weight: 600; font-size: 14px;'>Внесено до системи єПам'ятка</span>**", unsafe_allow_html=True)
-        st.markdown("<h1 class='big-number'>105,988</h1>", unsafe_allow_html=True)
-        st.markdown("<div class='green-tag'>↑ 73% від загальної кількості</div>", unsafe_allow_html=True)
+        st.markdown(
+            "**:material/cloud_upload: <span style='color: #8c92a4;"
+            " font-weight: 600; font-size: 14px;'>Внесено до системи"
+            " єПам'ятка</span>**",
+            unsafe_allow_html=True,
+        )
+        st.markdown(
+            "<h1 class='big-number'>105,988</h1>", unsafe_allow_html=True
+        )
+        st.markdown(
+            "<div class='green-tag'>↑ 73% від загальної кількості</div>",
+            unsafe_allow_html=True,
+        )
 
     with top_right2:
         st.markdown(
             """
             <ul class='sub-list'>
-                <li>Об'єкти всесвітньої спадщини ЮНЕСКО: <b>70</b></li>
                 <li>Пам'ятки національного значення: <b>4,595</b></li>
                 <li>Пам'ятки місцевого значення: <b>79,765</b></li>
                 <li>Щойно виявлені об'єкти культурної спадщини: <b>470</b></li>
-                <li>Історико-культурні території: <b>405</b></li>
-                <li>Не визначено користувачем: <b>20,683</b></li>
+                <li>Об'єкти всесвітньої спадщини ЮНЕСКО: <b>70</b></li>
+                <li>Користувач не визначив статус: <b>20,683</b></li>
             </ul>
             """,
             unsafe_allow_html=True,
@@ -112,9 +132,16 @@ with st.container(border=True):
     top_left3, top_right3 = st.columns([1.5, 3.5], vertical_alignment="center")
 
     with top_left3:
-        st.markdown("**:material/group: <span style='color: #8c92a4; font-weight: 600; font-size: 14px;'>Користувачі</span>**", unsafe_allow_html=True)
+        st.markdown(
+            "**:material/group: <span style='color: #8c92a4; font-weight:"
+            " 600; font-size: 14px;'>Користувачі</span>**",
+            unsafe_allow_html=True,
+        )
         st.markdown("<h1 class='big-number'>226</h1>", unsafe_allow_html=True)
-        st.markdown("<div class='green-tag'>↑ 86% користувачі ОВА та КП</div>", unsafe_allow_html=True)
+        st.markdown(
+            "<div class='green-tag'>↑ 86% користувачі ОВА та КП</div>",
+            unsafe_allow_html=True,
+        )
 
     with top_right3:
         st.markdown(
@@ -142,7 +169,8 @@ file_path = os.path.join(parent_dir, file_name)
 
 if not os.path.exists(file_path):
     st.error(
-        f"❌ Файл `{file_name}` не знайдено! Переконайтеся, що він лежить у головній папці поруч із `app.py`."
+        f"❌ Файл `{file_name}` не знайдено! Переконайтеся, що він лежить у"
+        " головній папці поруч із `app.py`."
     )
     st.stop()
 
@@ -259,7 +287,9 @@ if df.empty:
     st.stop()
 
 # --- ГРАФІК ---
-st.subheader(":material/stacked_bar_chart: Об'єкти національного значення в єПам'ятці")
+st.subheader(
+    ":material/stacked_bar_chart: Об'єкти національного значення в єПам'ятці"
+)
 df_sorted = df.sort_values(by=col_reestr, ascending=False)
 fig_comp = go.Figure(
     data=[
