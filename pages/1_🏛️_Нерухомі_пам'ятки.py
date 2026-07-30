@@ -36,12 +36,13 @@ with st.container(border=True):
     top_left, top_right = st.columns([1.5, 3.5])
     
     with top_left:
-        st.markdown("<div style='color: #8c92a4; font-size: 14px; margin-bottom: -15px;'>🏛️ Всього об'єктів на обліку</div>", unsafe_allow_html=True)
-        st.markdown("<h1 style='font-size: 4rem; font-weight: 900; margin-top: 0px; margin-bottom: 0px;'>144,643</h1>", unsafe_allow_html=True)
+        # Використовуємо нативну іконку Streamlit разом із сірим кольором
+        st.markdown("**:material/museum: <span style='color: #8c92a4; font-weight: normal; font-size: 14px;'>Всього об'єктів на обліку</span>**", unsafe_allow_html=True)
+        st.markdown("<h1 style='font-size: 4rem; font-weight: 900; margin-top: -15px; margin-bottom: 0px;'>144,643</h1>", unsafe_allow_html=True)
         
     with top_right:
         st.markdown("""
-        <div style='margin-top: 15px;'>
+        <div style='margin-top: 10px;'>
             <ul style='font-size: 15px; opacity: 0.9; line-height: 1.7;'>
                 <li>Пам'ятки національного значення: <b>[заглушка, чекаємо дані]</b></li>
                 <li>Пам'ятки місцевого значення: <b>[заглушка, чекаємо дані]</b></li>
@@ -55,18 +56,40 @@ with st.container(border=True):
     top_left2, top_right2 = st.columns([1.5, 3.5])
     
     with top_left2:
-        st.markdown("<div style='color: #8c92a4; font-size: 14px; margin-bottom: -15px;'>☁️ Внесено до системи</div>", unsafe_allow_html=True)
-        st.markdown("<h1 style='font-size: 4rem; font-weight: 900; margin-top: 0px; margin-bottom: 0px;'>105,987</h1>", unsafe_allow_html=True)
-        # Стилізований зелений підпис (імітація дельти Streamlit)
+        st.markdown("**:material/cloud_upload: <span style='color: #8c92a4; font-weight: normal; font-size: 14px;'>Внесено до системи</span>**", unsafe_allow_html=True)
+        st.markdown("<h1 style='font-size: 4rem; font-weight: 900; margin-top: -15px; margin-bottom: 0px;'>105,987</h1>", unsafe_allow_html=True)
+        # Стилізований зелений підпис
         st.markdown("<div style='color: #00d26a; font-size: 14px; font-weight: 600; margin-top: -10px;'>↑ 72% від загальної кількості</div>", unsafe_allow_html=True)
         
     with top_right2:
         st.markdown("""
-        <div style='margin-top: 15px;'>
+        <div style='margin-top: 10px;'>
             <ul style='font-size: 15px; opacity: 0.9; line-height: 1.7;'>
                 <li>Деталізація пункт 1: <b>[заглушка, чекаємо дані]</b></li>
                 <li>Деталізація пункт 2: <b>[заглушка, чекаємо дані]</b></li>
                 <li>Деталізація пункт 3: <b>[заглушка, чекаємо дані]</b></li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+
+# --- ОКРЕМИЙ ВЕРХНІЙ БЛОК 3 (Деталізація за категоріями) ---
+with st.container(border=True):
+    top_left3, top_right3 = st.columns([1.5, 3.5])
+    
+    with top_left3:
+        st.markdown("**:material/list_alt: <span style='color: #8c92a4; font-weight: normal; font-size: 14px;'>[Назва блоку]</span>**", unsafe_allow_html=True)
+        # Заглушка замість цифри
+        st.markdown("<h1 style='font-size: 4rem; font-weight: 900; margin-top: -15px; margin-bottom: 0px; color: #8c92a4;'>...</h1>", unsafe_allow_html=True)
+        
+    with top_right3:
+        st.markdown("""
+        <div style='margin-top: 0px;'>
+            <ul style='font-size: 15px; opacity: 0.9; line-height: 1.7;'>
+                <li>Об'єкти всесвітньої спадщини ЮНЕСКО: <b>[заглушка]</b></li>
+                <li>Пам'ятки національного значення: <b>[заглушка]</b></li>
+                <li>Пам'ятки місцевого значення: <b>[заглушка]</b></li>
+                <li>Щойно виявлені об'єкти культурної спадщини: <b>[заглушка]</b></li>
+                <li>Історико-культурні території: <b>[заглушка]</b></li>
             </ul>
         </div>
         """, unsafe_allow_html=True)
