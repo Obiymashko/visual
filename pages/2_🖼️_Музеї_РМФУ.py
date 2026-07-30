@@ -7,32 +7,37 @@ import streamlit as st
 
 st.set_page_config(page_title="Дашборд: Музейний реєстр", layout="wide")
 
-# Надійне налаштування Montserrat + ТАБУ на зламування іконки сайдбару
+# Точне налаштування CSS: Montserrat для контенту та Plotly, нейтралізація текстових іконок сайдбару
 st.markdown(
     """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
 
-/* Глобальне застосування шрифту Montserrat для всього додатку */
-html, body, [class*="css"], [class*="st-"], .stMarkdown, .stTable, div, span, p, h1, h2, h3, h4, h5, h6, li, button, input {
+/* Глобальний Montserrat для контенту */
+.main {
     font-family: 'Montserrat', sans-serif !important;
 }
 
-/* ФІКС ІКОНКИ ЗГОРТАННЯ САЙДБАРУ (keyboard_double_arrow) */
-[data-testid="stSidebarCollapseButton"] button span,
-[data-testid="stSidebarCollapseButton"] button div,
+/* Приховуємо вилазячий текст іконок Streamlit у сайдбарі без зламу функціональності */
+[data-testid="stSidebarCollapseButton"] [data-testid="stIconMaterial"],
 [data-testid="stSidebarNavSeparator"] {
-    font-family: Source Sans Pro, -apple-system, BlinkMacSystemFont, Roboto, sans-serif !important;
+    font-size: 0px !important;
+    visibility: hidden !important;
 }
 
-/* Безпечний захист для системного меню та перемикача теми */
+/* Системний шрифт для кнопок управління, щоб зберегти базову іконку */
+[data-testid="stSidebarCollapseButton"] button,
 button[data-testid="stHeaderIconButton"], 
-[data-testid="stHeader"] *,
-[data-testid="stMainMenu"] * {
+[data-testid="stHeader"] * {
     font-family: Source Sans Pro, -apple-system, BlinkMacSystemFont, Roboto, sans-serif !important;
 }
 
-/* Примусове застосування Montserrat до графіків Plotly */
+/* Назви пунктів меню в сайдбарі залишаємо Montserrat */
+[data-testid="stSidebarNav"] span {
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+/* Montserrat для графіків Plotly */
 .js-plotly-plot .plotly text,
 .js-plotly-plot .plotly .hovertext,
 .js-plotly-plot .plotly .gtitle,
