@@ -32,7 +32,8 @@ with st.container(border=True):
     info_col1, info_col2, info_col3, info_col4, info_col5 = st.columns(5)
     
     info_col1.metric(":material/museum: Всього об'єктів на обліку", "144,643")
-    info_col2.metric(":material/cloud_upload: Внесено до системи", "105,263", "72% від загальної кількості", delta_color="normal")
+    # ТУТ ОНОВЛЕНО ЦИФРУ НА 103 578
+    info_col2.metric(":material/cloud_upload: Внесено до системи", "103,578", "72% від загальної кількості", delta_color="normal")
     info_col3.metric(":material/how_to_reg: Внесено до Реєстру", "30,192")
     info_col4.metric(":material/verified: Повністю верифіковано", "49")
     info_col5.metric(":material/group: Підключено користувачів", "139")
