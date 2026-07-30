@@ -11,34 +11,62 @@ st.set_page_config(
     layout="wide",
 )
 
-# Виправлений точковий CSS для шрифту Montserrat (не чіпає меню Streamlit)
+# Точне налаштування шрифтів для Streamlit та Plotly Canvas
 st.markdown(
     """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
 
-/* Застосовуємо шрифт тільки до основного контенту та бічної панелі */
-.main, .stAppHeader, [data-testid="stSidebar"] {
+/* Глобальний CSS для сторінки */
+html, body, [class*="css"], [class*="st-"] {
     font-family: 'Montserrat', sans-serif !important;
 }
 
-/* Примусово повертаємо стандартний шрифт для службових іконок Streamlit (меню/теми) */
-button[data-testid="stHeaderIconButton"], 
-[data-testid="stHeader"] *,
-[data-testid="stMainMenu"] * {
-    font-family: Source Sans Pro, -apple-system, BlinkMacSystemFont, Roboto, sans-serif !important;
+/* Примусове застосування Montserrat до графіків Plotly (текст, осі, тултіпи) */
+.js-plotly-plot .plotly text,
+.js-plotly-plot .plotly .hovertext,
+.js-plotly-plot .plotly .gtitle,
+.js-plotly-plot .plotly .xtitle,
+.js-plotly-plot .plotly .ytitle {
+    font-family: 'Montserrat', sans-serif !important;
 }
 
-/* Стилі для великих чисел */
+/* Контейнер для лівого блоку */
+.left-stat-block {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+/* Заголовок картки */
+.stat-title {
+    color: #8c92a4;
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 6px;
+    line-height: 1.3;
+}
+
+/* Великі числа */
 .big-number {
     font-family: 'Montserrat', sans-serif !important;
     font-size: 3.5rem !important;
     font-weight: 900 !important;
-    margin: 0px 0px 4px 0px !important;
+    margin: 0px 0px 6px 0px !important;
     line-height: 1 !important;
 }
 
-/* Стилі для підпунктів праворуч */
+/* Зелені підписи */
+.green-tag {
+    font-family: 'Montserrat', sans-serif !important;
+    color: #00d26a;
+    font-size: 13px;
+    font-weight: 700;
+    margin-top: 2px;
+}
+
+/* Підпункти списку */
 .sub-list {
     font-family: 'Montserrat', sans-serif !important;
     font-size: 14px !important;
@@ -57,7 +85,7 @@ button[data-testid="stHeaderIconButton"],
     font-weight: 900 !important;
 }
 
-/* Кольорові маркери перед пунктами */
+/* Кольорові маркери */
 .color-dot {
     height: 10px;
     width: 10px;
@@ -66,14 +94,6 @@ button[data-testid="stHeaderIconButton"],
     position: absolute;
     left: 0;
     top: 7px;
-}
-
-/* Зелені підписи */
-.green-tag {
-    font-family: 'Montserrat', sans-serif !important;
-    color: #00d26a;
-    font-size: 13px;
-    font-weight: 700;
 }
 </style>
 """,
@@ -92,6 +112,7 @@ def clean_chart_layout(fig, height=200):
         plot_bgcolor="rgba(0,0,0,0)",
         showlegend=False,
         font=dict(family="Montserrat, sans-serif"),
+        hoverlabel=dict(font_family="Montserrat, sans-serif"),
     )
     return fig
 
@@ -100,7 +121,7 @@ def clean_chart_layout(fig, height=200):
 st.title("єПам'ятка")
 st.caption("**Дані актуальні на 29.07.2026**")
 
-# Контрастні палітри кольорів
+# Палітри кольорів
 colors1 = ["#2563EB", "#16A34A", "#EA580C", "#DC2626", "#9333EA", "#0284C7"]
 colors0 = [
     "#2563EB",
@@ -238,7 +259,7 @@ with st.container(border=True):
         fig0.update_layout(
             margin=dict(l=10, r=60, t=10, b=10),
             xaxis=dict(visible=False),
-            yaxis=dict(title="", tickfont=dict(size=11)),
+            yaxis=dict(title="", tickfont=dict(size=11, family="Montserrat, sans-serif")),
         )
         st.plotly_chart(fig0, use_container_width=True, config=plot_config)
 
@@ -374,7 +395,7 @@ with st.container(border=True):
                 value=65,
                 number={
                     "suffix": " / 1,043",
-                    "font": {"size": 18, "family": "Montserrat"},
+                    "font": {"size": 18, "family": "Montserrat, sans-serif"},
                 },
                 gauge={
                     "axis": {"range": [None, 1043], "visible": False},
@@ -516,6 +537,7 @@ fig_users.update_layout(
     yaxis_title="",
     coloraxis_showscale=False,
     font=dict(family="Montserrat, sans-serif"),
+    hoverlabel=dict(font_family="Montserrat, sans-serif"),
 )
 st.plotly_chart(fig_users, use_container_width=True, config=plot_config)
 
@@ -675,6 +697,7 @@ fig_comp.update_layout(
     height=500,
     xaxis_tickangle=-45,
     font=dict(family="Montserrat, sans-serif"),
+    hoverlabel=dict(font_family="Montserrat, sans-serif"),
     legend=dict(
         orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1
     ),
