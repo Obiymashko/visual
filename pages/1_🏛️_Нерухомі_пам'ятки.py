@@ -189,14 +189,14 @@ with st.container(border=True):
             unsafe_allow_html=True,
         )
 
-# --- БЛОК 5 (Картки, що підлягають верифікації - 1,043) ---
+# --- БЛОК 5 (Картки національного значення, що підлягають верифікації в єПам'ятці - 1,043) ---
 with st.container(border=True):
     top_left5, top_right5 = st.columns([1.5, 3.5], vertical_alignment="center")
 
     with top_left5:
         st.markdown(
             "**:material/fact_check: <span style='color: #8c92a4; font-weight:"
-            " 600; font-size: 14px;'>Картки, що підлягають верифікації</span>**",
+            " 600; font-size: 14px;'>Картки національного значення, що підлягають верифікації в єПам'ятці</span>**",
             unsafe_allow_html=True,
         )
         st.markdown("<h1 class='big-number'>1,043</h1>", unsafe_allow_html=True)
@@ -205,6 +205,8 @@ with st.container(border=True):
         st.markdown(
             """
             <ul class='sub-list'>
+                <li>Верифіковано Спадщиною: <b>65</b></li>
+                <li>Верифіковано без зауважень Управлінням дозвільно-погоджувальної документації: <b>0</b></li>
             </ul>
             """,
             unsafe_allow_html=True,
