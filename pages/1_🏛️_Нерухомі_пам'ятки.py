@@ -61,7 +61,44 @@ plot_config = {
 st.title(":material/account_balance: єПам'ятка")
 st.caption(":material/calendar_today: **Дані актуальні на 29.07.2026**")
 
-# --- БЛОК 1 (Нерухомі об'єкти на обліку - 145,172) ---
+# --- БЛОК 1 (Загальна кількість пам'яток у тому числі комплексів - 116,500) ---
+with st.container(border=True):
+    top_left0, top_right0 = st.columns([1.5, 3.5], vertical_alignment="center")
+
+    with top_left0:
+        st.markdown(
+            "**:material/collections_bookmark: <span style='color: #8c92a4;"
+            " font-weight: 600; font-size: 14px;'>Загальна кількість пам'яток,"
+            " ураховуючи ті, що входять до складу комплексів (ансамблів), які"
+            " перебувають на державному обліку</span>**",
+            unsafe_allow_html=True,
+        )
+        st.markdown(
+            "<h1 class='big-number'>116,500</h1>", unsafe_allow_html=True
+        )
+        st.markdown(
+            "<div class='green-tag'>за інформацією офіційного звіту Мінкульту"
+            " до Держстату за 2025 рік</div>",
+            unsafe_allow_html=True,
+        )
+
+    with top_right0:
+        st.markdown(
+            """
+            <ul class='sub-list'>
+                <li>Археологічні: <b>65,891</b></li>
+                <li>Історичні: <b>35,654</b></li>
+                <li>Архітектури та містобудування: <b>11,892</b></li>
+                <li>Монументального мистецтва: <b>2,567</b></li>
+                <li>Ландшафтні: <b>198</b></li>
+                <li>Садово-паркового мистецтва: <b>177</b></li>
+                <li>Науки і техніки: <b>121</b></li>
+            </ul>
+            """,
+            unsafe_allow_html=True,
+        )
+
+# --- БЛОК 2 (Нерухомі об'єкти на обліку - 145,172) ---
 with st.container(border=True):
     top_left1, top_right1 = st.columns([1.5, 3.5], vertical_alignment="center")
 
@@ -94,7 +131,7 @@ with st.container(border=True):
             unsafe_allow_html=True,
         )
 
-# --- БЛОК 2 (Внесено до системи єПам'ятка - 105,988) ---
+# --- БЛОК 3 (Внесено до системи єПам'ятка - 105,988) ---
 with st.container(border=True):
     top_left2, top_right2 = st.columns([1.5, 3.5], vertical_alignment="center")
 
@@ -127,7 +164,7 @@ with st.container(border=True):
             unsafe_allow_html=True,
         )
 
-# --- БЛОК 3 (Користувачі - 226) ---
+# --- БЛОК 4 (Користувачі - 226) ---
 with st.container(border=True):
     top_left3, top_right3 = st.columns([1.5, 3.5], vertical_alignment="center")
 
