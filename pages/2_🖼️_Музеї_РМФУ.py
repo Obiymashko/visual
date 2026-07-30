@@ -38,13 +38,69 @@ button[data-testid="stHeaderIconButton"] {
 .js-plotly-plot .plotly .ytitle {
     font-family: 'Montserrat', sans-serif !important;
 }
+
+/* Контейнер для лівого блоку */
+.left-stat-block {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+/* Заголовок картки */
+.stat-title {
+    color: #8c92a4;
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 6px;
+    line-height: 1.3;
+}
+
+/* Великі числа */
+.big-number {
+    font-family: 'Montserrat', sans-serif !important;
+    font-size: 3.5rem !important;
+    font-weight: 900 !important;
+    margin: 0px 0px 6px 0px !important;
+    line-height: 1 !important;
+}
+
+/* Підпункти списку */
+.sub-list {
+    font-family: 'Montserrat', sans-serif !important;
+    font-size: 14px !important;
+    opacity: 0.95 !important;
+    line-height: 1.8 !important;
+    margin: 0 !important;
+    padding-left: 0px !important;
+    list-style-type: none !important;
+}
+.sub-list li {
+    position: relative;
+    padding-left: 20px;
+    margin-bottom: 4px;
+}
+.sub-list b {
+    font-weight: 900 !important;
+}
+
+/* Кольорові маркери */
+.color-dot {
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    position: absolute;
+    left: 0;
+    top: 7px;
+}
 </style>
 """,
     unsafe_allow_html=True,
 )
 
 plot_config = {
-    "displayModeBar": True,
+    "displayModeBar": False,
     "toImageButtonOptions": {
         "format": "png",
         "filename": "chart",
@@ -54,8 +110,72 @@ plot_config = {
     },
 }
 
+
+def clean_chart_layout(fig, height=200):
+    fig.update_layout(
+        height=height,
+        margin=dict(l=10, r=25, t=10, b=10),
+        template="plotly_white",
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
+        showlegend=False,
+        font=dict(family="Montserrat, sans-serif"),
+        hoverlabel=dict(font_family="Montserrat, sans-serif"),
+    )
+    return fig
+
+
 # --- ШАПКА ---
 st.title("❖ Музейний реєстр")
+
+# --- КАРТКА: Всього музеїв державної власності ---
+colors_state_mus = ["#ef4444", "#f59e0b", "#10b981"]
+
+with st.container(border=True):
+    top_left, top_mid, top_right = st.columns([1.8, 2.0, 1.2], vertical_alignment="top")
+
+    with top_left:
+        st.markdown(
+            """
+            <div class='left-stat-block'>
+                <div class='stat-title'>Всього музеїв державної власності</div>
+                <h1 class='big-number'>648</h1>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    with top_mid:
+        st.markdown(
+            f"""
+            <ul class='sub-list'>
+                <li><span class='color-dot' style='background-color: {colors_state_mus[0]};'></span>Відсутні: <b>239</b></li>
+                <li><span class='color-dot' style='background-color: {colors_state_mus[1]};'></span>Окуповані: <b>104</b></li>
+                <li><span class='color-dot' style='background-color: {colors_state_mus[2]};'></span>Підконтрольні: <b>135</b></li>
+            </ul>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    with top_right:
+        labels_state = ["Відсутні", "Окуповані", "Підконтрольні"]
+        values_state = [239, 104, 135]
+        fig_state = go.Figure(
+            data=[
+                go.Pie(
+                    labels=labels_state,
+                    values=values_state,
+                    hole=0.55,
+                    marker_colors=colors_state_mus,
+                    textinfo="percent",
+                    insidetextorientation="radial",
+                )
+            ]
+        )
+        fig_state = clean_chart_layout(fig_state, height=190)
+        st.plotly_chart(fig_state, use_container_width=True, config=plot_config)
+
+st.divider()
 
 # --- АВТОМАТИЧНЕ ЗАВАНТАЖЕННЯ ФАЙЛУ ---
 current_dir = os.getcwd()
