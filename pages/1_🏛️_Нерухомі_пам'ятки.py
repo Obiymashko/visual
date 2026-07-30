@@ -93,13 +93,13 @@ with st.container(border=True):
             unsafe_allow_html=True,
         )
 
-# --- БЛОК 2 (Внесено до системи ЄПам'ятка - 105,988) ---
+# --- БЛОК 2 (Внесено до системи єПам'ятка - 105,988) ---
 with st.container(border=True):
     top_left2, top_right2 = st.columns([1.5, 3.5])
 
     with top_left2:
         st.markdown(
-            "**:material/cloud_upload: <span style='color: #8c92a4; font-weight: normal; font-size: 14px;'>Внесено до системи ЄПам'ятка</span>**",
+            "**:material/cloud_upload: <span style='color: #8c92a4; font-weight: normal; font-size: 14px;'>Внесено до системи єПам'ятка</span>**",
             unsafe_allow_html=True,
         )
         st.markdown(
@@ -121,7 +121,7 @@ with st.container(border=True):
                 <li>Пам'ятки місцевого значення: <b>79,765</b></li>
                 <li>Щойно виявлені об'єкти культурної спадщини: <b>470</b></li>
                 <li>Історико-культурні території: <b>405</b></li>
-                <li>Не визначено: <b>20,753</b></li>
+                <li>Не визначено користувачем: <b>20,753</b></li>
             </ul>
         </div>
         """,
@@ -200,7 +200,7 @@ selected_sheet = xls.sheet_names[0]
 col_reestr = (
     "Кількість об'єктів національного значення в Реєстрі (на сайті Мінкульту)"
 )
-col_cards = "Кількість карток національного значення в єПам'ятка"
+col_cards = "Кількість карток національного значення в ЄПам'ятка"
 col_draft_all = "Кількість чернеток всього"
 col_draft_nac = "Кількість чернеток національного значення"
 col_perc = "Загальний прогрес (відсоток карток від об'єктів в реєстрі)"
