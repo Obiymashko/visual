@@ -81,6 +81,7 @@ with st.container(border=True):
                 <li>Внесено до державного реєстру нерухомих пам'яток нац. значення: <b>3,415</b></li>
                 <li>Внесено до державного реєстру нерухомих пам'яток місц. значення: <b>32,809</b></li>
                 <li>Щойно виявлені об'єкти: <b>28,772</b></li>
+                <li>Інші об'єкти (уточнюється): <b>80,176</b></li>
                 <li>Знято з обліку у 2025 році: <b>347</b></li>
             </ul>
         </div>
@@ -102,7 +103,7 @@ with st.container(border=True):
             unsafe_allow_html=True,
         )
         st.markdown(
-            "<div style='color: #00d26a; font-size: 14px; font-weight: 700; margin-top: 5px;'>↑ 72% від загальної кількості</div>",
+            "<div style='color: #00d26a; font-size: 14px; font-weight: 700; margin-top: 5px;'>↑ 73% від загальної кількості</div>",
             unsafe_allow_html=True,
         )
 
