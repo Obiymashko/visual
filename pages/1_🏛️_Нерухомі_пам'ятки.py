@@ -11,21 +11,27 @@ st.set_page_config(
     layout="wide",
 )
 
-# Підключення шрифту Montserrat та глобальне застосування CSS
+# Підключення Montserrat ТА Material Icons у CSS
 st.markdown(
     """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0');
 
-/* Глобальне застосування шрифту Montserrat для всього додатку */
+/* Глобальний шрифт Montserrat */
 html, body, [class*="css"], [class*="st-"], div, span, p, h1, h2, h3, h4, h5, h6, li, button, input {
     font-family: 'Montserrat', sans-serif !important;
+}
+
+/* Відновлення іконок Streamlit / Material */
+.material-symbols-outlined, [data-testid="stIconMaterial"] {
+    font-family: 'Material Symbols Outlined' !important;
 }
 
 /* Стилі для великих чисел */
 .big-number {
     font-family: 'Montserrat', sans-serif !important;
-    font-size: 3.8rem !important;
+    font-size: 3.5rem !important;
     font-weight: 900 !important;
     margin: 0px 0px 4px 0px !important;
     line-height: 1 !important;
@@ -34,7 +40,7 @@ html, body, [class*="css"], [class*="st-"], div, span, p, h1, h2, h3, h4, h5, h6
 /* Стилі для підпунктів праворуч */
 .sub-list {
     font-family: 'Montserrat', sans-serif !important;
-    font-size: 15px !important;
+    font-size: 14px !important;
     opacity: 0.95 !important;
     line-height: 1.8 !important;
     margin: 0 !important;
@@ -43,7 +49,7 @@ html, body, [class*="css"], [class*="st-"], div, span, p, h1, h2, h3, h4, h5, h6
 }
 .sub-list li {
     position: relative;
-    padding-left: 22px;
+    padding-left: 20px;
     margin-bottom: 4px;
 }
 .sub-list b {
@@ -52,20 +58,20 @@ html, body, [class*="css"], [class*="st-"], div, span, p, h1, h2, h3, h4, h5, h6
 
 /* Кольорові маркери перед пунктами */
 .color-dot {
-    height: 12px;
-    width: 12px;
+    height: 10px;
+    width: 10px;
     border-radius: 50%;
     display: inline-block;
     position: absolute;
     left: 0;
-    top: 6px;
+    top: 7px;
 }
 
 /* Зелені підписи */
 .green-tag {
     font-family: 'Montserrat', sans-serif !important;
     color: #00d26a;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 700;
 }
 </style>
@@ -79,7 +85,7 @@ plot_config = {"displayModeBar": False}
 def clean_chart_layout(fig, height=200):
     fig.update_layout(
         height=height,
-        margin=dict(l=10, r=10, t=10, b=10),
+        margin=dict(l=10, r=25, t=10, b=10),
         template="plotly_white",
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
@@ -112,7 +118,7 @@ colors3 = ["#2563EB", "#16A34A", "#F59E0B"]
 # --- БЛОК 1 (Нерухомі об'єкти на обліку - 145,172) ---
 with st.container(border=True):
     top_left1, top_mid1, top_right1 = st.columns(
-        [1.5, 2.3, 1.2], vertical_alignment="center"
+        [1.6, 2.1, 1.3], vertical_alignment="center"
     )
 
     with top_left1:
@@ -174,7 +180,7 @@ with st.container(border=True):
 # --- БЛОК 2 (Загальна кількість пам'яток, за видом - 116,500) ---
 with st.container(border=True):
     top_left0, top_mid0, top_right0 = st.columns(
-        [1.5, 2.3, 1.2], vertical_alignment="center"
+        [1.6, 2.1, 1.3], vertical_alignment="center"
     )
 
     with top_left0:
@@ -232,18 +238,21 @@ with st.container(border=True):
                 text=df_vyd["Кількість"].apply(lambda x: f"{x:,}"),
                 textposition="outside",
                 marker_color=df_vyd["Колір"],
+                cliponaxis=False,
             )
         )
         fig0 = clean_chart_layout(fig0, height=230)
         fig0.update_layout(
-            xaxis=dict(visible=False), yaxis=dict(title="", tickfont=dict(size=11))
+            margin=dict(l=10, r=60, t=10, b=10),
+            xaxis=dict(visible=False),
+            yaxis=dict(title="", tickfont=dict(size=11)),
         )
         st.plotly_chart(fig0, use_container_width=True, config=plot_config)
 
 # --- БЛОК 3 (Внесено до системи єПам'ятка - 105,988) ---
 with st.container(border=True):
     top_left2, top_mid2, top_right2 = st.columns(
-        [1.5, 2.3, 1.2], vertical_alignment="center"
+        [1.6, 2.1, 1.3], vertical_alignment="center"
     )
 
     with top_left2:
@@ -302,7 +311,7 @@ with st.container(border=True):
 # --- БЛОК 4 (Історико-культурні території - 405) ---
 with st.container(border=True):
     top_left4, top_mid4, top_right4 = st.columns(
-        [1.5, 2.3, 1.2], vertical_alignment="center"
+        [1.6, 2.1, 1.3], vertical_alignment="center"
     )
 
     with top_left4:
@@ -340,7 +349,7 @@ with st.container(border=True):
 # --- БЛОК 5 (Картки національного значення, що підлягають верифікації в єПам'ятці - 1,043) ---
 with st.container(border=True):
     top_left5, top_mid5, top_right5 = st.columns(
-        [1.5, 2.3, 1.2], vertical_alignment="center"
+        [1.6, 2.1, 1.3], vertical_alignment="center"
     )
 
     with top_left5:
@@ -382,7 +391,7 @@ with st.container(border=True):
 # --- БЛОК 6 (Користувачі - 226) ---
 with st.container(border=True):
     top_left3, top_mid3, top_right3 = st.columns(
-        [1.5, 2.3, 1.2], vertical_alignment="center"
+        [1.6, 2.1, 1.3], vertical_alignment="center"
     )
 
     with top_left3:
