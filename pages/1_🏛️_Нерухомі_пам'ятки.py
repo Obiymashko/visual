@@ -11,21 +11,28 @@ st.set_page_config(
     layout="wide",
 )
 
-# Точне налаштування CSS: Montserrat для контенту та графіків, захист іконок сайдбару
+# Точне налаштування CSS: Montserrat для контенту та Plotly, повна нейтралізація текстових іконок
 st.markdown(
     """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
 
-/* Застосовуємо Montserrat тільки до основного контенту */
+/* Глобальний Montserrat для контенту */
 .main {
     font-family: 'Montserrat', sans-serif !important;
 }
 
-/* Захист іконок у бічній панелі (Sidebar) та верхньому меню */
-[data-testid="stSidebar"] *, 
-[data-testid="stHeader"] *,
-button[data-testid="stHeaderIconButton"] {
+/* Приховуємо вилазячий текст іконок Streamlit у сайдбарі без зламу функціональності */
+[data-testid="stSidebarCollapseButton"] [data-testid="stIconMaterial"],
+[data-testid="stSidebarNavSeparator"] {
+    font-size: 0px !important;
+    visibility: hidden !important;
+}
+
+/* Системний шрифт для кнопок управління, щоб зберегти базову іконку */
+[data-testid="stSidebarCollapseButton"] button,
+button[data-testid="stHeaderIconButton"], 
+[data-testid="stHeader"] * {
     font-family: Source Sans Pro, -apple-system, BlinkMacSystemFont, Roboto, sans-serif !important;
 }
 
@@ -34,7 +41,7 @@ button[data-testid="stHeaderIconButton"] {
     font-family: 'Montserrat', sans-serif !important;
 }
 
-/* Примусове застосування Montserrat до графіків Plotly */
+/* Montserrat для графіків Plotly */
 .js-plotly-plot .plotly text,
 .js-plotly-plot .plotly .hovertext,
 .js-plotly-plot .plotly .gtitle,
@@ -569,7 +576,7 @@ file_path = os.path.join(parent_dir, file_name)
 
 if not os.path.exists(file_path):
     st.error(
-        f"❌ Файл `{file_name}` не знайдено! Переконайтеся, що він лежить у"
+        f"Не знайдено файл `{file_name}`! Переконайтеся, що він лежить у"
         " головній папці поруч із `app.py`."
     )
     st.stop()
@@ -683,7 +690,7 @@ def load_data(path, sheet):
 
 df = load_data(file_path, selected_sheet)
 if df.empty:
-    st.warning("⚠️ Не знайдено даних.")
+    st.warning("Не знайдено даних.")
     st.stop()
 
 # --- ГРАФІК ---
