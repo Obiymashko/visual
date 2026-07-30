@@ -15,6 +15,10 @@ st.markdown("""
     word-wrap: break-word !important;
     font-size: 14px !important;
 }
+[data-testid="stMetricDelta"] > div {
+    white-space: normal !important;
+    word-wrap: break-word !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -25,25 +29,43 @@ st.title(":material/account_balance: Моніторинг внесення не�
 st.markdown("Аналітика наповнення Реєстру та карток в системі ЄПам'ятка.")
 st.caption(":material/calendar_today: **Дані актуальні на 27.07.2026**")
 
-# Гарний блок з довідковою інформацією у вигляді ВЕЛИКИХ МЕТРИК
+st.markdown("**:material/info: Довідкова інформація щодо впровадження системи «ЄПам'ятка»:**")
+
+# --- ОКРЕМИЙ ВЕРХНІЙ БЛОК ДЛЯ ГОЛОВНОЇ ЦИФРИ (за вашим ескізом) ---
 with st.container(border=True):
-    st.markdown("**:material/info: Довідкова інформація щодо впровадження системи «ЄПам'ятка»:**")
+    top_left, top_right = st.columns([1.5, 3.5])
     
-    info_col1, info_col2, info_col3, info_col4, info_col5 = st.columns(5)
+    with top_left:
+        st.markdown("<p style='font-size: 15px; margin-bottom: -15px; opacity: 0.8;'>:material/museum: Всього об'єктів на обліку</p>", unsafe_allow_html=True)
+        st.markdown("<h1 style='font-size: 4rem; font-weight: 900; margin-top: 0;'>144,643</h1>", unsafe_allow_html=True)
+        
+    with top_right:
+        # Місце для деталізації (можете змінити текст під ваші потреби)
+        st.markdown("""
+        <div style='margin-top: 25px;'>
+            <ul style='font-size: 16px; opacity: 0.9; line-height: 1.6;'>
+                <li>Пам'ятки національного значення: <b>...</b></li>
+                <li>Пам'ятки місцевого значення: <b>...</b></li>
+                <li>Щойно виявлені об'єкти: <b>...</b></li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+
+# --- ДРУГИЙ БЛОК ДЛЯ ІНШИХ МЕТРИК ---
+with st.container(border=True):
+    b_col1, b_col2, b_col3, b_col4 = st.columns(4)
     
-    info_col1.metric(":material/museum: Всього об'єктів на обліку", "144,643")
-    info_col2.metric(":material/cloud_upload: Внесено до системи", "105,987", "72% від загальної кількості", delta_color="normal")
+    b_col1.metric(":material/cloud_upload: Внесено до системи", "105,987", "72% від загальної кількості", delta_color="normal")
     
-    # ТУТ ДОДАНО ВАШУ ПРИМІТКУ ПРО МІНРЕГІОН (сірим кольором)
-    info_col3.metric(
+    b_col2.metric(
         label=":material/how_to_reg: Внесено до Реєстру", 
         value="30,192", 
         delta="Разом з адресами, верифіковані та підтверджені Мінрегіоном", 
         delta_color="off"
     )
     
-    info_col4.metric(":material/verified: Повністю верифіковано", "49")
-    info_col5.metric(":material/group: Підключено користувачів", "139")
+    b_col3.metric(":material/verified: Повністю верифіковано", "49")
+    b_col4.metric(":material/group: Підключено користувачів", "139")
 
 st.info("Включає кількість об'єктів національного значення в реєстрі та Пам’ятка національного значення – взято на державний облік відповідно до законодавства, що діяло до набрання чинності Закону України «Про охорону культурної спадщини»", icon="ℹ️")
 
