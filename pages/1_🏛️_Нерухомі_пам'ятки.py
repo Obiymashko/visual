@@ -72,6 +72,10 @@ with st.container(border=True):
             "<h1 class='big-number'>145,172</h1>",
             unsafe_allow_html=True,
         )
+        st.markdown(
+            "<div style='color: #00d26a; font-size: 14px; font-weight: 700; margin-top: 5px;'>за інформацією офіційного звіту Мінкульту за 2025 рік</div>",
+            unsafe_allow_html=True,
+        )
 
     with top_right1:
         st.markdown(
