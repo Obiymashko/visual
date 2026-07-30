@@ -11,7 +11,7 @@ st.set_page_config(
     layout="wide",
 )
 
-# CSS для метрик
+# CSS для метрик та збільшення шрифтів
 st.markdown(
     """
 <style>
@@ -23,6 +23,21 @@ st.markdown(
 [data-testid="stMetricDelta"] > div {
     white-space: normal !important;
     word-wrap: break-word !important;
+}
+.big-number {
+    font-size: 4.2rem !important;
+    font-weight: 900 !important;
+    margin-top: -10px !important;
+    margin-bottom: 0px !important;
+    line-height: 1 !important;
+}
+.sub-list {
+    font-size: 16px !important;
+    opacity: 0.95 !important;
+    line-height: 1.8 !important;
+}
+.sub-list b {
+    font-weight: 900 !important;
 }
 </style>
 """,
@@ -42,7 +57,6 @@ plot_config = {
 
 # --- ШАПКА ТА ІНФОРМАЦІЯ ---
 st.title(":material/account_balance: єПам'ятка")
-st.markdown("Аналітика наповнення Реєстру та карток в системі ЄПам'ятка.")
 st.caption(":material/calendar_today: **Дані актуальні на 27.07.2026**")
 
 # --- БЛОК 1 (Нерухомі об'єкти на обліку - 145,172) ---
@@ -55,15 +69,15 @@ with st.container(border=True):
             unsafe_allow_html=True,
         )
         st.markdown(
-            "<h1 style='font-size: 4rem; font-weight: 900; margin-top: -15px; margin-bottom: 0px;'>145,172</h1>",
+            "<h1 class='big-number'>145,172</h1>",
             unsafe_allow_html=True,
         )
 
     with top_right1:
         st.markdown(
             """
-        <div style='margin-top: 10px;'>
-            <ul style='font-size: 15px; opacity: 0.9; line-height: 1.7;'>
+        <div style='margin-top: 5px;'>
+            <ul class='sub-list'>
                 <li>Внесено до державного реєстру нерухомих пам'яток нац. значення: <b>3,415</b></li>
                 <li>Внесено до державного реєстру нерухомих пам'яток місц. значення: <b>32,809</b></li>
                 <li>Щойно виявлені об'єкти: <b>28,772</b></li>
@@ -84,11 +98,11 @@ with st.container(border=True):
             unsafe_allow_html=True,
         )
         st.markdown(
-            "<h1 style='font-size: 4rem; font-weight: 900; margin-top: -15px; margin-bottom: 0px;'>105,988</h1>",
+            "<h1 class='big-number'>105,988</h1>",
             unsafe_allow_html=True,
         )
         st.markdown(
-            "<div style='color: #00d26a; font-size: 14px; font-weight: 600; margin-top: -10px;'>↑ 72% від загальної кількості</div>",
+            "<div style='color: #00d26a; font-size: 14px; font-weight: 700; margin-top: 5px;'>↑ 72% від загальної кількості</div>",
             unsafe_allow_html=True,
         )
 
@@ -96,7 +110,7 @@ with st.container(border=True):
         st.markdown(
             """
         <div style='margin-top: 0px;'>
-            <ul style='font-size: 15px; opacity: 0.9; line-height: 1.7;'>
+            <ul class='sub-list'>
                 <li>Об'єкти всесвітньої спадщини ЮНЕСКО: <b>70</b></li>
                 <li>Пам'ятки національного значення: <b>4,595</b></li>
                 <li>Пам'ятки місцевого значення: <b>79,765</b></li>
@@ -119,15 +133,15 @@ with st.container(border=True):
             unsafe_allow_html=True,
         )
         st.markdown(
-            "<h1 style='font-size: 4rem; font-weight: 900; margin-top: -15px; margin-bottom: 0px;'>227</h1>",
+            "<h1 class='big-number'>227</h1>",
             unsafe_allow_html=True,
         )
 
     with top_right3:
         st.markdown(
             """
-        <div style='margin-top: 10px;'>
-            <ul style='font-size: 15px; opacity: 0.9; line-height: 1.7;'>
+        <div style='margin-top: 5px;'>
+            <ul class='sub-list'>
                 <li>Активних: <b>183</b></li>
             </ul>
         </div>
