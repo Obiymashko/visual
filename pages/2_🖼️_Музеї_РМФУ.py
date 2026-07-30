@@ -7,27 +7,29 @@ import streamlit as st
 
 st.set_page_config(page_title="Дашборд: Музейний реєстр", layout="wide")
 
-# Точне налаштування CSS: Montserrat для контенту та графіків, захист іконок сайдбару та шапки
+# Надійне налаштування Montserrat + ТАБУ на зламування іконки сайдбару
 st.markdown(
     """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
 
-/* Застосовуємо Montserrat тільки до основного контенту */
-.main {
+/* Глобальне застосування шрифту Montserrat для всього додатку */
+html, body, [class*="css"], [class*="st-"], .stMarkdown, .stTable, div, span, p, h1, h2, h3, h4, h5, h6, li, button, input {
     font-family: 'Montserrat', sans-serif !important;
 }
 
-/* Захист іконок у бічній панелі (Sidebar) та верхньому меню */
-[data-testid="stSidebar"] *, 
-[data-testid="stHeader"] *,
-button[data-testid="stHeaderIconButton"] {
+/* ФІКС ІКОНКИ ЗГОРТАННЯ САЙДБАРУ (keyboard_double_arrow) */
+[data-testid="stSidebarCollapseButton"] button span,
+[data-testid="stSidebarCollapseButton"] button div,
+[data-testid="stSidebarNavSeparator"] {
     font-family: Source Sans Pro, -apple-system, BlinkMacSystemFont, Roboto, sans-serif !important;
 }
 
-/* Назви пунктів меню в сайдбарі залишаємо Montserrat */
-[data-testid="stSidebarNav"] span {
-    font-family: 'Montserrat', sans-serif !important;
+/* Безпечний захист для системного меню та перемикача теми */
+button[data-testid="stHeaderIconButton"], 
+[data-testid="stHeader"] *,
+[data-testid="stMainMenu"] * {
+    font-family: Source Sans Pro, -apple-system, BlinkMacSystemFont, Roboto, sans-serif !important;
 }
 
 /* Примусове застосування Montserrat до графіків Plotly */
@@ -126,7 +128,7 @@ def clean_chart_layout(fig, height=200):
 
 
 # --- ШАПКА ---
-st.title("❖ Музейний реєстр")
+st.title("Музейний реєстр")
 
 # --- КАРТКА: Всього музеїв державної власності ---
 colors_state_mus = ["#ef4444", "#f59e0b", "#10b981"]
@@ -189,8 +191,8 @@ file_path = os.path.join(parent_dir, file_name)
 
 if not os.path.exists(file_path):
     st.error(
-        f"❌ Файл `{file_name}` не знайдено у папці проєкту! Переконайтеся, що"
-        " він лежить у головній папці поруч із `app.py`."
+        f"Не знайдено файл `{file_name}` у папці проєкту! Переконайтеся, що він"
+        " лежить у головній папці поруч із `app.py`."
     )
     st.stop()
 
@@ -261,25 +263,22 @@ def load_rmfu_data(path):
 df_summary, df_museums = load_rmfu_data(file_path)
 
 c1, c2, c3, c4, c5 = st.columns(5)
-c1.metric("🏢 Всього музеїв", f"{int(df_summary['Кількість музеїв'].sum()):,}")
-c2.metric("📦 Всього предметів", f"{int(df_summary['Всього предметів'].sum()):,}")
-c3.metric(
-    "☑ Внесено предметів", f"{int(df_summary['Внесено предметів'].sum()):,}"
-)
+c1.metric("Всього музеїв", f"{int(df_summary['Кількість музеїв'].sum()):,}")
+c2.metric("Всього предметів", f"{int(df_summary['Всього предметів'].sum()):,}")
+c3.metric("Внесено предметів", f"{int(df_summary['Внесено предметів'].sum()):,}")
 c4.metric(
-    "✍ Основний фонд (підписано)",
+    "Основний фонд (підписано)",
     f"{int(df_summary['Основний фонд (підписано)'].sum()):,}",
 )
 c5.metric(
-    "✍ Спецфонд (підписано)",
-    f"{int(df_summary['Спецфонд (підписано)'].sum()):,}",
+    "Спецфонд (підписано)", f"{int(df_summary['Спецфонд (підписано)'].sum()):,}"
 )
 st.divider()
 
-tab1, tab2 = st.tabs(["📊 Зведення по областях", "🏛️ Помузейна деталізація"])
+tab1, tab2 = st.tabs(["Зведення по областях", "Помузейна деталізація"])
 
 with tab1:
-    st.subheader("▤ Зведена таблиця по регіонах України")
+    st.subheader("Зведена таблиця по регіонах України")
     st.dataframe(
         df_summary.sort_values(by="Внесено предметів", ascending=False),
         use_container_width=True,
@@ -301,10 +300,8 @@ with tab1:
 
     cg1, cg2 = st.columns(2)
     with cg1:
-        st.subheader("★ Топ областей за кількістю внесених предметів")
-        df_top = df_summary.sort_values(
-            by="Внесено предметів", ascending=True
-        )
+        st.subheader("Топ областей за кількістю внесених предметів")
+        df_top = df_summary.sort_values(by="Внесено предметів", ascending=True)
         fig_top = px.bar(
             df_top,
             x="Внесено предметів",
@@ -326,7 +323,7 @@ with tab1:
         st.plotly_chart(fig_top, use_container_width=True, config=plot_config)
 
     with cg2:
-        st.subheader("◫ Співвідношення: Основний vs Спецфонд (внесено)")
+        st.subheader("Співвідношення: Основний vs Спецфонд (внесено)")
         df_f = df_summary.sort_values(
             by="Основний фонд (внесено)", ascending=False
         )
@@ -357,22 +354,16 @@ with tab1:
                 orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1
             ),
         )
-        st.plotly_chart(
-            fig_fonds, use_container_width=True, config=plot_config
-        )
+        st.plotly_chart(fig_fonds, use_container_width=True, config=plot_config)
 
 with tab2:
-    st.subheader("🔍 Пошук та детальний аналіз по музеях")
+    st.subheader("Пошук та детальний аналіз по музеях")
     cf1, cf2 = st.columns([1, 2])
     reg = cf1.selectbox(
         "Фільтр по області:",
         ["Усі області"] + list(df_summary["Регіон"].unique()),
     )
-    q = (
-        cf2.text_input("Пошук музею (за назвою або ЄДРПОУ):", "")
-        .lower()
-        .strip()
-    )
+    q = cf2.text_input("Пошук музею (за назвою або ЄДРПОУ):", "").lower().strip()
 
     df_filt = df_museums.copy()
     if reg != "Усі області":
