@@ -57,7 +57,7 @@ plot_config = {
 
 # --- ШАПКА ТА ІНФОРМАЦІЯ ---
 st.title(":material/account_balance: єПам'ятка")
-st.caption(":material/calendar_today: **Дані актуальні на 27.07.2026**")
+st.caption(":material/calendar_today: **Дані актуальні на 29.07.2026**")
 
 # --- БЛОК 1 (Нерухомі об'єкти на обліку - 145,172) ---
 with st.container(border=True):
