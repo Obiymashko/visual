@@ -31,41 +31,58 @@ st.caption(":material/calendar_today: **Дані актуальні на 27.07.2
 
 st.markdown("**:material/info: Довідкова інформація щодо впровадження системи «ЄПам'ятка»:**")
 
-# --- ОКРЕМИЙ ВЕРХНІЙ БЛОК ДЛЯ ГОЛОВНОЇ ЦИФРИ (за вашим ескізом) ---
+# --- ОКРЕМИЙ ВЕРХНІЙ БЛОК 1 (Всього об'єктів) ---
 with st.container(border=True):
     top_left, top_right = st.columns([1.5, 3.5])
     
     with top_left:
-        st.markdown("<p style='font-size: 15px; margin-bottom: -15px; opacity: 0.8;'>:material/museum: Всього об'єктів на обліку</p>", unsafe_allow_html=True)
-        st.markdown("<h1 style='font-size: 4rem; font-weight: 900; margin-top: 0;'>144,643</h1>", unsafe_allow_html=True)
+        st.markdown("<div style='color: #8c92a4; font-size: 14px; margin-bottom: -15px;'>🏛️ Всього об'єктів на обліку</div>", unsafe_allow_html=True)
+        st.markdown("<h1 style='font-size: 4rem; font-weight: 900; margin-top: 0px; margin-bottom: 0px;'>144,643</h1>", unsafe_allow_html=True)
         
     with top_right:
-        # Місце для деталізації (можете змінити текст під ваші потреби)
         st.markdown("""
-        <div style='margin-top: 25px;'>
-            <ul style='font-size: 16px; opacity: 0.9; line-height: 1.6;'>
-                <li>Пам'ятки національного значення: <b>...</b></li>
-                <li>Пам'ятки місцевого значення: <b>...</b></li>
-                <li>Щойно виявлені об'єкти: <b>...</b></li>
+        <div style='margin-top: 15px;'>
+            <ul style='font-size: 15px; opacity: 0.9; line-height: 1.7;'>
+                <li>Пам'ятки національного значення: <b>[заглушка, чекаємо дані]</b></li>
+                <li>Пам'ятки місцевого значення: <b>[заглушка, чекаємо дані]</b></li>
+                <li>Щойно виявлені об'єкти: <b>[заглушка, чекаємо дані]</b></li>
             </ul>
         </div>
         """, unsafe_allow_html=True)
 
-# --- ДРУГИЙ БЛОК ДЛЯ ІНШИХ МЕТРИК ---
+# --- ОКРЕМИЙ ВЕРХНІЙ БЛОК 2 (Внесено до системи) ---
 with st.container(border=True):
-    b_col1, b_col2, b_col3, b_col4 = st.columns(4)
+    top_left2, top_right2 = st.columns([1.5, 3.5])
     
-    b_col1.metric(":material/cloud_upload: Внесено до системи", "105,987", "72% від загальної кількості", delta_color="normal")
+    with top_left2:
+        st.markdown("<div style='color: #8c92a4; font-size: 14px; margin-bottom: -15px;'>☁️ Внесено до системи</div>", unsafe_allow_html=True)
+        st.markdown("<h1 style='font-size: 4rem; font-weight: 900; margin-top: 0px; margin-bottom: 0px;'>105,987</h1>", unsafe_allow_html=True)
+        # Стилізований зелений підпис (імітація дельти Streamlit)
+        st.markdown("<div style='color: #00d26a; font-size: 14px; font-weight: 600; margin-top: -10px;'>↑ 72% від загальної кількості</div>", unsafe_allow_html=True)
+        
+    with top_right2:
+        st.markdown("""
+        <div style='margin-top: 15px;'>
+            <ul style='font-size: 15px; opacity: 0.9; line-height: 1.7;'>
+                <li>Деталізація пункт 1: <b>[заглушка, чекаємо дані]</b></li>
+                <li>Деталізація пункт 2: <b>[заглушка, чекаємо дані]</b></li>
+                <li>Деталізація пункт 3: <b>[заглушка, чекаємо дані]</b></li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+
+# --- БЛОК ДЛЯ ІНШИХ МЕТРИК ---
+with st.container(border=True):
+    b_col1, b_col2, b_col3 = st.columns(3)
     
-    b_col2.metric(
+    b_col1.metric(
         label=":material/how_to_reg: Внесено до Реєстру", 
         value="30,192", 
         delta="Разом з адресами, верифіковані та підтверджені Мінрегіоном", 
         delta_color="off"
     )
-    
-    b_col3.metric(":material/verified: Повністю верифіковано", "49")
-    b_col4.metric(":material/group: Підключено користувачів", "139")
+    b_col2.metric(":material/verified: Повністю верифіковано", "49")
+    b_col3.metric(":material/group: Підключено користувачів", "139")
 
 st.info("Включає кількість об'єктів національного значення в реєстрі та Пам’ятка національного значення – взято на державний облік відповідно до законодавства, що діяло до набрання чинності Закону України «Про охорону культурної спадщини»", icon="ℹ️")
 
