@@ -128,7 +128,7 @@ with st.container(border=True):
             unsafe_allow_html=True,
         )
 
-# --- БЛОК 3 (Користувачі - 227) ---
+# --- БЛОК 3 (Користувачі - 226) ---
 with st.container(border=True):
     top_left3, top_right3 = st.columns([1.5, 3.5])
 
@@ -138,7 +138,11 @@ with st.container(border=True):
             unsafe_allow_html=True,
         )
         st.markdown(
-            "<h1 class='big-number'>227</h1>",
+            "<h1 class='big-number'>226</h1>",
+            unsafe_allow_html=True,
+        )
+        st.markdown(
+            "<div style='color: #00d26a; font-size: 14px; font-weight: 700; margin-top: 5px;'>↑ 86% користувачі ОВА та КП</div>",
             unsafe_allow_html=True,
         )
 
