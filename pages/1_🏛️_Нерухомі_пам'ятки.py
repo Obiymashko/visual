@@ -11,18 +11,30 @@ st.set_page_config(
     layout="wide",
 )
 
-# Точне налаштування шрифтів для Streamlit та Plotly Canvas
+# Точне налаштування CSS: Montserrat для контенту та графіків, захист іконок сайдбару
 st.markdown(
     """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
 
-/* Глобальний CSS для сторінки */
-html, body, [class*="css"], [class*="st-"] {
+/* Застосовуємо Montserrat тільки до основного контенту */
+.main {
     font-family: 'Montserrat', sans-serif !important;
 }
 
-/* Примусове застосування Montserrat до графіків Plotly (текст, осі, тултіпи) */
+/* Захист іконок у бічній панелі (Sidebar) та верхньому меню */
+[data-testid="stSidebar"] *, 
+[data-testid="stHeader"] *,
+button[data-testid="stHeaderIconButton"] {
+    font-family: Source Sans Pro, -apple-system, BlinkMacSystemFont, Roboto, sans-serif !important;
+}
+
+/* Назви пунктів меню в сайдбарі залишаємо Montserrat */
+[data-testid="stSidebarNav"] span {
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+/* Примусове застосування Montserrat до графіків Plotly */
 .js-plotly-plot .plotly text,
 .js-plotly-plot .plotly .hovertext,
 .js-plotly-plot .plotly .gtitle,
@@ -259,7 +271,9 @@ with st.container(border=True):
         fig0.update_layout(
             margin=dict(l=10, r=60, t=10, b=10),
             xaxis=dict(visible=False),
-            yaxis=dict(title="", tickfont=dict(size=11, family="Montserrat, sans-serif")),
+            yaxis=dict(
+                title="", tickfont=dict(size=11, family="Montserrat, sans-serif")
+            ),
         )
         st.plotly_chart(fig0, use_container_width=True, config=plot_config)
 
