@@ -290,35 +290,8 @@ if df.empty:
     st.warning("⚠️ Не знайдено даних.")
     st.stop()
 
-# --- ГРАФІКИ ---
-st.subheader(":material/leaderboard: Рейтинг областей за відсотком виконання")
-fig_bar = px.bar(
-    df.sort_values(by=col_perc, ascending=True),
-    x=col_perc,
-    y="Регіон",
-    orientation="h",
-    text=df.sort_values(by=col_perc, ascending=True)[col_perc].apply(
-        lambda x: f"{x:.1f}%"
-    ),
-    color=col_perc,
-    color_continuous_scale="RdYlGn",
-    height=750,
-)
-fig_bar.update_traces(textposition="outside")
-fig_bar.update_layout(
-    template="plotly_white",
-    margin=dict(l=0, r=50, t=30, b=0),
-    xaxis_title="% Внесено карток",
-    yaxis_title="",
-    coloraxis_showscale=False,
-)
-st.plotly_chart(fig_bar, use_container_width=True, config=plot_config)
-
-st.divider()
-
-st.subheader(
-    ":material/stacked_bar_chart: Порівняння: Реєстр Мінкульту vs Картки в ЄПам'ятка"
-)
+# --- ГРАФІК ---
+st.subheader(":material/stacked_bar_chart: Об'єкти національного значення в єПам'ятці")
 df_sorted = df.sort_values(by=col_reestr, ascending=False)
 fig_comp = go.Figure(
     data=[
@@ -331,7 +304,7 @@ fig_comp = go.Figure(
         go.Bar(
             x=df_sorted["Регіон"],
             y=df_sorted[col_cards],
-            name="Внесено в ЄПам'ятка",
+            name="Внесено в єПам'ятку",
             marker_color="#3b82f6",
         ),
     ]
