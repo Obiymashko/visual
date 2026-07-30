@@ -154,7 +154,6 @@ colors0 = [
     "#06B6D4",
 ]
 colors2 = ["#2563EB", "#16A34A", "#F59E0B", "#DC2626", "#9333EA"]
-colors4 = ["#16A34A", "#2563EB", "#F59E0B"]
 colors5 = ["#16A34A", "#94A3B8"]
 colors3 = ["#2563EB", "#16A34A", "#F59E0B"]
 
@@ -179,8 +178,11 @@ with st.container(border=True):
     with top_mid1:
         st.markdown(
             f"""
+            <div style='background-color: #f8fafc; border-left: 3px solid #2563eb; padding: 6px 12px; margin-bottom: 10px; border-radius: 4px;'>
+                <span style='font-size: 13px; color: #64748b; font-weight: 600;'>Внесено до Державного реєстру нерухомих пам'яток усього:</span><br>
+                <b style='font-size: 18px; color: #1e293b;'>38,212</b>
+            </div>
             <ul class='sub-list'>
-                <li style='padding-left: 0px;'><b>Внесено до Державного реєстру нерухомих пам'яток усього: 38,212</b></li>
                 <li><span class='color-dot' style='background-color: {colors1[0]};'></span>Внесено до Державного реєстру нерухомих пам'яток національного значення: <b>3,415</b></li>
                 <li><span class='color-dot' style='background-color: {colors1[1]};'></span>Внесено до Державного реєстру нерухомих пам'яток місцевого значення: <b>32,809</b></li>
                 <li><span class='color-dot' style='background-color: {colors1[2]};'></span>Щойно виявлені об'єкти: <b>28,772</b></li>
@@ -211,10 +213,12 @@ with st.container(border=True):
                     marker_colors=colors1,
                     textinfo="percent",
                     insidetextorientation="radial",
+                    hoverinfo="label+value+percent",
                 )
             ]
         )
         fig1 = clean_chart_layout(fig1, height=210)
+        fig1.update_traces(textposition="inside")
         st.plotly_chart(fig1, use_container_width=True, config=plot_config)
 
 # --- БЛОК 2 (Загальна кількість пам'яток, за видом - 116,500) ---
@@ -341,50 +345,10 @@ with st.container(border=True):
             ]
         )
         fig2 = clean_chart_layout(fig2, height=190)
+        fig2.update_traces(textposition="inside")
         st.plotly_chart(fig2, use_container_width=True, config=plot_config)
 
-# --- БЛОК 4 (Історико-культурні території - 405) ---
-with st.container(border=True):
-    top_left4, top_mid4, top_right4 = st.columns(
-        [1.8, 2.0, 1.2], vertical_alignment="top"
-    )
-
-    with top_left4:
-        st.markdown(
-            """
-            <div class='left-stat-block'>
-                <div class='stat-title'>Історико-культурні території</div>
-                <h1 class='big-number'>405</h1>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-
-    with top_mid4:
-        st.markdown(
-            f"""
-            <ul class='sub-list'>
-                <li><span class='color-dot' style='background-color: {colors4[0]};'></span>Оцифровано історико-культурних територій: <b>178</b></li>
-                <li><span class='color-dot' style='background-color: {colors4[1]};'></span>Розгорнуто історико-культурних територій в єПам'ятці з геоданими: <b>15</b></li>
-                <li><span class='color-dot' style='background-color: {colors4[2]};'></span>Підготовлено до розгортання в єПам'ятці: <b>158</b></li>
-            </ul>
-            """,
-            unsafe_allow_html=True,
-        )
-
-    with top_right4:
-        fig4 = go.Figure(
-            go.Funnel(
-                y=["Оцифровано", "Підготовлено", "З геоданими"],
-                x=[178, 158, 15],
-                textinfo="value",
-                marker={"color": colors4},
-            )
-        )
-        fig4 = clean_chart_layout(fig4, height=160)
-        st.plotly_chart(fig4, use_container_width=True, config=plot_config)
-
-# --- БЛОК 5 (Картки національного значення - 1,043) ---
+# --- БЛОК 4 (Картки національного значення - 1,043) ---
 with st.container(border=True):
     top_left5, top_mid5, top_right5 = st.columns(
         [1.8, 2.0, 1.2], vertical_alignment="top"
@@ -431,7 +395,7 @@ with st.container(border=True):
         fig5 = clean_chart_layout(fig5, height=140)
         st.plotly_chart(fig5, use_container_width=True, config=plot_config)
 
-# --- БЛОК 6 (Користувачі - 226) ---
+# --- БЛОК 5 (Користувачі - 226) ---
 with st.container(border=True):
     top_left3, top_mid3, top_right3 = st.columns(
         [1.8, 2.0, 1.2], vertical_alignment="top"
