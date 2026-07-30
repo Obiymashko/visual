@@ -11,21 +11,22 @@ st.set_page_config(
     layout="wide",
 )
 
-# Підключення Montserrat ТА Material Icons у CSS
+# Точне налаштування шрифтів без шкоди для системних іконок Streamlit
 st.markdown(
     """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0');
 
-/* Глобальний шрифт Montserrat */
-html, body, [class*="css"], [class*="st-"], div, span, p, h1, h2, h3, h4, h5, h6, li, button, input {
+/* Шрифт Montserrat для всього тексту, ОКРІМ елементів іконок */
+html, body, [class*="css"], [class*="st-"]:not([data-testid="stIconMaterial"]), 
+div:not([data-testid="stIconMaterial"]), span:not([data-testid="stIconMaterial"]), 
+p, h1, h2, h3, h4, h5, h6, li, button, input {
     font-family: 'Montserrat', sans-serif !important;
 }
 
-/* Відновлення іконок Streamlit / Material */
-.material-symbols-outlined, [data-testid="stIconMaterial"] {
-    font-family: 'Material Symbols Outlined' !important;
+/* Примусове збереження шрифту іконок Material */
+[data-testid="stIconMaterial"], .material-symbols-outlined {
+    font-family: 'Material Symbols Outlined', 'Material Icons', sans-serif !important;
 }
 
 /* Стилі для великих чисел */
