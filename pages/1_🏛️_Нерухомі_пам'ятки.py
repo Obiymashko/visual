@@ -147,7 +147,9 @@ with st.container(border=True):
             """
         <div style='margin-top: 5px;'>
             <ul class='sub-list'>
-                <li>Активних: <b>183</b></li>
+                <li>Користувачі ОВА та КП: <b>195</b></li>
+                <li>Мінкульт: <b>13</b></li>
+                <li>Адміністратори: <b>18</b></li>
             </ul>
         </div>
         """,
