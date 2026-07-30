@@ -34,11 +34,12 @@ with st.container(border=True):
     info_col1.metric(":material/museum: Всього об'єктів на обліку", "144,643")
     info_col2.metric(":material/cloud_upload: Внесено до системи", "105,987", "72% від загальної кількості", delta_color="normal")
     
-    # ТУТ ДОДАНО ПРИМІТКУ ЧЕРЕЗ ПАРАМЕТР help
+    # ТУТ ДОДАНО ВАШУ ПРИМІТКУ ПРО МІНРЕГІОН (сірим кольором)
     info_col3.metric(
-        ":material/how_to_reg: Внесено до Реєстру", 
-        "30,192", 
-        help="Разом з адресами, верифіковані та підтверджені спільно з Мінрегіоном"
+        label=":material/how_to_reg: Внесено до Реєстру", 
+        value="30,192", 
+        delta="Разом з адресами, верифіковані та підтверджені Мінрегіоном", 
+        delta_color="off"
     )
     
     info_col4.metric(":material/verified: Повністю верифіковано", "49")
