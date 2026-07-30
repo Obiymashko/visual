@@ -33,13 +33,20 @@ with st.container(border=True):
     
     info_col1.metric(":material/museum: Всього об'єктів на обліку", "144,643")
     info_col2.metric(":material/cloud_upload: Внесено до системи", "105,987", "72% від загальної кількості", delta_color="normal")
-    info_col3.metric(":material/how_to_reg: Внесено до Реєстру", "30,192")
+    
+    # ТУТ ДОДАНО ПРИМІТКУ ЧЕРЕЗ ПАРАМЕТР help
+    info_col3.metric(
+        ":material/how_to_reg: Внесено до Реєстру", 
+        "30,192", 
+        help="Разом з адресами, верифіковані та підтверджені спільно з Мінрегіоном"
+    )
+    
     info_col4.metric(":material/verified: Повністю верифіковано", "49")
     info_col5.metric(":material/group: Підключено користувачів", "139")
 
 st.info("Включає кількість об'єктів національного значення в реєстрі та Пам’ятка національного значення – взято на державний облік відповідно до законодавства, що діяло до набрання чинності Закону України «Про охорону культурної спадщини»", icon="ℹ️")
 
-# --- АВТОМАТИЧНЕ ЗАВАНТАЖЕННЯ ФАЙЛУ (Без бокового меню) ---
+# --- АВТОМАТИЧНЕ ЗАВАНТАЖЕННЯ ФАЙЛУ ---
 current_dir = os.getcwd()
 parent_dir = os.path.dirname(current_dir) if os.path.basename(current_dir) == 'pages' else current_dir
 file_name = "свод нерухома обл 2026 (1).xlsx"
@@ -50,7 +57,6 @@ if not os.path.exists(file_path):
     st.stop()
 
 xls = pd.ExcelFile(file_path)
-# Автоматично беремо ПЕРШИЙ аркуш (ніяких випадаючих списків)
 selected_sheet = xls.sheet_names[0]
 
 # Точні повні назви колонок БЕЗ переносів
