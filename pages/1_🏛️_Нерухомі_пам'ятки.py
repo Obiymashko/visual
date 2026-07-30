@@ -121,7 +121,7 @@ with st.container(border=True):
                 <li>Пам'ятки місцевого значення: <b>79,765</b></li>
                 <li>Щойно виявлені об'єкти культурної спадщини: <b>470</b></li>
                 <li>Історико-культурні території: <b>405</b></li>
-                <li>Не визначено користувачем: <b>20,753</b></li>
+                <li>Не визначено користувачем: <b>20,683</b></li>
             </ul>
         </div>
         """,
@@ -159,6 +159,8 @@ with st.container(border=True):
         """,
             unsafe_allow_html=True,
         )
+
+st.divider()
 
 # --- АВТОМАТИЧНЕ ЗАВАНТАЖЕННЯ ФАЙЛУ ---
 current_dir = os.getcwd()
@@ -288,37 +290,6 @@ if df.empty:
     st.warning("⚠️ Не знайдено даних.")
     st.stop()
 
-tot_reestr, tot_cards = int(df[col_reestr].sum()), int(df[col_cards].sum())
-avg_perc = (tot_cards / tot_reestr * 100) if tot_reestr > 0 else 0
-
-# --- ГОЛОВНІ ДИНАМІЧНІ МЕТРИКИ ---
-cols_metric = st.columns(
-    3 + sum(1 for c in [col_draft_all, col_draft_nac] if c in df.columns)
-)
-idx = 0
-
-if col_draft_all in df.columns:
-    cols_metric[idx].metric(
-        f":material/draft: {col_draft_all}", f"{int(df[col_draft_all].sum()):,}"
-    )
-    idx += 1
-cols_metric[idx].metric(
-    f":material/trending_up: {col_perc}", f"{avg_perc:.1f}%"
-)
-idx += 1
-cols_metric[idx].metric(f":material/list_alt: {col_reestr}", f"{tot_reestr:,}")
-idx += 1
-cols_metric[idx].metric(
-    f":material/check_circle: {col_cards}", f"{tot_cards:,}"
-)
-idx += 1
-if col_draft_nac in df.columns:
-    cols_metric[idx].metric(
-        f":material/draft: {col_draft_nac}", f"{int(df[col_draft_nac].sum()):,}"
-    )
-
-st.divider()
-
 # --- ГРАФІКИ ---
 st.subheader(":material/leaderboard: Рейтинг областей за відсотком виконання")
 fig_bar = px.bar(
@@ -375,32 +346,3 @@ fig_comp.update_layout(
     ),
 )
 st.plotly_chart(fig_comp, use_container_width=True, config=plot_config)
-
-st.divider()
-
-# --- ДЕТАЛЬНА ТАБЛИЦЯ ---
-st.subheader(":material/table: Детальна таблиця")
-col_cfg = {
-    "Регіон": st.column_config.TextColumn("Регіон", width="medium"),
-    col_perc: st.column_config.ProgressColumn(
-        col_perc,
-        format="%.1f%%",
-        min_value=0,
-        max_value=(
-            100 if df[col_perc].max() <= 100 else int(df[col_perc].max())
-        ),
-        width="large",
-    ),
-    col_reestr: st.column_config.NumberColumn(col_reestr, width="large"),
-    col_cards: st.column_config.NumberColumn(col_cards, width="large"),
-}
-if col_draft_all in df.columns:
-    col_cfg[col_draft_all] = st.column_config.NumberColumn(
-        col_draft_all, width="medium"
-    )
-if col_draft_nac in df.columns:
-    col_cfg[col_draft_nac] = st.column_config.NumberColumn(
-        col_draft_nac, width="large"
-    )
-
-st.dataframe(df, use_container_width=True, hide_index=True, column_config=col_cfg)
