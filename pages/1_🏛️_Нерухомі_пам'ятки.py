@@ -11,7 +11,7 @@ st.set_page_config(
     layout="wide",
 )
 
-# CSS для красивих розмірів та відступів
+# CSS для красивих розмірів, відступів та кольорових маркерів
 st.markdown(
     """
 <style>
@@ -29,10 +29,27 @@ st.markdown(
     opacity: 0.95 !important;
     line-height: 1.8 !important;
     margin: 0 !important;
-    padding-left: 20px !important;
+    padding-left: 0px !important;
+    list-style-type: none !important;
+}
+.sub-list li {
+    position: relative;
+    padding-left: 22px;
+    margin-bottom: 4px;
 }
 .sub-list b {
     font-weight: 900 !important;
+}
+
+/* Кольорові маркери перед пунктами */
+.color-dot {
+    height: 12px;
+    width: 12px;
+    border-radius: 50%;
+    display: inline-block;
+    position: absolute;
+    left: 0;
+    top: 6px;
 }
 
 /* Зелені підписи */
@@ -46,82 +63,136 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-plot_config = {
-    "displayModeBar": False
-}
+plot_config = {"displayModeBar": False}
 
-def clean_chart_layout(fig, height=180):
+
+def clean_chart_layout(fig, height=200):
     fig.update_layout(
         height=height,
         margin=dict(l=10, r=10, t=10, b=10),
         template="plotly_white",
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
-        showlegend=False
+        showlegend=False,
     )
     return fig
+
 
 # --- ШАПКА ТА ІНФОРМАЦІЯ ---
 st.title(":material/account_balance: єПам'ятка")
 st.caption(":material/calendar_today: **Дані актуальні на 29.07.2026**")
 
+# Кольорові палітри для кожного блоку
+colors1 = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6", "#6b7280"]
+colors0 = [
+    "#3b82f6",
+    "#10b981",
+    "#f59e0b",
+    "#ef4444",
+    "#8b5cf6",
+    "#ec4899",
+    "#14b8a6",
+]
+colors2 = ["#3b82f6", "#60a5fa", "#93c5fd", "#f59e0b", "#6b7280"]
+colors4 = ["#10b981", "#3b82f6", "#f59e0b"]
+colors5 = ["#10b981", "#6b7280"]
+colors3 = ["#3b82f6", "#10b981", "#f59e0b"]
+
 # --- БЛОК 1 (Нерухомі об'єкти на обліку - 145,172) ---
 with st.container(border=True):
-    top_left1, top_mid1, top_right1 = st.columns([1.5, 2.2, 1.3], vertical_alignment="center")
+    top_left1, top_mid1, top_right1 = st.columns(
+        [1.5, 2.3, 1.2], vertical_alignment="center"
+    )
 
     with top_left1:
         st.markdown(
-            "**:material/account_balance: <span style='color: #8c92a4; font-weight: 600; font-size: 14px;'>Нерухомі об'єкти культурної спадщини які знаходяться на обліку</span>**",
+            "**:material/account_balance: <span style='color: #8c92a4;"
+            " font-weight: 600; font-size: 14px;'>Нерухомі об'єкти культурної"
+            " спадщини які знаходяться на обліку</span>**",
             unsafe_allow_html=True,
         )
-        st.markdown("<h1 class='big-number'>145,172</h1>", unsafe_allow_html=True)
-        st.markdown("<div class='green-tag'>за інформацією з офіційного звіту Мінкульту до Держстату за 2025 рік</div>", unsafe_allow_html=True)
+        st.markdown(
+            "<h1 class='big-number'>145,172</h1>", unsafe_allow_html=True
+        )
+        st.markdown(
+            "<div class='green-tag'>за інформацією з офіційного звіту Мінкульту"
+            " до Держстату за 2025 рік</div>",
+            unsafe_allow_html=True,
+        )
 
     with top_mid1:
         st.markdown(
-            """
+            f"""
             <ul class='sub-list'>
-                <li>Об'єкти всесвітньої спадщини ЮНЕСКО: <b>8</b></li>
-                <li>Внесено до державного реєстру нерухомих пам'яток нац. значення: <b>3,415</b></li>
-                <li>Внесено до державного реєстру нерухомих пам'яток місц. значення: <b>32,809</b></li>
-                <li>Щойно виявлені об'єкти: <b>28,772</b></li>
-                <li>Знято з обліку у 2025 році: <b>347</b></li>
-                <li>Не визначено категорію: <b>79,929</b></li>
+                <li><span class='color-dot' style='background-color: {colors1[0]};'></span>Об'єкти всесвітньої спадщини ЮНЕСКО: <b>8</b></li>
+                <li><span class='color-dot' style='background-color: {colors1[1]};'></span>Внесено до державного реєстру нерухомих пам'яток нац. значення: <b>3,415</b></li>
+                <li><span class='color-dot' style='background-color: {colors1[2]};'></span>Внесено до державного реєстру нерухомих пам'яток місц. значення: <b>32,809</b></li>
+                <li><span class='color-dot' style='background-color: {colors1[3]};'></span>Щойно виявлені об'єкти: <b>28,772</b></li>
+                <li><span class='color-dot' style='background-color: {colors1[4]};'></span>Знято з обліку у 2025 році: <b>347</b></li>
+                <li><span class='color-dot' style='background-color: {colors1[5]};'></span>Не визначено категорію: <b>79,929</b></li>
             </ul>
             """,
             unsafe_allow_html=True,
         )
 
     with top_right1:
-        labels1 = ["ЮНЕСКО", "Нац. значення", "Місц. значення", "Щойно виявлені", "Не визначено"]
-        values1 = [8, 3415, 32809, 28772, 79929]
-        fig1 = go.Figure(data=[go.Pie(labels=labels1, values=values1, hole=.6, textinfo='none')])
-        fig1 = clean_chart_layout(fig1, height=200)
+        labels1 = [
+            "ЮНЕСКО",
+            "Реєстр нац.",
+            "Реєстр місц.",
+            "Щойно виявлені",
+            "Знято з обліку",
+            "Не визначено",
+        ]
+        values1 = [8, 3415, 32809, 28772, 347, 79929]
+        fig1 = go.Figure(
+            data=[
+                go.Pie(
+                    labels=labels1,
+                    values=values1,
+                    hole=0.55,
+                    marker_colors=colors1,
+                    textinfo="percent",
+                    insidetextorientation="radial",
+                )
+            ]
+        )
+        fig1 = clean_chart_layout(fig1, height=210)
         st.plotly_chart(fig1, use_container_width=True, config=plot_config)
 
 # --- БЛОК 2 (Загальна кількість пам'яток, за видом - 116,500) ---
 with st.container(border=True):
-    top_left0, top_mid0, top_right0 = st.columns([1.5, 2.2, 1.3], vertical_alignment="center")
+    top_left0, top_mid0, top_right0 = st.columns(
+        [1.5, 2.3, 1.2], vertical_alignment="center"
+    )
 
     with top_left0:
         st.markdown(
-            "**:material/collections_bookmark: <span style='color: #8c92a4; font-weight: 600; font-size: 14px;'>Загальна кількість пам'яток, за видом</span>**",
+            "**:material/collections_bookmark: <span style='color: #8c92a4;"
+            " font-weight: 600; font-size: 14px;'>Загальна кількість пам'яток,"
+            " за видом</span>**",
             unsafe_allow_html=True,
         )
-        st.markdown("<h1 class='big-number'>116,500</h1>", unsafe_allow_html=True)
-        st.markdown("<div class='green-tag'>за інформацією з офіційного звіту Мінкульту до Держстату за 2025 рік</div>", unsafe_allow_html=True)
+        st.markdown(
+            "<h1 class='big-number'>116,500</h1>", unsafe_allow_html=True
+        )
+        st.markdown(
+            "<div class='green-tag'>за інформацією з офіційного звіту Мінкульту"
+            " до Держстату за 2025 рік</div>",
+            unsafe_allow_html=True,
+        )
 
     with top_mid0:
         st.markdown(
-            """
+            f"""
             <ul class='sub-list'>
-                <li>Археологічні: <b>65,891</b></li>
-                <li>Історичні: <b>35,654</b></li>
-                <li>Архітектури та містобудування: <b>11,892</b></li>
-                <li>Монументального мистецтва: <b>2,567</b></li>
-                <li>Ландшафтні: <b>198</b></li>
-                <li>Садово-паркового мистецтва: <b>177</b></li>
-                <li>Науки і техніки: <b>121</b></li>
+                <li><span class='color-dot' style='background-color: {colors0[0]};'></span>Археологічні: <b>65,891</b></li>
+                <li><span class='color-dot' style='background-color: {colors0[1]};'></span>Історичні: <b>35,654</b></li>
+                <li><span class='color-dot' style='background-color: {colors0[2]};'></span>Архітектури та містобудування: <b>11,892</b></li>
+                <li><span class='color-dot' style='background-color: {colors0[3]};'></span>Монументального мистецтва: <b>2,567</b></li>
+                <li><span class='color-dot' style='background-color: {colors0[4]};'></span>Ландшафтні: <b>198</b></li>
+                <li><span class='color-dot' style='background-color: {colors0[5]};'></span>Садово-паркового мистецтва: <b>177</b></li>
+                <li><span class='color-dot' style='background-color: {colors0[6]};'></span>Науки і техніки: <b>121</b></li>
             </ul>
             """,
             unsafe_allow_html=True,
@@ -129,134 +200,199 @@ with st.container(border=True):
 
     with top_right0:
         df_vyd = pd.DataFrame({
-            "Вид": ["Археол.", "Істор.", "Архіт.", "Монум.", "Інші"],
-            "Кількість": [65891, 35654, 11892, 2567, 198+177+121]
-        })
-        fig0 = px.bar(df_vyd, y="Вид", x="Кількість", orientation='h', color="Кількість", color_continuous_scale="Viridis")
-        fig0 = clean_chart_layout(fig0, height=220)
-        fig0.update_layout(coloraxis_showscale=False, xaxis=dict(visible=False), yaxis=dict(title=""))
+            "Вид": [
+                "Археол.",
+                "Істор.",
+                "Архіт.",
+                "Монум.",
+                "Ландш.",
+                "Сад.-парк.",
+                "Науки",
+            ],
+            "Кількість": [65891, 35654, 11892, 2567, 198, 177, 121],
+            "Колір": colors0,
+        }).iloc[::-1]
+
+        fig0 = go.Figure(
+            go.Bar(
+                y=df_vyd["Вид"],
+                x=df_vyd["Кількість"],
+                orientation="h",
+                text=df_vyd["Кількість"].apply(lambda x: f"{x:,}"),
+                textposition="outside",
+                marker_color=df_vyd["Колір"],
+            )
+        )
+        fig0 = clean_chart_layout(fig0, height=230)
+        fig0.update_layout(
+            xaxis=dict(visible=False), yaxis=dict(title="", tickfont=dict(size=11))
+        )
         st.plotly_chart(fig0, use_container_width=True, config=plot_config)
 
 # --- БЛОК 3 (Внесено до системи єПам'ятка - 105,988) ---
 with st.container(border=True):
-    top_left2, top_mid2, top_right2 = st.columns([1.5, 2.2, 1.3], vertical_alignment="center")
+    top_left2, top_mid2, top_right2 = st.columns(
+        [1.5, 2.3, 1.2], vertical_alignment="center"
+    )
 
     with top_left2:
         st.markdown(
-            "**:material/cloud_upload: <span style='color: #8c92a4; font-weight: 600; font-size: 14px;'>Внесено до системи єПам'ятка</span>**",
+            "**:material/cloud_upload: <span style='color: #8c92a4;"
+            " font-weight: 600; font-size: 14px;'>Внесено до системи"
+            " єПам'ятка</span>**",
             unsafe_allow_html=True,
         )
-        st.markdown("<h1 class='big-number'>105,988</h1>", unsafe_allow_html=True)
-        st.markdown("<div class='green-tag'>↑ 73% від загальної кількості</div>", unsafe_allow_html=True)
+        st.markdown(
+            "<h1 class='big-number'>105,988</h1>", unsafe_allow_html=True
+        )
+        st.markdown(
+            "<div class='green-tag'>↑ 73% від загальної кількості</div>",
+            unsafe_allow_html=True,
+        )
 
     with top_mid2:
         st.markdown(
-            """
+            f"""
             <ul class='sub-list'>
-                <li>Пам'ятки національного значення: <b>4,595</b></li>
-                <li>Пам'ятки місцевого значення: <b>79,765</b></li>
-                <li>Щойно виявлені об'єкти культурної спадщини: <b>470</b></li>
-                <li>Об'єкти всесвітньої спадщини ЮНЕСКО: <b>70</b></li>
-                <li>Користувач не визначив статус: <b>20,683</b></li>
+                <li><span class='color-dot' style='background-color: {colors2[0]};'></span>Пам'ятки національного значення: <b>4,595</b></li>
+                <li><span class='color-dot' style='background-color: {colors2[1]};'></span>Пам'ятки місцевого значення: <b>79,765</b></li>
+                <li><span class='color-dot' style='background-color: {colors2[2]};'></span>Щойно виявлені об'єкти культурної спадщини: <b>470</b></li>
+                <li><span class='color-dot' style='background-color: {colors2[3]};'></span>Об'єкти всесвітньої спадщини ЮНЕСКО: <b>70</b></li>
+                <li><span class='color-dot' style='background-color: {colors2[4]};'></span>Користувач не визначив статус: <b>20,683</b></li>
             </ul>
             """,
             unsafe_allow_html=True,
         )
 
     with top_right2:
-        labels2 = ["Національні", "Місцеві", "Щойно виявлені", "ЮНЕСКО", "Не визначено"]
+        labels2 = [
+            "Національні",
+            "Місцеві",
+            "Щойно виявлені",
+            "ЮНЕСКО",
+            "Не визначено",
+        ]
         values2 = [4595, 79765, 470, 70, 20683]
-        fig2 = go.Figure(data=[go.Pie(labels=labels2, values=values2, hole=.6, marker_colors=['#3b82f6', '#60a5fa', '#93c5fd', '#f59e0b', '#d1d5db'])])
+        fig2 = go.Figure(
+            data=[
+                go.Pie(
+                    labels=labels2,
+                    values=values2,
+                    hole=0.55,
+                    marker_colors=colors2,
+                    textinfo="percent",
+                    insidetextorientation="radial",
+                )
+            ]
+        )
         fig2 = clean_chart_layout(fig2, height=190)
         st.plotly_chart(fig2, use_container_width=True, config=plot_config)
 
 # --- БЛОК 4 (Історико-культурні території - 405) ---
 with st.container(border=True):
-    top_left4, top_mid4, top_right4 = st.columns([1.5, 2.2, 1.3], vertical_alignment="center")
+    top_left4, top_mid4, top_right4 = st.columns(
+        [1.5, 2.3, 1.2], vertical_alignment="center"
+    )
 
     with top_left4:
         st.markdown(
-            "**:material/map: <span style='color: #8c92a4; font-weight: 600; font-size: 14px;'>Історико-культурні території</span>**",
+            "**:material/map: <span style='color: #8c92a4; font-weight:"
+            " 600; font-size: 14px;'>Історико-культурні території</span>**",
             unsafe_allow_html=True,
         )
         st.markdown("<h1 class='big-number'>405</h1>", unsafe_allow_html=True)
 
     with top_mid4:
         st.markdown(
-            """
+            f"""
             <ul class='sub-list'>
-                <li>Оцифровано історико-культурних територій: <b>178</b></li>
-                <li>Розгорнуто історико-культурних територій в єПам'ятці з геоданими: <b>15</b></li>
-                <li>Підготовлено до розгортання в єПам'ятці: <b>158</b></li>
+                <li><span class='color-dot' style='background-color: {colors4[0]};'></span>Оцифровано історико-культурних територій: <b>178</b></li>
+                <li><span class='color-dot' style='background-color: {colors4[1]};'></span>Розгорнуто історико-культурних територій в єПам'ятці з геоданими: <b>15</b></li>
+                <li><span class='color-dot' style='background-color: {colors4[2]};'></span>Підготовлено до розгортання в єПам'ятці: <b>158</b></li>
             </ul>
             """,
             unsafe_allow_html=True,
         )
 
     with top_right4:
-        fig4 = go.Figure(go.Funnel(
-            y = ["Всього", "Оцифровано", "Підготовлено", "З геоданими"],
-            x = [405, 178, 158, 15],
-            textinfo = "value"
-        ))
+        fig4 = go.Figure(
+            go.Funnel(
+                y=["Оцифровано", "Підготовлено", "З геоданими"],
+                x=[178, 158, 15],
+                textinfo="value",
+                marker={"color": colors4},
+            )
+        )
         fig4 = clean_chart_layout(fig4, height=160)
         st.plotly_chart(fig4, use_container_width=True, config=plot_config)
 
 # --- БЛОК 5 (Картки національного значення, що підлягають верифікації в єПам'ятці - 1,043) ---
 with st.container(border=True):
-    top_left5, top_mid5, top_right5 = st.columns([1.5, 2.2, 1.3], vertical_alignment="center")
+    top_left5, top_mid5, top_right5 = st.columns(
+        [1.5, 2.3, 1.2], vertical_alignment="center"
+    )
 
     with top_left5:
         st.markdown(
-            "**:material/fact_check: <span style='color: #8c92a4; font-weight: 600; font-size: 14px;'>Картки національного значення, що підлягають верифікації в єПам'ятці</span>**",
+            "**:material/fact_check: <span style='color: #8c92a4; font-weight:"
+            " 600; font-size: 14px;'>Картки національного значення, що підлягають"
+            " верифікації в єПам'ятці</span>**",
             unsafe_allow_html=True,
         )
         st.markdown("<h1 class='big-number'>1,043</h1>", unsafe_allow_html=True)
 
     with top_mid5:
         st.markdown(
-            """
+            f"""
             <ul class='sub-list'>
-                <li>Верифіковано Спадщиною: <b>65</b></li>
-                <li>Верифіковано без зауважень Управлінням дозвільно-погоджувальної документації: <b>0</b></li>
+                <li><span class='color-dot' style='background-color: {colors5[0]};'></span>Верифіковано Спадщиною: <b>65</b></li>
+                <li><span class='color-dot' style='background-color: {colors5[1]};'></span>Верифіковано без зауважень Управлінням дозвільно-погоджувальної документації: <b>0</b></li>
             </ul>
             """,
             unsafe_allow_html=True,
         )
 
     with top_right5:
-        fig5 = go.Figure(go.Indicator(
-            mode = "gauge+number",
-            value = 65,
-            domain = {'x': [0, 1], 'y': [0, 1]},
-            gauge = {
-                'axis': {'range': [None, 1043], 'visible': False},
-                'bar': {'color': "#10b981"},
-                'bgcolor': "#e5e7eb",
-            }
-        ))
+        fig5 = go.Figure(
+            go.Indicator(
+                mode="gauge+number",
+                value=65,
+                number={"suffix": " / 1,043", "font": {"size": 18}},
+                gauge={
+                    "axis": {"range": [None, 1043], "visible": False},
+                    "bar": {"color": colors5[0]},
+                    "bgcolor": "#e5e7eb",
+                },
+            )
+        )
         fig5 = clean_chart_layout(fig5, height=140)
         st.plotly_chart(fig5, use_container_width=True, config=plot_config)
 
 # --- БЛОК 6 (Користувачі - 226) ---
 with st.container(border=True):
-    top_left3, top_mid3, top_right3 = st.columns([1.5, 2.2, 1.3], vertical_alignment="center")
+    top_left3, top_mid3, top_right3 = st.columns(
+        [1.5, 2.3, 1.2], vertical_alignment="center"
+    )
 
     with top_left3:
         st.markdown(
-            "**:material/group: <span style='color: #8c92a4; font-weight: 600; font-size: 14px;'>Користувачі</span>**",
+            "**:material/group: <span style='color: #8c92a4; font-weight:"
+            " 600; font-size: 14px;'>Користувачі</span>**",
             unsafe_allow_html=True,
         )
         st.markdown("<h1 class='big-number'>226</h1>", unsafe_allow_html=True)
-        st.markdown("<div class='green-tag'>↑ 86% користувачі ОВА та КП</div>", unsafe_allow_html=True)
+        st.markdown(
+            "<div class='green-tag'>↑ 86% користувачі ОВА та КП</div>",
+            unsafe_allow_html=True,
+        )
 
     with top_mid3:
         st.markdown(
-            """
+            f"""
             <ul class='sub-list'>
-                <li>Користувачі ОВА та КП: <b>195</b></li>
-                <li>Користувачі Мінкульт: <b>13</b></li>
-                <li>Адміністратори: <b>18</b></li>
+                <li><span class='color-dot' style='background-color: {colors3[0]};'></span>Користувачі ОВА та КП: <b>195</b></li>
+                <li><span class='color-dot' style='background-color: {colors3[1]};'></span>Користувачі Мінкульт: <b>13</b></li>
+                <li><span class='color-dot' style='background-color: {colors3[2]};'></span>Адміністратори: <b>18</b></li>
             </ul>
             """,
             unsafe_allow_html=True,
@@ -265,22 +401,77 @@ with st.container(border=True):
     with top_right3:
         labels3 = ["ОВА та КП", "Мінкульт", "Адміни"]
         values3 = [195, 13, 18]
-        fig3 = go.Figure(data=[go.Pie(labels=labels3, values=values3, hole=.5, marker_colors=['#3b82f6', '#10b981', '#f59e0b'])])
+        fig3 = go.Figure(
+            data=[
+                go.Pie(
+                    labels=labels3,
+                    values=values3,
+                    hole=0.55,
+                    marker_colors=colors3,
+                    textinfo="value+percent",
+                    textposition="inside",
+                )
+            ]
+        )
         fig3 = clean_chart_layout(fig3, height=150)
         st.plotly_chart(fig3, use_container_width=True, config=plot_config)
 
 # --- ВІЗУАЛІЗАЦІЯ КОРИСТУВАЧІВ ПО ОБЛАСТЯХ ---
 users_by_region_data = {
     "Регіон": [
-        "Вінницька", "Волинська", "Дніпропетровська", "Донецька", "Житомирська",
-        "Закарпатська", "Запорізька", "Івано-Франківська", "Київська", "Кіровоградська",
-        "Луганська", "Львівська", "Миколаївська", "Одеська", "Полтавська",
-        "Рівненська", "Сумська", "Тернопільська", "Харківська", "Херсонська",
-        "Хмельницька", "Черкаська", "Чернівецька", "Чернігівська", "м. Київ"
+        "Вінницька",
+        "Волинська",
+        "Дніпропетровська",
+        "Донецька",
+        "Житомирська",
+        "Закарпатська",
+        "Запорізька",
+        "Івано-Франківська",
+        "Київська",
+        "Кіровоградська",
+        "Луганська",
+        "Львівська",
+        "Миколаївська",
+        "Одеська",
+        "Полтавська",
+        "Рівненська",
+        "Сумська",
+        "Тернопільська",
+        "Харківська",
+        "Херсонська",
+        "Хмельницька",
+        "Черкаська",
+        "Чернівецька",
+        "Чернігівська",
+        "м. Київ",
     ],
     "Кількість користувачів": [
-        5, 8, 6, 3, 9, 5, 13, 6, 12, 4, 5, 8, 4, 4, 12, 4, 9, 10, 7, 8, 12, 5, 5, 7, 24
-    ]
+        5,
+        8,
+        6,
+        3,
+        9,
+        5,
+        13,
+        6,
+        12,
+        4,
+        5,
+        8,
+        4,
+        4,
+        12,
+        4,
+        9,
+        10,
+        7,
+        8,
+        12,
+        5,
+        5,
+        7,
+        24,
+    ],
 }
 
 df_users_reg = pd.DataFrame(users_by_region_data).sort_values(
