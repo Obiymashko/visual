@@ -18,12 +18,13 @@ st.markdown(
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
 
 /* Глобальний Montserrat для контенту */
-.main {
+.main, .stMarkdown, .stTable, .stDataFrame, h1, h2, h3, h4, h5, h6, p, div, span {
     font-family: 'Montserrat', sans-serif !important;
 }
 
-/* Приховуємо вилазячий текст іконок Streamlit у сайдбарі без зламу функціональності */
+/* Приховуємо вилазячий текст іконок Streamlit у сайдбарі та шапці без зламу функціональності */
 [data-testid="stSidebarCollapseButton"] [data-testid="stIconMaterial"],
+[data-testid="stExpandSidebarButton"] [data-testid="stIconMaterial"],
 [data-testid="stSidebarNavSeparator"] {
     font-size: 0px !important;
     visibility: hidden !important;
@@ -31,6 +32,7 @@ st.markdown(
 
 /* Системний шрифт для кнопок управління, щоб зберегти базову іконку */
 [data-testid="stSidebarCollapseButton"] button,
+[data-testid="stExpandSidebarButton"] button,
 button[data-testid="stHeaderIconButton"], 
 [data-testid="stHeader"] * {
     font-family: Source Sans Pro, -apple-system, BlinkMacSystemFont, Roboto, sans-serif !important;
@@ -153,7 +155,7 @@ colors0 = [
 ]
 colors2 = ["#2563EB", "#16A34A", "#F59E0B", "#DC2626", "#9333EA"]
 colors4 = ["#16A34A", "#2563EB", "#F59E0B"]
-colors5 = ["#16A34A", "#2563EB"]
+colors5 = ["#16A34A", "#94A3B8"]
 colors3 = ["#2563EB", "#16A34A", "#F59E0B"]
 
 # --- БЛОК 1 (Нерухомі об'єкти на обліку - 145,172) ---
@@ -402,8 +404,8 @@ with st.container(border=True):
         st.markdown(
             f"""
             <ul class='sub-list'>
-                <li><span class='color-dot' style='background-color: {colors5[0]};'></span>Верифіковано Спадщиною: <b>65</b></li>
-                <li><span class='color-dot' style='background-color: {colors5[1]};'></span>Верифіковано Управлінням дозвільно-погоджувальної документації: <b>65</b></li>
+                <li><span class='color-dot' style='background-color: {colors5[0]};'></span>Верифіковано Управлінням дозвільно-погоджувальної документації: <b>65</b></li>
+                <li><span class='color-dot' style='background-color: {colors5[1]};'></span>Верифіковано Управлінням дозвільно-погоджувальної документації без зауважень: <b>0</b></li>
             </ul>
             """,
             unsafe_allow_html=True,
