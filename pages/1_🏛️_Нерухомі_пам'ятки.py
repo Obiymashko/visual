@@ -73,6 +73,25 @@ with st.container(border=True):
         </div>
         """, unsafe_allow_html=True)
 
+# --- ОКРЕМИЙ ВЕРХНІЙ БЛОК 3 (Нерухомі об'єкти культурної спадщини які знаходяться на обліку) ---
+with st.container(border=True):
+    top_left3, top_right3 = st.columns([1.5, 3.5])
+    
+    with top_left3:
+        st.markdown("**:material/account_balance: <span style='color: #8c92a4; font-weight: normal; font-size: 14px;'>Нерухомі об'єкти культурної спадщини які знаходяться на обліку</span>**", unsafe_allow_html=True)
+        st.markdown("<h1 style='font-size: 4rem; font-weight: 900; margin-top: -15px; margin-bottom: 0px;'>145,175</h1>", unsafe_allow_html=True)
+        
+    with top_right3:
+        st.markdown("""
+        <div style='margin-top: 10px;'>
+            <ul style='font-size: 15px; opacity: 0.9; line-height: 1.7;'>
+                <li>Внесено до державного реєстру нерухомих пам'яток нац. значення: <b>3,415</b></li>
+                <li>Внесено до державного реєстру нерухомих пам'яток місц. значення: <b>32,809</b></li>
+                <li>Знято з обліку у 2025 році: <b>347</b></li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+
 # --- БЛОК ДЛЯ ІНШИХ МЕТРИК ---
 with st.container(border=True):
     b_col1, b_col2, b_col3 = st.columns(3)
@@ -199,7 +218,7 @@ st.subheader(":material/stacked_bar_chart: Порівняння: Реєстр М
 df_sorted = df.sort_values(by=col_reestr, ascending=False)
 fig_comp = go.Figure(data=[
     go.Bar(x=df_sorted['Регіон'], y=df_sorted[col_reestr], name='Об\'єкти в Реєстрі', marker_color='#d1d5db'),
-    go.Bar(x=df_sorted['Регіон'], y=df_sorted[col_cards], name='Внесено в ЄПам\'ятка', marker_color='#3b82f6')
+    go.Bar(x=df_sorted['Регіон'], y=df_sorted[col_cards], name='Внесено в ЄПам'ятка', marker_color='#3b82f6')
 ])
 fig_comp.update_layout(barmode='group', template="plotly_white", height=500, xaxis_tickangle=-45, legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
 st.plotly_chart(fig_comp, use_container_width=True, config=plot_config)
