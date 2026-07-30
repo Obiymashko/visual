@@ -7,25 +7,30 @@ import streamlit as st
 
 st.set_page_config(page_title="Дашборд: Музейний реєстр", layout="wide")
 
-# Точковий CSS для шрифту Montserrat (не конфліктує з перемикачем теми та іконками)
+# Точне налаштування CSS: Montserrat для контенту та графіків, захист іконок сайдбару та шапки
 st.markdown(
     """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
 
-/* Глобальне застосування шрифту Montserrat для основного вмісту */
-.main, .stAppHeader, [data-testid="stSidebar"] {
+/* Застосовуємо Montserrat тільки до основного контенту */
+.main {
     font-family: 'Montserrat', sans-serif !important;
 }
 
-/* Примусово повертаємо системний шрифт для верхнього меню та перемикача теми */
-button[data-testid="stHeaderIconButton"], 
+/* Захист іконок у бічній панелі (Sidebar) та верхньому меню */
+[data-testid="stSidebar"] *, 
 [data-testid="stHeader"] *,
-[data-testid="stMainMenu"] * {
+button[data-testid="stHeaderIconButton"] {
     font-family: Source Sans Pro, -apple-system, BlinkMacSystemFont, Roboto, sans-serif !important;
 }
 
-/* Примусове застосування Montserrat до текстів Plotly графіків */
+/* Назви пунктів меню в сайдбарі залишаємо Montserrat */
+[data-testid="stSidebarNav"] span {
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+/* Примусове застосування Montserrat до графіків Plotly */
 .js-plotly-plot .plotly text,
 .js-plotly-plot .plotly .hovertext,
 .js-plotly-plot .plotly .gtitle,
