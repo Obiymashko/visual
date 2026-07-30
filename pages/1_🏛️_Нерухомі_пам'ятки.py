@@ -11,31 +11,22 @@ st.set_page_config(
     layout="wide",
 )
 
-# Надійне підключення шрифту Montserrat через CSS
+# Виправлений точковий CSS для шрифту Montserrat (не чіпає меню Streamlit)
 st.markdown(
     """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
 
-html, body, [class*="css"], [class*="st-"] {
+/* Застосовуємо шрифт тільки до основного контенту та бічної панелі */
+.main, .stAppHeader, [data-testid="stSidebar"] {
     font-family: 'Montserrat', sans-serif !important;
 }
 
-/* Контейнер для лівого блоку (заголовок + число + примітка разом) */
-.left-stat-block {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-}
-
-/* Заголовок картки */
-.stat-title {
-    color: #8c92a4;
-    font-weight: 600;
-    font-size: 14px;
-    margin-bottom: 6px;
-    line-height: 1.3;
+/* Примусово повертаємо стандартний шрифт для службових іконок Streamlit (меню/теми) */
+button[data-testid="stHeaderIconButton"], 
+[data-testid="stHeader"] *,
+[data-testid="stMainMenu"] * {
+    font-family: Source Sans Pro, -apple-system, BlinkMacSystemFont, Roboto, sans-serif !important;
 }
 
 /* Стилі для великих чисел */
@@ -43,17 +34,8 @@ html, body, [class*="css"], [class*="st-"] {
     font-family: 'Montserrat', sans-serif !important;
     font-size: 3.5rem !important;
     font-weight: 900 !important;
-    margin: 0px 0px 6px 0px !important;
+    margin: 0px 0px 4px 0px !important;
     line-height: 1 !important;
-}
-
-/* Зелені підписи строго під числом */
-.green-tag {
-    font-family: 'Montserrat', sans-serif !important;
-    color: #00d26a;
-    font-size: 13px;
-    font-weight: 700;
-    margin-top: 2px;
 }
 
 /* Стилі для підпунктів праворуч */
@@ -84,6 +66,14 @@ html, body, [class*="css"], [class*="st-"] {
     position: absolute;
     left: 0;
     top: 7px;
+}
+
+/* Зелені підписи */
+.green-tag {
+    font-family: 'Montserrat', sans-serif !important;
+    color: #00d26a;
+    font-size: 13px;
+    font-weight: 700;
 }
 </style>
 """,
