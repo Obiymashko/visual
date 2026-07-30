@@ -50,35 +50,16 @@ with st.container(border=True):
         </div>
         """, unsafe_allow_html=True)
 
-# --- ОКРЕМИЙ ВЕРХНІЙ БЛОК 2 (Внесено до системи) ---
+# --- ОКРЕМИЙ ВЕРХНІЙ БЛОК 2 (Внесено до системи ЄПам'ятка) ---
 with st.container(border=True):
     top_left2, top_right2 = st.columns([1.5, 3.5])
     
     with top_left2:
-        st.markdown("**:material/cloud_upload: <span style='color: #8c92a4; font-weight: normal; font-size: 14px;'>Внесено до системи</span>**", unsafe_allow_html=True)
-        st.markdown("<h1 style='font-size: 4rem; font-weight: 900; margin-top: -15px; margin-bottom: 0px;'>105,987</h1>", unsafe_allow_html=True)
+        st.markdown("**:material/cloud_upload: <span style='color: #8c92a4; font-weight: normal; font-size: 14px;'>Внесено до системи ЄПам'ятка</span>**", unsafe_allow_html=True)
+        st.markdown("<h1 style='font-size: 4rem; font-weight: 900; margin-top: -15px; margin-bottom: 0px;'>105,988</h1>", unsafe_allow_html=True)
         st.markdown("<div style='color: #00d26a; font-size: 14px; font-weight: 600; margin-top: -10px;'>↑ 72% від загальної кількості</div>", unsafe_allow_html=True)
         
     with top_right2:
-        st.markdown("""
-        <div style='margin-top: 10px;'>
-            <ul style='font-size: 15px; opacity: 0.9; line-height: 1.7;'>
-                <li>Деталізація пункт 1: <b>[заглушка, чекаємо дані]</b></li>
-                <li>Деталізація пункт 2: <b>[заглушка, чекаємо дані]</b></li>
-                <li>Деталізація пункт 3: <b>[заглушка, чекаємо дані]</b></li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
-
-# --- ОКРЕМИЙ ВЕРХНІЙ БЛОК 3 (Оновлена деталізація за категоріями) ---
-with st.container(border=True):
-    top_left3, top_right3 = st.columns([1.5, 3.5])
-    
-    with top_left3:
-        st.markdown("**:material/list_alt: <span style='color: #8c92a4; font-weight: normal; font-size: 14px;'>Об'єкти в системі</span>**", unsafe_allow_html=True)
-        st.markdown("<h1 style='font-size: 4rem; font-weight: 900; margin-top: -15px; margin-bottom: 0px;'>105,988</h1>", unsafe_allow_html=True)
-        
-    with top_right3:
         st.markdown("""
         <div style='margin-top: 0px;'>
             <ul style='font-size: 15px; opacity: 0.9; line-height: 1.7;'>
