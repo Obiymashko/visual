@@ -51,35 +51,35 @@ st.markdown(
     "**:material/info: Довідкова інформація щодо впровадження системи «ЄПам'ятка»:**"
 )
 
-# --- ОКРЕМИЙ ВЕРХНІЙ БЛОК 1 (Всього об'єктів) ---
+# --- ПЕРЕМІЩЕНИЙ НАГОРУ БЛОК 1 (Нерухомі об'єкти на обліку - 145,175) ---
 with st.container(border=True):
-    top_left, top_right = st.columns([1.5, 3.5])
+    top_left3, top_right3 = st.columns([1.5, 3.5])
 
-    with top_left:
+    with top_left3:
         st.markdown(
-            "**:material/museum: <span style='color: #8c92a4; font-weight: normal; font-size: 14px;'>Всього об'єктів на обліку</span>**",
+            "**:material/account_balance: <span style='color: #8c92a4; font-weight: normal; font-size: 14px;'>Нерухомі об'єкти культурної спадщини які знаходяться на обліку</span>**",
             unsafe_allow_html=True,
         )
         st.markdown(
-            "<h1 style='font-size: 4rem; font-weight: 900; margin-top: -15px; margin-bottom: 0px;'>144,643</h1>",
+            "<h1 style='font-size: 4rem; font-weight: 900; margin-top: -15px; margin-bottom: 0px;'>145,175</h1>",
             unsafe_allow_html=True,
         )
 
-    with top_right:
+    with top_right3:
         st.markdown(
             """
         <div style='margin-top: 10px;'>
             <ul style='font-size: 15px; opacity: 0.9; line-height: 1.7;'>
-                <li>Пам'ятки національного значення: <b>[заглушка, чекаємо дані]</b></li>
-                <li>Пам'ятки місцевого значення: <b>[заглушка, чекаємо дані]</b></li>
-                <li>Щойно виявлені об'єкти: <b>[заглушка, чекаємо дані]</b></li>
+                <li>Внесено до державного реєстру нерухомих пам'яток нац. значення: <b>3,415</b></li>
+                <li>Внесено до державного реєстру нерухомих пам'яток місц. значення: <b>32,809</b></li>
+                <li>Знято з обліку у 2025 році: <b>347</b></li>
             </ul>
         </div>
         """,
             unsafe_allow_html=True,
         )
 
-# --- ОКРЕМИЙ ВЕРХНІЙ БЛОК 2 (Внесено до системи ЄПам'ятка) ---
+# --- БЛОК 2 (Внесено до системи ЄПам'ятка - 105,988) ---
 with st.container(border=True):
     top_left2, top_right2 = st.columns([1.5, 3.5])
 
@@ -108,34 +108,6 @@ with st.container(border=True):
                 <li>Щойно виявлені об'єкти культурної спадщини: <b>470</b></li>
                 <li>Історико-культурні території: <b>405</b></li>
                 <li>Не визначено: <b>20,753</b></li>
-            </ul>
-        </div>
-        """,
-            unsafe_allow_html=True,
-        )
-
-# --- ОКРЕМИЙ ВЕРХНІЙ БЛОК 3 (Нерухомі об'єкти на обліку) ---
-with st.container(border=True):
-    top_left3, top_right3 = st.columns([1.5, 3.5])
-
-    with top_left3:
-        st.markdown(
-            "**:material/account_balance: <span style='color: #8c92a4; font-weight: normal; font-size: 14px;'>Нерухомі об'єкти культурної спадщини які знаходяться на обліку</span>**",
-            unsafe_allow_html=True,
-        )
-        st.markdown(
-            "<h1 style='font-size: 4rem; font-weight: 900; margin-top: -15px; margin-bottom: 0px;'>145,175</h1>",
-            unsafe_allow_html=True,
-        )
-
-    with top_right3:
-        st.markdown(
-            """
-        <div style='margin-top: 10px;'>
-            <ul style='font-size: 15px; opacity: 0.9; line-height: 1.7;'>
-                <li>Внесено до державного реєстру нерухомих пам'яток нац. значення: <b>3,415</b></li>
-                <li>Внесено до державного реєстру нерухомих пам'яток місц. значення: <b>32,809</b></li>
-                <li>Знято з обліку у 2025 році: <b>347</b></li>
             </ul>
         </div>
         """,
