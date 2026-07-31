@@ -23,7 +23,8 @@ html, body, [class*="st-"], .stMarkdown, .stTable, .stDataFrame, h1, h2, h3, h4,
 span[data-testid="stIconMaterial"], 
 span[translate="no"], 
 i.material-icons,
-.material-symbols-rounded {
+.material-symbols-rounded,
+button[kind="headerNoPadding"] span {
     font-family: 'Material Symbols Rounded', 'Material Icons', sans-serif !important;
 }
 
@@ -33,13 +34,6 @@ i.material-icons,
 [data-testid="stSidebarNavSeparator"] {
     font-size: 0px !important;
     visibility: hidden !important;
-}
-
-[data-testid="stSidebarCollapseButton"] button,
-[data-testid="stExpandSidebarButton"] button,
-button[data-testid="stHeaderIconButton"], 
-[data-testid="stHeader"] * {
-    font-family: Source Sans Pro, -apple-system, BlinkMacSystemFont, Roboto, sans-serif !important;
 }
 
 [data-testid="stSidebarNav"] span {
@@ -152,14 +146,12 @@ def clean_chart_layout(fig, height=220):
             insidetextorientation="radial",
             textfont_size=15,
             textfont_color="white",
-            marker=dict(line=dict(color='#ffffff', width=2))
+            marker=dict(line=dict(color='#ffffff', width=2)) # Біла рамка між секторами
         )
     return fig
 
 # --- ШАПКА ---
 st.title("Музейний реєстр")
-
-st.write("") # Додатковий відступ
 
 # =====================================================================
 # 1. ЗАВАНТАЖЕННЯ ДАНИХ
@@ -240,12 +232,13 @@ mus_not_started = len(df_museums[df_museums["Прогрес (%)"] == 0])
 mus_in_progress = total_museums - mus_completed - mus_not_started
 perc_total = (total_vneseno / total_items * 100) if total_items > 0 else 0
 
+st.write("") # Додатковий відступ зверху
 
 # =====================================================================
-# 2. КАРТКИ ДАШБОРДУ
+# 2. КАРТКИ ДАШБОРДУ (РІЗНОМАНІТНІ ВІЗУАЛІЗАЦІЇ)
 # =====================================================================
 
-# --- КАРТКА 1: Загальний стан ---
+# --- КАРТКА 1: Загальний стан (Pie Chart) ---
 colors_items = ["#16A34A", "#F59E0B"]
 with st.container(border=True):
     col1, col2, col3 = st.columns([1.8, 2.0, 1.2], vertical_alignment="center")
@@ -272,7 +265,7 @@ with st.container(border=True):
         fig1 = go.Figure(data=[go.Pie(labels=["Внесено", "Залишилось"], values=[total_vneseno, total_potribno], hole=0.6, marker_colors=colors_items)])
         st.plotly_chart(clean_chart_layout(fig1), use_container_width=True, config=plot_config)
 
-# --- КАРТКА 2: Фонди ---
+# --- КАРТКА 2: Фонди (Gauge / Спідометр) ---
 colors_funds = ["#3b82f6", "#06b6d4"]
 with st.container(border=True):
     col1, col2, col3 = st.columns([1.8, 2.0, 1.2], vertical_alignment="center")
@@ -297,11 +290,24 @@ with st.container(border=True):
             """, unsafe_allow_html=True
         )
     with col3:
-        fig2 = go.Figure(data=[go.Pie(labels=["Основний фонд", "Спецфонд"], values=[osn_vneseno, spec_vneseno], hole=0.6, marker_colors=colors_funds)])
-        st.plotly_chart(clean_chart_layout(fig2), use_container_width=True, config=plot_config)
+        # Використовуємо Gauge замість Pie
+        val_osn_perc = (osn_vneseno / osn_pidpysano * 100) if osn_pidpysano > 0 else 0
+        fig2 = go.Figure(go.Indicator(
+            mode = "gauge+number",
+            value = val_osn_perc,
+            number = {'suffix': "%", 'font': {'size': 24, 'family': "Montserrat, sans-serif"}},
+            title = {'text': "Осн. фонд (внес. / підпис.)", 'font': {'size': 12, 'family': "Montserrat, sans-serif"}},
+            gauge = {
+                'axis': {'range': [None, 100], 'visible': False},
+                'bar': {'color': colors_funds[0], 'thickness': 0.8},
+                'bgcolor': "#e2e8f0",
+                'borderwidth': 0,
+            }
+        ))
+        st.plotly_chart(clean_chart_layout(fig2, height=180), use_container_width=True, config=plot_config)
 
-# --- КАРТКА 3: Активність музеїв ---
-colors_mus = ["#10b981", "#3b82f6", "#ef4444"]
+# --- КАРТКА 3: Активність музеїв (Funnel / Воронка) ---
+colors_mus = ["#ef4444", "#3b82f6", "#10b981"] # Не розпочали -> В процесі -> Завершили
 with st.container(border=True):
     col1, col2, col3 = st.columns([1.8, 2.0, 1.2], vertical_alignment="center")
     with col1:
@@ -317,17 +323,23 @@ with st.container(border=True):
         st.markdown(
             f"""
             <ul class='sub-list'>
-                <li><span class='color-dot' style='background-color: {colors_mus[0]};'></span>Завершили внесення (100%): <b>{mus_completed:,}</b></li>
+                <li><span class='color-dot' style='background-color: {colors_mus[2]};'></span>Завершили внесення (100%): <b>{mus_completed:,}</b></li>
                 <li><span class='color-dot' style='background-color: {colors_mus[1]};'></span>В процесі внесення (1-99%): <b>{mus_in_progress:,}</b></li>
-                <li><span class='color-dot' style='background-color: {colors_mus[2]};'></span>Ще не розпочали (0%): <b>{mus_not_started:,}</b></li>
+                <li><span class='color-dot' style='background-color: {colors_mus[0]};'></span>Ще не розпочали (0%): <b>{mus_not_started:,}</b></li>
             </ul>
             """, unsafe_allow_html=True
         )
     with col3:
-        fig3 = go.Figure(data=[go.Pie(labels=["Завершили", "В процесі", "Не розпочали"], values=[mus_completed, mus_in_progress, mus_not_started], hole=0.6, marker_colors=colors_mus)])
-        st.plotly_chart(clean_chart_layout(fig3), use_container_width=True, config=plot_config)
+        # Використовуємо Funnel замість Pie
+        fig3 = go.Figure(go.Funnel(
+            y=["Не розпочали", "В процесі", "Завершили"],
+            x=[mus_not_started, mus_in_progress, mus_completed],
+            textinfo="value",
+            marker={"color": colors_mus}
+        ))
+        st.plotly_chart(clean_chart_layout(fig3, height=180), use_container_width=True, config=plot_config)
 
-# --- КАРТКА 4: Державне значення (Жорстко зафіксована математика) ---
+# --- КАРТКА 4: Державне значення (Horizontal Bar) ---
 colors_derzh = ["#8b5cf6", "#cbd5e1"]
 total_derzh = 409
 other_val = max(0, total_museums - total_derzh)
@@ -357,8 +369,17 @@ with st.container(border=True):
             """, unsafe_allow_html=True
         )
     with col3:
-        fig4 = go.Figure(data=[go.Pie(labels=[label_derzh, label_other], values=[total_derzh, other_val], hole=0.6, marker_colors=colors_derzh)])
-        st.plotly_chart(clean_chart_layout(fig4), use_container_width=True, config=plot_config)
+        # Використовуємо Bar Chart замість Pie
+        fig4 = go.Figure(go.Bar(
+            x=[total_derzh, other_val],
+            y=[label_derzh, label_other],
+            orientation='h',
+            marker_color=colors_derzh,
+            text=[f"{total_derzh:,}", f"{other_val:,}"],
+            textposition="auto"
+        ))
+        fig4.update_layout(xaxis=dict(visible=False), yaxis=dict(title=""))
+        st.plotly_chart(clean_chart_layout(fig4, height=180), use_container_width=True, config=plot_config)
 
 st.divider()
 
@@ -377,20 +398,15 @@ with cg1:
         orientation="h",
         text=df_top["Внесено предметів"].apply(lambda x: f"{x:,}"),
         color="Внесено предметів",
-        color_continuous_scale="Viridis", # Змінили палітру на яскравішу
+        color_continuous_scale="Viridis",
         height=750,
     )
-    fig_top.update_traces(
-        textposition="outside", 
-        textfont=dict(size=14, family="Montserrat, sans-serif", color="#0f172a"),
-        marker_line_width=0
-    )
+    fig_top.update_traces(textposition="outside", textfont_size=13, textfont_family="Montserrat, sans-serif")
     fig_top.update_layout(
         template="plotly_white",
         margin=dict(l=0, r=60, t=30, b=0),
         coloraxis_showscale=False,
         font=dict(family="Montserrat, sans-serif", size=14),
-        hoverlabel=dict(font_family="Montserrat, sans-serif", font_size=15),
         xaxis_title="",
         yaxis_title="",
     )
@@ -401,18 +417,8 @@ with cg2:
     df_f = df_summary.sort_values(by="Основний фонд (внесено)", ascending=False)
     fig_fonds = go.Figure(
         data=[
-            go.Bar(
-                x=df_f["Регіон"], 
-                y=df_f["Основний фонд (внесено)"], 
-                name="Основний фонд", 
-                marker_color="#3b82f6"
-            ),
-            go.Bar(
-                x=df_f["Регіон"], 
-                y=df_f["Спецфонд (внесено)"], 
-                name="Спецфонд", 
-                marker_color="#10b981"
-            ),
+            go.Bar(x=df_f["Регіон"], y=df_f["Основний фонд (внесено)"], name="Основний фонд", marker_color="#3b82f6"),
+            go.Bar(x=df_f["Регіон"], y=df_f["Спецфонд (внесено)"], name="Спецфонд", marker_color="#10b981"),
         ]
     )
     fig_fonds.update_layout(
