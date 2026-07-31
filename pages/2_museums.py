@@ -163,7 +163,7 @@ def clean_chart_layout(fig, height=220):
     return fig
 
 # --- ШАПКА ---
-st.title("РЕЄСТР МУЗЕЙНИХ ПРЕДМЕТІВ")
+st.title("Реєстр музейних предметів")
 st.caption("**Дані актуальні на 29.07.2026**")
 st.write("") # Додатковий відступ
 
@@ -348,7 +348,7 @@ with st.container(border=True):
             <ul class='sub-list'>
                 <li><span class='color-dot' style='background-color: {colors_mus[2]};'></span>Завершили наповнення (100%): <b>{mus_completed:,}</b></li>
                 <li><span class='color-dot' style='background-color: {colors_mus[1]};'></span>В процесі наповнення (1-99%): <b>{mus_in_progress:,}</b></li>
-                <li><span class='color-dot' style='background-color: {colors_mus[0]};'></span>Ще не розпочали (0%): <b>{mus_not_started:,}</b></li>
+                <li><span class='color-dot' style='background-color: {colors_mus[0]};'></span>Не розпочали (0%): <b>{mus_not_started:,}</b></li>
             </ul>
             """, unsafe_allow_html=True
         )
