@@ -89,6 +89,18 @@ button[kind="headerNoPadding"] span {
     border-radius: 6px;
 }
 
+.red-alert-tag {
+    font-family: 'Montserrat', sans-serif !important;
+    color: #b91c1c;
+    font-size: 13px;
+    font-weight: 800;
+    margin-top: 15px;
+    background-color: #fee2e2;
+    padding: 8px 12px;
+    border-radius: 6px;
+    line-height: 1.4;
+}
+
 .sub-list {
     font-family: 'Montserrat', sans-serif !important;
     font-size: 15px !important;
@@ -151,7 +163,9 @@ def clean_chart_layout(fig, height=220):
     return fig
 
 # --- ШАПКА ---
-st.title("Музейний реєстр")
+st.title("РЕЄСТР МУЗЕЙНИХ ПРЕДМЕТІВ")
+st.caption("**Дані актуальні на 29.07.2026**")
+st.write("") # Додатковий відступ
 
 # =====================================================================
 # 1. ЗАВАНТАЖЕННЯ ДАНИХ
@@ -232,7 +246,6 @@ mus_not_started = len(df_museums[df_museums["Прогрес (%)"] == 0])
 mus_in_progress = total_museums - mus_completed - mus_not_started
 perc_total = (total_vneseno / total_items * 100) if total_items > 0 else 0
 
-st.write("") # Додатковий відступ зверху
 
 # =====================================================================
 # 2. КАРТКИ ДАШБОРДУ (РІЗНОМАНІТНІ ВІЗУАЛІЗАЦІЇ)
@@ -265,7 +278,7 @@ with st.container(border=True):
         fig1 = go.Figure(data=[go.Pie(labels=["Внесено", "Залишилось"], values=[total_vneseno, total_potribno], hole=0.6, marker_colors=colors_items)])
         st.plotly_chart(clean_chart_layout(fig1), use_container_width=True, config=plot_config)
 
-# --- КАРТКА 2: Фонди (Gauge / Спідометр) ---
+# --- КАРТКА 2: Фонди (ВИПРАВЛЕНИЙ Bar Chart замість зламаного спідометра) ---
 colors_funds = ["#3b82f6", "#06b6d4"]
 with st.container(border=True):
     col1, col2, col3 = st.columns([1.8, 2.0, 1.2], vertical_alignment="center")
@@ -290,21 +303,32 @@ with st.container(border=True):
             """, unsafe_allow_html=True
         )
     with col3:
-        # Використовуємо Gauge замість Pie
-        val_osn_perc = (osn_vneseno / osn_pidpysano * 100) if osn_pidpysano > 0 else 0
-        fig2 = go.Figure(go.Indicator(
-            mode = "gauge+number",
-            value = val_osn_perc,
-            number = {'suffix': "%", 'font': {'size': 24, 'family': "Montserrat, sans-serif"}},
-            title = {'text': "Осн. фонд (внес. / підпис.)", 'font': {'size': 12, 'family': "Montserrat, sans-serif"}},
-            gauge = {
-                'axis': {'range': [None, 100], 'visible': False},
-                'bar': {'color': colors_funds[0], 'thickness': 0.8},
-                'bgcolor': "#e2e8f0",
-                'borderwidth': 0,
-            }
+        # Груповий графік, який коректно порівнює "Внесено" та "Підписано"
+        fig2 = go.Figure()
+        fig2.add_trace(go.Bar(
+            y=['Осн. фонд', 'Спецфонд'], x=[osn_vneseno, spec_vneseno], 
+            name='Внесено', orientation='h', marker_color='#94a3b8',
+            text=[f"{osn_vneseno:,}", f"{spec_vneseno:,}"], textposition='auto'
         ))
-        st.plotly_chart(clean_chart_layout(fig2, height=180), use_container_width=True, config=plot_config)
+        fig2.add_trace(go.Bar(
+            y=['Осн. фонд', 'Спецфонд'], x=[osn_pidpysano, spec_pidpysano], 
+            name='Підписано КЕП', orientation='h', marker_color='#3b82f6',
+            text=[f"{osn_pidpysano:,}", f"{spec_pidpysano:,}"], textposition='auto'
+        ))
+        fig2.update_layout(
+            barmode='group',
+            height=200,
+            margin=dict(l=0, r=0, t=30, b=0),
+            template="plotly_white",
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)",
+            font=dict(family="Montserrat, sans-serif", size=13),
+            showlegend=True,
+            legend=dict(orientation="h", yanchor="bottom", y=1.05, xanchor="center", x=0.5, font_size=12),
+            xaxis=dict(visible=False),
+            yaxis=dict(title="", tickfont=dict(size=14, color="#1e293b", weight="bold"))
+        )
+        st.plotly_chart(fig2, use_container_width=True, config=plot_config)
 
 # --- КАРТКА 3: Активність музеїв (Funnel / Воронка) ---
 colors_mus = ["#ef4444", "#3b82f6", "#10b981"] # Не розпочали -> В процесі -> Завершили
@@ -314,7 +338,7 @@ with st.container(border=True):
         st.markdown(
             f"""
             <div class='left-stat-block'>
-                <div class='stat-title'>Всього музейних установ у базі</div>
+                <div class='stat-title'>Всього музейних установ У РЕЄСТРІ</div>
                 <h1 class='big-number'>{total_museums:,}</h1>
             </div>
             """, unsafe_allow_html=True
@@ -323,14 +347,13 @@ with st.container(border=True):
         st.markdown(
             f"""
             <ul class='sub-list'>
-                <li><span class='color-dot' style='background-color: {colors_mus[2]};'></span>Завершили внесення (100%): <b>{mus_completed:,}</b></li>
-                <li><span class='color-dot' style='background-color: {colors_mus[1]};'></span>В процесі внесення (1-99%): <b>{mus_in_progress:,}</b></li>
+                <li><span class='color-dot' style='background-color: {colors_mus[2]};'></span>Завершили наповнення (100%): <b>{mus_completed:,}</b></li>
+                <li><span class='color-dot' style='background-color: {colors_mus[1]};'></span>В процесі наповнення (1-99%): <b>{mus_in_progress:,}</b></li>
                 <li><span class='color-dot' style='background-color: {colors_mus[0]};'></span>Ще не розпочали (0%): <b>{mus_not_started:,}</b></li>
             </ul>
             """, unsafe_allow_html=True
         )
     with col3:
-        # Використовуємо Funnel замість Pie
         fig3 = go.Figure(go.Funnel(
             y=["Не розпочали", "В процесі", "Завершили"],
             x=[mus_not_started, mus_in_progress, mus_completed],
@@ -339,7 +362,7 @@ with st.container(border=True):
         ))
         st.plotly_chart(clean_chart_layout(fig3, height=180), use_container_width=True, config=plot_config)
 
-# --- КАРТКА 4: Державне значення (Horizontal Bar) ---
+# --- КАРТКА 4: Державне значення (Horizontal Bar + ЧЕРВОНА ПЛАШКА) ---
 colors_derzh = ["#8b5cf6", "#cbd5e1"]
 total_derzh = 409
 other_val = max(0, total_museums - total_derzh)
@@ -366,10 +389,10 @@ with st.container(border=True):
                 <li><span class='color-dot' style='background-color: {colors_derzh[0]};'></span>{label_derzh}: <b>{total_derzh:,}</b></li>
                 <li><span class='color-dot' style='background-color: {colors_derzh[1]};'></span>{label_other}: <b>{other_val:,}</b></li>
             </ul>
+            <div class='red-alert-tag'>⚠️ 104 МУЗЕЙНІ УСТАНОВИ ДЕРЖАВНОГО ЗНАЧЕННЯ ПЕРЕБУВАЮТЬ НА ТИМЧАСОВО ОКУПОВАНИХ ТЕРИТОРІЯХ</div>
             """, unsafe_allow_html=True
         )
     with col3:
-        # Використовуємо Bar Chart замість Pie
         fig4 = go.Figure(go.Bar(
             x=[total_derzh, other_val],
             y=[label_derzh, label_other],
@@ -378,8 +401,17 @@ with st.container(border=True):
             text=[f"{total_derzh:,}", f"{other_val:,}"],
             textposition="auto"
         ))
-        fig4.update_layout(xaxis=dict(visible=False), yaxis=dict(title=""))
-        st.plotly_chart(clean_chart_layout(fig4, height=180), use_container_width=True, config=plot_config)
+        fig4.update_layout(
+            height=180, 
+            margin=dict(l=0, r=0, t=10, b=10),
+            template="plotly_white",
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)",
+            font=dict(family="Montserrat, sans-serif", size=13),
+            xaxis=dict(visible=False), 
+            yaxis=dict(title="")
+        )
+        st.plotly_chart(fig4, use_container_width=True, config=plot_config)
 
 st.divider()
 
