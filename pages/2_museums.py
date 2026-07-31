@@ -7,7 +7,7 @@ import streamlit as st
 
 st.set_page_config(page_title="Дашборд: Музейний реєстр", layout="wide")
 
-# Точне налаштування CSS: Підтримка світлої/темної теми, великі шрифти та збереження іконок
+# Точне налаштування CSS: Адаптація під світлу/темну тему та збереження іконок
 st.markdown(
     """
 <style>
@@ -49,7 +49,7 @@ button[kind="headerNoPadding"] span {
     font-family: 'Montserrat', sans-serif !important;
 }
 
-/* --- ПРОКАЧАНИЙ ДИЗАЙН КАРТОК З ПІДТРИМКОЮ ТЕМНОЇ ТЕМИ --- */
+/* --- ПРОКАЧАНИЙ ДИЗАЙН КАРТОК (Адаптивний під теми) --- */
 .left-stat-block {
     display: flex;
     flex-direction: column;
@@ -59,18 +59,16 @@ button[kind="headerNoPadding"] span {
 }
 
 .stat-title {
-    color: var(--text-color);
-    opacity: 0.8;
     font-weight: 700;
     font-size: 15px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     margin-bottom: 12px;
     line-height: 1.4;
+    opacity: 0.7; /* Замість жорсткого кольору використовуємо прозорість для підтримки темної теми */
 }
 
 .big-number {
-    color: var(--text-color) !important;
     font-family: 'Montserrat', sans-serif !important;
     font-size: 4.2rem !important;
     font-weight: 900 !important;
@@ -85,19 +83,19 @@ button[kind="headerNoPadding"] span {
     font-size: 15px;
     font-weight: 800;
     margin-top: 4px;
-    background-color: rgba(22, 163, 74, 0.15); /* Прозорий фон для адаптації під тему */
+    background-color: rgba(22, 163, 74, 0.15); /* Прозорий фон для темної теми */
     padding: 4px 10px;
     border-radius: 6px;
 }
 
 .red-alert-tag {
     font-family: 'Montserrat', sans-serif !important;
-    color: #ef4444; /* Більш яскравий червоний для темної теми */
+    color: #ef4444;
     font-size: 13px;
     font-weight: 800;
     margin-top: 0px;
     margin-bottom: 15px;
-    background-color: rgba(239, 68, 68, 0.15); /* Прозорий фон */
+    background-color: rgba(239, 68, 68, 0.15); /* Прозорий фон для темної теми */
     padding: 8px 12px;
     border-radius: 6px;
     line-height: 1.4;
@@ -106,7 +104,6 @@ button[kind="headerNoPadding"] span {
 .sub-list {
     font-family: 'Montserrat', sans-serif !important;
     font-size: 15px !important;
-    color: var(--text-color);
     opacity: 0.95 !important;
     line-height: 2 !important;
     margin: 0 !important;
@@ -159,7 +156,7 @@ def clean_chart_layout(fig, height=220):
             insidetextorientation="radial",
             textfont_size=15,
             textfont_color="white",
-            marker=dict(line=dict(color='rgba(0,0,0,0)', width=2)) # Зробили рамку прозорою для універсальності в темах
+            marker=dict(line=dict(color='rgba(0,0,0,0)', width=2)) # Видалили жорстку білу лінію для темної теми
         )
     return fig
 
@@ -237,7 +234,8 @@ total_vneseno = int(df_summary['Внесено предметів'].sum())
 
 # Згідно ТЗ: фіксуємо кількість предметів, що залишилось внести
 total_potribno = 10898203
-total_items = total_vneseno + total_potribno # Перераховуємо, щоб сходилося
+# Перераховуємо загальну кількість, щоб діаграма та відсотки були на 100% точними
+total_items = total_vneseno + total_potribno
 perc_total = (total_vneseno / total_items * 100) if total_items > 0 else 0
 
 osn_vneseno = int(df_summary['Основний фонд (внесено)'].sum())
@@ -249,57 +247,47 @@ mus_completed = len(df_museums[df_museums["Прогрес (%)"] >= 99.9])
 mus_not_started = len(df_museums[df_museums["Прогрес (%)"] == 0])
 mus_in_progress = total_museums - mus_completed - mus_not_started
 
-
 # =====================================================================
 # 2. КАРТКИ ДАШБОРДУ
 # =====================================================================
 
-# --- КАРТКА 1: Загальний стан музеїв та предметів ---
-colors_mus = ["#ef4444", "#3b82f6", "#10b981"] # Не розпочали -> В процесі -> Завершили
+# --- КАРТКА 1: Загальний стан ---
+colors_items = ["#16A34A", "#F59E0B"]
 with st.container(border=True):
     col1, col2, col3 = st.columns([1.8, 2.0, 1.2], vertical_alignment="center")
     with col1:
         st.markdown(
             f"""
             <div class='left-stat-block'>
-                <div class='stat-title'>Всього музейних установ У РЕЄСТРІ</div>
-                <h1 class='big-number'>{total_museums:,}</h1>
+                <div class='stat-title'>Всього музейних предметів (за звітами)</div>
+                <h1 class='big-number'>{total_items:,}</h1>
+                <div class='green-tag'>↑ {perc_total:.1f}% загальний прогрес внесення</div>
             </div>
             """, unsafe_allow_html=True
         )
     with col2:
         st.markdown(
             f"""
-            <div class='red-alert-tag'>⚠️ 104 МУЗЕЙНІ УСТАНОВИ ДЕРЖАВНОГО ЗНАЧЕННЯ ПЕРЕБУВАЮТЬ НА ТИМЧАСОВО ОКУПОВАНИХ ТЕРИТОРІЯХ</div>
             <ul class='sub-list'>
-                <li><span class='color-dot' style='background-color: #8b5cf6;'></span>Музеї держ. значення: <b>409</b></li>
-                <li><span class='color-dot' style='background-color: #94a3b8;'></span>Інші музеї: <b>44</b></li>
-                <li><span class='color-dot' style='background-color: {colors_mus[2]};'></span>Завершили наповнення (100%): <b>{mus_completed:,}</b></li>
-                <li><span class='color-dot' style='background-color: {colors_mus[1]};'></span>В процесі наповнення (1-99%): <b>{mus_in_progress:,}</b></li>
-                <li><span class='color-dot' style='background-color: {colors_mus[0]};'></span>Ще не розпочали (0%): <b>{mus_not_started:,}</b></li>
+                <li><span class='color-dot' style='background-color: {colors_items[0]};'></span>Внесено до реєстру: <b>{total_vneseno:,}</b></li>
+                <li><span class='color-dot' style='background-color: {colors_items[1]};'></span>Залишилось внести: <b>{total_potribno:,}</b></li>
             </ul>
             """, unsafe_allow_html=True
         )
     with col3:
-        fig1 = go.Figure(go.Funnel(
-            y=["Не розпочали", "В процесі", "Завершили"],
-            x=[mus_not_started, mus_in_progress, mus_completed],
-            textinfo="value",
-            marker={"color": colors_mus}
-        ))
-        st.plotly_chart(clean_chart_layout(fig1, height=220), use_container_width=True, config=plot_config)
+        fig1 = go.Figure(data=[go.Pie(labels=["Внесено", "Залишилось"], values=[total_vneseno, total_potribno], hole=0.6, marker_colors=colors_items)])
+        st.plotly_chart(clean_chart_layout(fig1), use_container_width=True, config=plot_config)
 
-
-# --- КАРТКА 2: Внесено до системи (Груповий Bar Chart) ---
+# --- КАРТКА 2: Фонди (Груповий Bar Chart) ---
+colors_funds = ["#3b82f6", "#06b6d4"]
 with st.container(border=True):
     col1, col2, col3 = st.columns([1.8, 2.0, 1.2], vertical_alignment="center")
     with col1:
         st.markdown(
             f"""
             <div class='left-stat-block'>
-                <div class='stat-title'>Внесено до системи предметів</div>
+                <div class='stat-title'>Внесено до системи</div>
                 <h1 class='big-number'>{total_vneseno:,}</h1>
-                <div class='green-tag' style='background-color: rgba(245, 158, 11, 0.15); color: #f59e0b;'>Залишилось внести: {total_potribno:,}</div>
             </div>
             """, unsafe_allow_html=True
         )
@@ -307,10 +295,10 @@ with st.container(border=True):
         st.markdown(
             f"""
             <ul class='sub-list'>
-                <li><span class='color-dot' style='background-color: #94a3b8;'></span>Основний фонд (внесено): <b>{osn_vneseno:,}</b></li>
-                <li><span class='color-dot' style='background-color: transparent; border: 2px solid #3b82f6; left: -2px; top: 7px;'></span>Основний фонд (підписано КЕП): <b>{osn_pidpysano:,}</b></li>
-                <li><span class='color-dot' style='background-color: #94a3b8;'></span>Спецфонд (внесено): <b>{spec_vneseno:,}</b></li>
-                <li><span class='color-dot' style='background-color: transparent; border: 2px solid #3b82f6; left: -2px; top: 7px;'></span>Спецфонд (підписано КЕП): <b>{spec_pidpysano:,}</b></li>
+                <li><span class='color-dot' style='background-color: {colors_funds[0]};'></span>Основний фонд (внесено): <b>{osn_vneseno:,}</b></li>
+                <li><span class='color-dot' style='background-color: transparent; border: 2px solid {colors_funds[0]}; left: -2px; top: 7px;'></span>Основний фонд (підписано КЕП): <b>{osn_pidpysano:,}</b></li>
+                <li><span class='color-dot' style='background-color: {colors_funds[1]};'></span>Спецфонд (внесено): <b>{spec_vneseno:,}</b></li>
+                <li><span class='color-dot' style='background-color: transparent; border: 2px solid {colors_funds[1]}; left: -2px; top: 7px;'></span>Спецфонд (підписано КЕП): <b>{spec_pidpysano:,}</b></li>
             </ul>
             """, unsafe_allow_html=True
         )
@@ -332,16 +320,50 @@ with st.container(border=True):
             margin=dict(l=0, r=0, t=30, b=0),
             paper_bgcolor="rgba(0,0,0,0)",
             plot_bgcolor="rgba(0,0,0,0)",
-            font=dict(family="Montserrat, sans-serif", size=13, color="var(--text-color)"),
+            font=dict(family="Montserrat, sans-serif", size=13),
             showlegend=True,
             legend=dict(orientation="h", yanchor="bottom", y=1.05, xanchor="center", x=0.5, font_size=12),
             xaxis=dict(visible=False),
-            yaxis=dict(title="", tickfont=dict(size=14, weight="bold"))
+            yaxis=dict(title="", tickfont=dict(size=14, weight="bold")) # Колір автоматичний під тему
         )
         st.plotly_chart(fig2, use_container_width=True, config=plot_config)
 
+# --- КАРТКА 3: Всього музеїв у реєстрі (Оновлена) ---
+colors_mus = ["#ef4444", "#3b82f6", "#10b981"] # Не розпочали -> В процесі -> Завершили
+with st.container(border=True):
+    col1, col2, col3 = st.columns([1.8, 2.0, 1.2], vertical_alignment="center")
+    with col1:
+        st.markdown(
+            f"""
+            <div class='left-stat-block'>
+                <div class='stat-title'>Всього музейних установ У РЕЄСТРІ</div>
+                <h1 class='big-number'>{total_museums:,}</h1>
+            </div>
+            """, unsafe_allow_html=True
+        )
+    with col2:
+        st.markdown(
+            f"""
+            <div class='red-alert-tag'>⚠️ 104 МУЗЕЙНІ УСТАНОВИ ДЕРЖАВНОГО ЗНАЧЕННЯ ПЕРЕБУВАЮТЬ НА ТИМЧАСОВО ОКУПОВАНИХ ТЕРИТОРІЯХ</div>
+            <ul class='sub-list'>
+                <li><span class='color-dot' style='background-color: #8b5cf6;'></span>Музеї держ. значення: <b>409</b></li>
+                <li><span class='color-dot' style='background-color: #cbd5e1;'></span>Інші музеї: <b>{total_museums - 409}</b></li>
+                <li style="margin-top: 8px;"><span class='color-dot' style='background-color: {colors_mus[2]}; top: 17px;'></span>Завершили наповнення (100%): <b>{mus_completed:,}</b></li>
+                <li><span class='color-dot' style='background-color: {colors_mus[1]};'></span>В процесі наповнення (1-99%): <b>{mus_in_progress:,}</b></li>
+                <li><span class='color-dot' style='background-color: {colors_mus[0]};'></span>Ще не розпочали (0%): <b>{mus_not_started:,}</b></li>
+            </ul>
+            """, unsafe_allow_html=True
+        )
+    with col3:
+        fig3 = go.Figure(go.Funnel(
+            y=["Не розпочали", "В процесі", "Завершили"],
+            x=[mus_not_started, mus_in_progress, mus_completed],
+            textinfo="value",
+            marker={"color": colors_mus}
+        ))
+        st.plotly_chart(clean_chart_layout(fig3, height=220), use_container_width=True, config=plot_config)
 
-# --- КАРТКА 3: Викрадені / зниклі предмети ---
+# --- КАРТКА 4: Викрадені / зниклі предмети ---
 colors_missing = ["#dc2626", "#ea580c", "#f59e0b", "#94a3b8"]
 val_stolen = 448
 val_search = 471
@@ -357,7 +379,7 @@ with st.container(border=True):
             <div class='left-stat-block'>
                 <div class='stat-title'>Викрадені / зниклі предмети</div>
                 <h1 class='big-number'>{total_missing:,}</h1>
-                <div class='green-tag' style='background-color: rgba(185, 28, 28, 0.15); color: #ef4444;'>зафіксовано втрати</div>
+                <div class='red-alert-tag' style='margin-top: 4px; padding: 4px 10px;'>зафіксовано втрати</div>
             </div>
             """, unsafe_allow_html=True
         )
@@ -397,16 +419,13 @@ fig_top = px.bar(
     color_continuous_scale="Viridis",
     height=800,
 )
-fig_top.update_traces(
-    textposition="outside", 
-    textfont=dict(size=14, family="Montserrat, sans-serif", color="var(--text-color)")
-)
+fig_top.update_traces(textposition="outside", textfont_size=13, textfont_family="Montserrat, sans-serif")
 fig_top.update_layout(
-    paper_bgcolor="rgba(0,0,0,0)",
-    plot_bgcolor="rgba(0,0,0,0)",
     margin=dict(l=0, r=60, t=30, b=0),
     coloraxis_showscale=False,
-    font=dict(family="Montserrat, sans-serif", size=14, color="var(--text-color)"),
+    paper_bgcolor="rgba(0,0,0,0)",
+    plot_bgcolor="rgba(0,0,0,0)",
+    font=dict(family="Montserrat, sans-serif", size=14),
     xaxis_title="",
     yaxis_title="",
 )
