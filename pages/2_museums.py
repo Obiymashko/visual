@@ -161,7 +161,7 @@ def clean_chart_layout(fig, height=220):
     return fig
 
 # --- ШАПКА ---
-st.title("Реєстр музейних предметів")
+st.title("РЕЄСТР МУЗЕЙНИХ ПРЕДМЕТІВ")
 st.caption("**Дані актуальні на 29.07.2026**")
 st.write("") # Додатковий відступ
 
@@ -251,7 +251,7 @@ mus_in_progress = total_museums - mus_completed - mus_not_started
 # 2. КАРТКИ ДАШБОРДУ
 # =====================================================================
 
-# --- КАРТКА 1: Загальний стан ---
+# --- КАРТКА 1: Загальний стан (Музеї + Предмети) ---
 colors_items = ["#16A34A", "#F59E0B"]
 with st.container(border=True):
     col1, col2, col3 = st.columns([1.8, 2.0, 1.2], vertical_alignment="center")
@@ -268,7 +268,10 @@ with st.container(border=True):
     with col2:
         st.markdown(
             f"""
+            <div class='red-alert-tag'>⚠️ 104 МУЗЕЙНІ УСТАНОВИ ДЕРЖАВНОГО ЗНАЧЕННЯ ПЕРЕБУВАЮТЬ НА ТИМЧАСОВО ОКУПОВАНИХ ТЕРИТОРІЯХ</div>
             <ul class='sub-list'>
+                <li><span class='color-dot' style='background-color: #8b5cf6;'></span>Музеї держ. значення: <b>409</b></li>
+                <li><span class='color-dot' style='background-color: #cbd5e1;'></span>Інші музеї: <b>{total_museums - 409}</b></li>
                 <li><span class='color-dot' style='background-color: {colors_items[0]};'></span>Внесено до реєстру: <b>{total_vneseno:,}</b></li>
                 <li><span class='color-dot' style='background-color: {colors_items[1]};'></span>Залишилось внести: <b>{total_potribno:,}</b></li>
             </ul>
@@ -305,14 +308,14 @@ with st.container(border=True):
     with col3:
         fig2 = go.Figure()
         fig2.add_trace(go.Bar(
-            y=['Осн. фонд', 'Спецфонд'], x=[osn_vneseno, spec_vneseno], 
+            y=['Спецфонд', 'Осн. фонд'], x=[spec_vneseno, osn_vneseno], 
             name='Внесено', orientation='h', marker_color='#94a3b8',
-            text=[f"{osn_vneseno:,}", f"{spec_vneseno:,}"], textposition='auto'
+            text=[f"{spec_vneseno:,}", f"{osn_vneseno:,}"], textposition='auto'
         ))
         fig2.add_trace(go.Bar(
-            y=['Осн. фонд', 'Спецфонд'], x=[osn_pidpysano, spec_pidpysano], 
+            y=['Спецфонд', 'Осн. фонд'], x=[spec_pidpysano, osn_pidpysano], 
             name='Підписано КЕП', orientation='h', marker_color='#3b82f6',
-            text=[f"{osn_pidpysano:,}", f"{spec_pidpysano:,}"], textposition='auto'
+            text=[f"{spec_pidpysano:,}", f"{osn_pidpysano:,}"], textposition='auto'
         ))
         fig2.update_layout(
             barmode='group',
@@ -345,15 +348,10 @@ with st.container(border=True):
         # Два акуратні окремі списки, щоб уникнути зламів CSS
         st.markdown(
             f"""
-            <div class='red-alert-tag'>⚠️ 104 МУЗЕЙНІ УСТАНОВИ ДЕРЖАВНОГО ЗНАЧЕННЯ ПЕРЕБУВАЮТЬ НА ТИМЧАСОВО ОКУПОВАНИХ ТЕРИТОРІЯХ</div>
-            <ul class='sub-list' style='margin-bottom: 12px !important;'>
-                <li><span class='color-dot' style='background-color: #8b5cf6;'></span>Музеї держ. значення: <b>409</b></li>
-                <li><span class='color-dot' style='background-color: #cbd5e1;'></span>Інші музеї: <b>{total_museums - 409}</b></li>
-            </ul>
             <ul class='sub-list'>
                 <li><span class='color-dot' style='background-color: {colors_mus[2]};'></span>Завершили наповнення (100%): <b>{mus_completed:,}</b></li>
                 <li><span class='color-dot' style='background-color: {colors_mus[1]};'></span>В процесі наповнення (1-99%): <b>{mus_in_progress:,}</b></li>
-                <li><span class='color-dot' style='background-color: {colors_mus[0]};'></span>Не розпочали (0%): <b>{mus_not_started:,}</b></li>
+                <li><span class='color-dot' style='background-color: {colors_mus[0]};'></span>Ще не розпочали (0%): <b>{mus_not_started:,}</b></li>
             </ul>
             """, unsafe_allow_html=True
         )
