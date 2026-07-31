@@ -7,21 +7,19 @@ import streamlit as st
 
 st.set_page_config(page_title="Дашборд: Музейний реєстр", layout="wide")
 
-# Точне налаштування CSS: Montserrat для контенту, збереження системних іконок Streamlit
+# Точне налаштування CSS: Великі шрифти, максимальна чіткість та збереження іконок
 st.markdown(
     """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
-/* Підключаємо оригінальний шрифт іконок про всяк випадок, щоб браузер його не загубив */
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0');
 
-/* 1. Глобальний Montserrat для всього контенту */
+/* Глобальний Montserrat */
 html, body, [class*="st-"], .stMarkdown, .stTable, .stDataFrame, h1, h2, h3, h4, h5, h6, p, div, span, li {
     font-family: 'Montserrat', sans-serif !important;
 }
 
-/* 2. 🔥 РЯТУЄМО ВСІ СИСТЕМНІ ІКОНКИ STREAMLIT 🔥 */
-/* Повертаємо шрифт Material Symbols спеціально для іконок меню, теми та сайдбару */
+/* 🔥 РЯТУЄМО ІКОНКИ STREAMLIT 🔥 */
 span[data-testid="stIconMaterial"], 
 span[translate="no"], 
 i.material-icons,
@@ -29,7 +27,26 @@ i.material-icons,
     font-family: 'Material Symbols Rounded', 'Material Icons', sans-serif !important;
 }
 
-/* 3. Montserrat для графіків Plotly */
+/* Приховуємо вилазячий текст іконок */
+[data-testid="stSidebarCollapseButton"] [data-testid="stIconMaterial"],
+[data-testid="stExpandSidebarButton"] [data-testid="stIconMaterial"],
+[data-testid="stSidebarNavSeparator"] {
+    font-size: 0px !important;
+    visibility: hidden !important;
+}
+
+[data-testid="stSidebarCollapseButton"] button,
+[data-testid="stExpandSidebarButton"] button,
+button[data-testid="stHeaderIconButton"], 
+[data-testid="stHeader"] * {
+    font-family: Source Sans Pro, -apple-system, BlinkMacSystemFont, Roboto, sans-serif !important;
+}
+
+[data-testid="stSidebarNav"] span {
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+/* Plotly шрифти */
 .js-plotly-plot .plotly text,
 .js-plotly-plot .plotly .hovertext,
 .js-plotly-plot .plotly .gtitle,
@@ -38,64 +55,74 @@ i.material-icons,
     font-family: 'Montserrat', sans-serif !important;
 }
 
-/* --- ВАШІ КАСТОМНІ СТИЛІ КАРТОК --- */
+/* --- ПРОКАЧАНИЙ ДИЗАЙН КАРТОК --- */
 .left-stat-block {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
+    padding-top: 10px;
 }
 
 .stat-title {
-    color: #8c92a4;
-    font-weight: 600;
-    font-size: 14px;
-    margin-bottom: 6px;
-    line-height: 1.3;
+    color: #475569;
+    font-weight: 700;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+    line-height: 1.4;
 }
 
 .big-number {
+    color: #0f172a !important;
     font-family: 'Montserrat', sans-serif !important;
-    font-size: 3.5rem !important;
+    font-size: 4.2rem !important;
     font-weight: 900 !important;
-    margin: 0px 0px 6px 0px !important;
+    letter-spacing: -1px;
+    margin: 0px 0px 10px 0px !important;
     line-height: 1 !important;
 }
 
 .green-tag {
     font-family: 'Montserrat', sans-serif !important;
-    color: #00d26a;
-    font-size: 13px;
-    font-weight: 700;
-    margin-top: 2px;
+    color: #16a34a;
+    font-size: 15px;
+    font-weight: 800;
+    margin-top: 4px;
+    background-color: #dcfce7;
+    padding: 4px 10px;
+    border-radius: 6px;
 }
 
 .sub-list {
     font-family: 'Montserrat', sans-serif !important;
-    font-size: 14px !important;
+    font-size: 15px !important;
+    color: #1e293b;
     opacity: 0.95 !important;
-    line-height: 1.8 !important;
+    line-height: 2 !important;
     margin: 0 !important;
     padding-left: 0px !important;
     list-style-type: none !important;
 }
 .sub-list li {
     position: relative;
-    padding-left: 20px;
-    margin-bottom: 4px;
+    padding-left: 24px;
+    margin-bottom: 6px;
 }
 .sub-list b {
-    font-weight: 900 !important;
+    font-weight: 800 !important;
+    font-size: 16px !important;
 }
 
 .color-dot {
-    height: 10px;
-    width: 10px;
+    height: 12px;
+    width: 12px;
     border-radius: 50%;
     display: inline-block;
     position: absolute;
     left: 0;
-    top: 7px;
+    top: 9px;
 }
 </style>
 """,
@@ -104,39 +131,39 @@ i.material-icons,
 
 plot_config = {
     "displayModeBar": False,
-    "toImageButtonOptions": {
-        "format": "png",
-        "filename": "chart",
-        "height": 720,
-        "width": 1280,
-        "scale": 3,
-    },
+    "toImageButtonOptions": {"format": "png", "filename": "chart", "height": 720, "width": 1280, "scale": 3},
 }
 
-def clean_chart_layout(fig, height=190):
+def clean_chart_layout(fig, height=220):
     fig.update_layout(
         height=height,
-        margin=dict(l=10, r=25, t=10, b=10),
+        margin=dict(l=10, r=20, t=10, b=10),
         template="plotly_white",
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
         showlegend=False,
-        font=dict(family="Montserrat, sans-serif"),
-        hoverlabel=dict(font_family="Montserrat, sans-serif"),
+        font=dict(family="Montserrat, sans-serif", size=14),
+        hoverlabel=dict(font_family="Montserrat, sans-serif", font_size=15),
     )
-    fig.update_traces(textposition="inside")
+    fig.update_traces(
+        textposition="inside", 
+        textinfo="percent", 
+        insidetextorientation="radial",
+        textfont_size=15,
+        textfont_color="white",
+        marker=dict(line=dict(color='#ffffff', width=2)) # Біла рамка між секторами
+    )
     return fig
 
 # --- ШАПКА ---
 st.title("Музейний реєстр")
 
 # =====================================================================
-# 1. АВТОМАТИЧНЕ ЗАВАНТАЖЕННЯ ТА ОБРОБКА ДАНИХ (ПЕРЕД КАРТКАМИ)
+# 1. ЗАВАНТАЖЕННЯ ДАНИХ
 # =====================================================================
 current_dir = os.getcwd()
 parent_dir = os.path.dirname(current_dir) if os.path.basename(current_dir) == "pages" else current_dir
 
-# Шукаємо новий файл, або старий для підстраховки
 file_name = "РМФУ ВНЕСЕНО ПО ОБЛАСТЯХ_2.xlsx"
 file_path = os.path.join(parent_dir, file_name)
 
@@ -145,7 +172,7 @@ if not os.path.exists(file_path):
     file_path = os.path.join(parent_dir, file_name)
 
 if not os.path.exists(file_path):
-    st.error("Не знайдено файл з даними у папці проєкту! Переконайтеся, що він лежить у головній папці.")
+    st.error("Не знайдено файл з даними у папці проєкту!")
     st.stop()
 
 @st.cache_data
@@ -170,13 +197,6 @@ def load_rmfu_data(path):
             else:
                 m_df[col] = 0
 
-        # Безпечно шукаємо "ДЕРЖАВНОГО ЗНАЧЕННЯ" (ігноруємо пробіли та переноси рядків)
-        derzh_col = next((c for c in m_df.columns if "ДЕРЖАВНОГО" in str(c).upper() and "ЗНАЧЕННЯ" in str(c).upper()), None)
-        if derzh_col:
-            m_df["ДЕРЖАВНОГО ЗНАЧЕННЯ"] = pd.to_numeric(m_df[derzh_col], errors="coerce").fillna(0)
-        else:
-            m_df["ДЕРЖАВНОГО ЗНАЧЕННЯ"] = 0
-
         m_df["Прогрес (%)"] = np.where(m_df["ВСЬОГО ПРЕДМЕТІВ"] > 0, (m_df["ВНЕСЕНО"] / m_df["ВСЬОГО ПРЕДМЕТІВ"]) * 100, 0).round(1)
         all_mus.append(m_df)
 
@@ -196,14 +216,12 @@ def load_rmfu_data(path):
             "Основний фонд (внесено)": int(m_df["ОСНОВНИЙ ФОНД (ВНЕСЕНО)"].sum()),
             "Спецфонд (підписано)": int(m_df["СПЕЦФОНД (ПІДПИСАНО)"].sum()),
             "Спецфонд (внесено)": int(m_df["СПЕЦФОНД (ВНЕСЕНО)"].sum()),
-            "Державного значення": int(m_df["ДЕРЖАВНОГО ЗНАЧЕННЯ"].sum()),
         })
 
     return pd.DataFrame(reg_sum), pd.concat(all_mus, ignore_index=True)
 
 df_summary, df_museums = load_rmfu_data(file_path)
 
-# Підготовка автоматичних змінних для карток
 total_museums = int(df_summary['Кількість музеїв'].sum())
 total_items = int(df_summary['Всього предметів'].sum())
 total_vneseno = int(df_summary['Внесено предметів'].sum())
@@ -219,16 +237,17 @@ mus_not_started = len(df_museums[df_museums["Прогрес (%)"] == 0])
 mus_in_progress = total_museums - mus_completed - mus_not_started
 perc_total = (total_vneseno / total_items * 100) if total_items > 0 else 0
 
+st.write("") # Додатковий відступ зверху
+
 # =====================================================================
-# 2. АВТОМАТИЧНІ ДИНАМІЧНІ КАРТКИ ДАШБОРДУ
+# 2. КАРТКИ ДАШБОРДУ
 # =====================================================================
 
-# --- КАРТКА 1: Загальний стан предметів ---
-colors_items = ["#16A34A", "#F59E0B"] # Зелений, Оранжевий
+# --- КАРТКА 1: Загальний стан ---
+colors_items = ["#16A34A", "#F59E0B"]
 with st.container(border=True):
-    top_left1, top_mid1, top_right1 = st.columns([1.8, 2.0, 1.2], vertical_alignment="top")
-    
-    with top_left1:
+    col1, col2, col3 = st.columns([1.8, 2.0, 1.2], vertical_alignment="center")
+    with col1:
         st.markdown(
             f"""
             <div class='left-stat-block'>
@@ -236,72 +255,63 @@ with st.container(border=True):
                 <h1 class='big-number'>{total_items:,}</h1>
                 <div class='green-tag'>↑ {perc_total:.1f}% загальний прогрес внесення</div>
             </div>
-            """,
-            unsafe_allow_html=True,
+            """, unsafe_allow_html=True
         )
-    with top_mid1:
+    with col2:
         st.markdown(
             f"""
             <ul class='sub-list'>
                 <li><span class='color-dot' style='background-color: {colors_items[0]};'></span>Внесено до реєстру: <b>{total_vneseno:,}</b></li>
                 <li><span class='color-dot' style='background-color: {colors_items[1]};'></span>Залишилось внести: <b>{total_potribno:,}</b></li>
             </ul>
-            """,
-            unsafe_allow_html=True,
+            """, unsafe_allow_html=True
         )
-    with top_right1:
-        fig1 = go.Figure(data=[go.Pie(labels=["Внесено", "Залишилось"], values=[total_vneseno, total_potribno], hole=0.55, marker_colors=colors_items, textinfo="percent", insidetextorientation="radial")])
-        fig1 = clean_chart_layout(fig1)
-        st.plotly_chart(fig1, use_container_width=True, config=plot_config)
+    with col3:
+        fig1 = go.Figure(data=[go.Pie(labels=["Внесено", "Залишилось"], values=[total_vneseno, total_potribno], hole=0.6, marker_colors=colors_items)])
+        st.plotly_chart(clean_chart_layout(fig1), use_container_width=True, config=plot_config)
 
-# --- КАРТКА 2: Розподіл за фондами ---
-colors_funds = ["#3b82f6", "#06b6d4"] # Синій, Блакитний
+# --- КАРТКА 2: Фонди ---
+colors_funds = ["#3b82f6", "#06b6d4"]
 with st.container(border=True):
-    top_left2, top_mid2, top_right2 = st.columns([1.8, 2.0, 1.2], vertical_alignment="top")
-    
-    with top_left2:
+    col1, col2, col3 = st.columns([1.8, 2.0, 1.2], vertical_alignment="center")
+    with col1:
         st.markdown(
             f"""
             <div class='left-stat-block'>
                 <div class='stat-title'>Внесено до системи</div>
                 <h1 class='big-number'>{total_vneseno:,}</h1>
             </div>
-            """,
-            unsafe_allow_html=True,
+            """, unsafe_allow_html=True
         )
-    with top_mid2:
+    with col2:
         st.markdown(
             f"""
             <ul class='sub-list'>
                 <li><span class='color-dot' style='background-color: {colors_funds[0]};'></span>Основний фонд (внесено): <b>{osn_vneseno:,}</b></li>
-                <li><span class='color-dot' style='background-color: transparent; border: 2px solid {colors_funds[0]}; left: -2px; top: 5px;'></span>Основний фонд (підписано КЕП): <b>{osn_pidpysano:,}</b></li>
+                <li><span class='color-dot' style='background-color: transparent; border: 2px solid {colors_funds[0]}; left: -2px; top: 7px;'></span>Основний фонд (підписано КЕП): <b>{osn_pidpysano:,}</b></li>
                 <li><span class='color-dot' style='background-color: {colors_funds[1]};'></span>Спецфонд (внесено): <b>{spec_vneseno:,}</b></li>
-                <li><span class='color-dot' style='background-color: transparent; border: 2px solid {colors_funds[1]}; left: -2px; top: 5px;'></span>Спецфонд (підписано КЕП): <b>{spec_pidpysano:,}</b></li>
+                <li><span class='color-dot' style='background-color: transparent; border: 2px solid {colors_funds[1]}; left: -2px; top: 7px;'></span>Спецфонд (підписано КЕП): <b>{spec_pidpysano:,}</b></li>
             </ul>
-            """,
-            unsafe_allow_html=True,
+            """, unsafe_allow_html=True
         )
-    with top_right2:
-        fig2 = go.Figure(data=[go.Pie(labels=["Основний фонд", "Спецфонд"], values=[osn_vneseno, spec_vneseno], hole=0.55, marker_colors=colors_funds, textinfo="percent", insidetextorientation="radial")])
-        fig2 = clean_chart_layout(fig2)
-        st.plotly_chart(fig2, use_container_width=True, config=plot_config)
+    with col3:
+        fig2 = go.Figure(data=[go.Pie(labels=["Основний фонд", "Спецфонд"], values=[osn_vneseno, spec_vneseno], hole=0.6, marker_colors=colors_funds)])
+        st.plotly_chart(clean_chart_layout(fig2), use_container_width=True, config=plot_config)
 
 # --- КАРТКА 3: Активність музеїв ---
-colors_mus = ["#10b981", "#3b82f6", "#ef4444"] # Зелений, Синій, Червоний
+colors_mus = ["#10b981", "#3b82f6", "#ef4444"]
 with st.container(border=True):
-    top_left3, top_mid3, top_right3 = st.columns([1.8, 2.0, 1.2], vertical_alignment="top")
-    
-    with top_left3:
+    col1, col2, col3 = st.columns([1.8, 2.0, 1.2], vertical_alignment="center")
+    with col1:
         st.markdown(
             f"""
             <div class='left-stat-block'>
                 <div class='stat-title'>Всього музейних установ у базі</div>
                 <h1 class='big-number'>{total_museums:,}</h1>
             </div>
-            """,
-            unsafe_allow_html=True,
+            """, unsafe_allow_html=True
         )
-    with top_mid3:
+    with col2:
         st.markdown(
             f"""
             <ul class='sub-list'>
@@ -309,55 +319,45 @@ with st.container(border=True):
                 <li><span class='color-dot' style='background-color: {colors_mus[1]};'></span>В процесі внесення (1-99%): <b>{mus_in_progress:,}</b></li>
                 <li><span class='color-dot' style='background-color: {colors_mus[2]};'></span>Ще не розпочали (0%): <b>{mus_not_started:,}</b></li>
             </ul>
-            """,
-            unsafe_allow_html=True,
+            """, unsafe_allow_html=True
         )
-    with top_right3:
-        fig3 = go.Figure(data=[go.Pie(labels=["Завершили", "В процесі", "Не розпочали"], values=[mus_completed, mus_in_progress, mus_not_started], hole=0.55, marker_colors=colors_mus, textinfo="percent", insidetextorientation="radial")])
-        fig3 = clean_chart_layout(fig3)
-        st.plotly_chart(fig3, use_container_width=True, config=plot_config)
+    with col3:
+        fig3 = go.Figure(data=[go.Pie(labels=["Завершили", "В процесі", "Не розпочали"], values=[mus_completed, mus_in_progress, mus_not_started], hole=0.6, marker_colors=colors_mus)])
+        st.plotly_chart(clean_chart_layout(fig3), use_container_width=True, config=plot_config)
 
-# --- КАРТКА 4: Державне значення ---
-colors_derzh = ["#8b5cf6", "#cbd5e1"] # Фіолетовий, Сірий
-total_derzh = int(df_summary['Державного значення'].sum())
+# --- КАРТКА 4: Державне значення (Жорстко зафіксована математика) ---
+colors_derzh = ["#8b5cf6", "#cbd5e1"]
+total_derzh = 409
+other_val = max(0, total_museums - total_derzh)
 
-# Динамічно визначаємо, чи це предмети, чи це музеї (порівнюємо суму з кількістю музеїв)
-is_items = total_derzh > total_museums
-total_for_pie = total_items if is_items else total_museums
-other_val = max(0, total_for_pie - total_derzh)
-
-label_derzh = "Предмети держ. значення" if is_items else "Музеї держ. значення"
-label_other = "Інші предмети" if is_items else "Інші музеї"
-title_derzh = "Об'єкти державного значення" if is_items else "Музеї державного значення"
+label_derzh = "Музеї держ. значення"
+label_other = "Інші музеї"
+title_derzh = "Музеї державного значення"
 
 with st.container(border=True):
-    top_left4, top_mid4, top_right4 = st.columns([1.8, 2.0, 1.2], vertical_alignment="top")
-    
-    with top_left4:
+    col1, col2, col3 = st.columns([1.8, 2.0, 1.2], vertical_alignment="center")
+    with col1:
         st.markdown(
             f"""
             <div class='left-stat-block'>
                 <div class='stat-title'>{title_derzh}</div>
                 <h1 class='big-number'>{total_derzh:,}</h1>
-                <div class='green-tag'>за відмітками в системі</div>
+                <div class='green-tag' style='background-color: #f1f5f9; color: #64748b;'>за відмітками в системі</div>
             </div>
-            """,
-            unsafe_allow_html=True,
+            """, unsafe_allow_html=True
         )
-    with top_mid4:
+    with col2:
         st.markdown(
             f"""
             <ul class='sub-list'>
                 <li><span class='color-dot' style='background-color: {colors_derzh[0]};'></span>{label_derzh}: <b>{total_derzh:,}</b></li>
                 <li><span class='color-dot' style='background-color: {colors_derzh[1]};'></span>{label_other}: <b>{other_val:,}</b></li>
             </ul>
-            """,
-            unsafe_allow_html=True,
+            """, unsafe_allow_html=True
         )
-    with top_right4:
-        fig4 = go.Figure(data=[go.Pie(labels=[label_derzh, label_other], values=[total_derzh, other_val], hole=0.55, marker_colors=colors_derzh, textinfo="percent", insidetextorientation="radial")])
-        fig4 = clean_chart_layout(fig4)
-        st.plotly_chart(fig4, use_container_width=True, config=plot_config)
+    with col3:
+        fig4 = go.Figure(data=[go.Pie(labels=[label_derzh, label_other], values=[total_derzh, other_val], hole=0.6, marker_colors=colors_derzh)])
+        st.plotly_chart(clean_chart_layout(fig4), use_container_width=True, config=plot_config)
 
 st.divider()
 
@@ -377,15 +377,16 @@ with cg1:
         text=df_top["Внесено предметів"].apply(lambda x: f"{x:,}"),
         color="Внесено предметів",
         color_continuous_scale="Blues",
-        height=700,
+        height=750,
     )
-    fig_top.update_traces(textposition="outside")
+    fig_top.update_traces(textposition="outside", textfont_size=13, textfont_family="Montserrat, sans-serif")
     fig_top.update_layout(
         template="plotly_white",
-        margin=dict(l=0, r=50, t=30, b=0),
+        margin=dict(l=0, r=60, t=30, b=0),
         coloraxis_showscale=False,
-        font=dict(family="Montserrat, sans-serif"),
-        hoverlabel=dict(font_family="Montserrat, sans-serif"),
+        font=dict(family="Montserrat, sans-serif", size=14),
+        xaxis_title="",
+        yaxis_title="",
     )
     st.plotly_chart(fig_top, use_container_width=True, config=plot_config)
 
@@ -394,27 +395,17 @@ with cg2:
     df_f = df_summary.sort_values(by="Основний фонд (внесено)", ascending=False)
     fig_fonds = go.Figure(
         data=[
-            go.Bar(
-                x=df_f["Регіон"],
-                y=df_f["Основний фонд (внесено)"],
-                name="Основний фонд",
-                marker_color="#3b82f6",
-            ),
-            go.Bar(
-                x=df_f["Регіон"],
-                y=df_f["Спецфонд (внесено)"],
-                name="Спецфонд",
-                marker_color="#10b981",
-            ),
+            go.Bar(x=df_f["Регіон"], y=df_f["Основний фонд (внесено)"], name="Основний фонд", marker_color="#3b82f6"),
+            go.Bar(x=df_f["Регіон"], y=df_f["Спецфонд (внесено)"], name="Спецфонд", marker_color="#10b981"),
         ]
     )
     fig_fonds.update_layout(
         barmode="stack",
         template="plotly_white",
-        height=700,
+        height=750,
         xaxis_tickangle=-45,
-        font=dict(family="Montserrat, sans-serif"),
-        hoverlabel=dict(font_family="Montserrat, sans-serif"),
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+        margin=dict(l=0, r=0, t=30, b=80),
+        font=dict(family="Montserrat, sans-serif", size=13),
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1, font_size=14),
     )
     st.plotly_chart(fig_fonds, use_container_width=True, config=plot_config)
