@@ -135,11 +135,17 @@ st.title("Музейний реєстр")
 # =====================================================================
 current_dir = os.getcwd()
 parent_dir = os.path.dirname(current_dir) if os.path.basename(current_dir) == "pages" else current_dir
-file_name = "РМФУ ВНЕСЕНО ПО ОБЛАСТЯХ.xlsx"
+
+# Шукаємо новий файл, або старий для підстраховки
+file_name = "РМФУ ВНЕСЕНО ПО ОБЛАСТЯХ_2.xlsx"
 file_path = os.path.join(parent_dir, file_name)
 
 if not os.path.exists(file_path):
-    st.error(f"Не знайдено файл `{file_name}` у папці проєкту! Переконайтеся, що він лежить у головній папці поруч із `app.py`.")
+    file_name = "РМФУ ВНЕСЕНО ПО ОБЛАСТЯХ.xlsx"
+    file_path = os.path.join(parent_dir, file_name)
+
+if not os.path.exists(file_path):
+    st.error("Не знайдено файл з даними у папці проєкту! Переконайтеся, що він лежить у головній папці.")
     st.stop()
 
 @st.cache_data
@@ -153,12 +159,23 @@ def load_rmfu_data(path):
         r_name = sheet.title() + (" обл." if "КИЇВ" not in sheet.upper() else "")
 
         m_df["Регіон"] = r_name
+        
         for col in [
             "ВСЬОГО ПРЕДМЕТІВ", "ВНЕСЕНО", "ПОТРІБНО ВНЕСТИ",
             "ОСНОВНИЙ ФОНД (ПІДПИСАНО)", "ОСНОВНИЙ ФОНД (ВНЕСЕНО)",
             "СПЕЦФОНД (ПІДПИСАНО)", "СПЕЦФОНД (ВНЕСЕНО)",
         ]:
-            m_df[col] = pd.to_numeric(m_df[col], errors="coerce").fillna(0)
+            if col in m_df.columns:
+                m_df[col] = pd.to_numeric(m_df[col], errors="coerce").fillna(0)
+            else:
+                m_df[col] = 0
+
+        # Безпечно шукаємо "ДЕРЖАВНОГО ЗНАЧЕННЯ" (ігноруємо пробіли та переноси рядків)
+        derzh_col = next((c for c in m_df.columns if "ДЕРЖАВНОГО" in str(c).upper() and "ЗНАЧЕННЯ" in str(c).upper()), None)
+        if derzh_col:
+            m_df["ДЕРЖАВНОГО ЗНАЧЕННЯ"] = pd.to_numeric(m_df[derzh_col], errors="coerce").fillna(0)
+        else:
+            m_df["ДЕРЖАВНОГО ЗНАЧЕННЯ"] = 0
 
         m_df["Прогрес (%)"] = np.where(m_df["ВСЬОГО ПРЕДМЕТІВ"] > 0, (m_df["ВНЕСЕНО"] / m_df["ВСЬОГО ПРЕДМЕТІВ"]) * 100, 0).round(1)
         all_mus.append(m_df)
@@ -179,6 +196,7 @@ def load_rmfu_data(path):
             "Основний фонд (внесено)": int(m_df["ОСНОВНИЙ ФОНД (ВНЕСЕНО)"].sum()),
             "Спецфонд (підписано)": int(m_df["СПЕЦФОНД (ПІДПИСАНО)"].sum()),
             "Спецфонд (внесено)": int(m_df["СПЕЦФОНД (ВНЕСЕНО)"].sum()),
+            "Державного значення": int(m_df["ДЕРЖАВНОГО ЗНАЧЕННЯ"].sum()),
         })
 
     return pd.DataFrame(reg_sum), pd.concat(all_mus, ignore_index=True)
@@ -196,11 +214,9 @@ osn_pidpysano = int(df_summary['Основний фонд (підписано)']
 spec_vneseno = int(df_summary['Спецфонд (внесено)'].sum())
 spec_pidpysano = int(df_summary['Спецфонд (підписано)'].sum())
 
-# Статуси музеїв по прогресу
 mus_completed = len(df_museums[df_museums["Прогрес (%)"] >= 99.9])
 mus_not_started = len(df_museums[df_museums["Прогрес (%)"] == 0])
 mus_in_progress = total_museums - mus_completed - mus_not_started
-
 perc_total = (total_vneseno / total_items * 100) if total_items > 0 else 0
 
 # =====================================================================
@@ -300,6 +316,48 @@ with st.container(border=True):
         fig3 = go.Figure(data=[go.Pie(labels=["Завершили", "В процесі", "Не розпочали"], values=[mus_completed, mus_in_progress, mus_not_started], hole=0.55, marker_colors=colors_mus, textinfo="percent", insidetextorientation="radial")])
         fig3 = clean_chart_layout(fig3)
         st.plotly_chart(fig3, use_container_width=True, config=plot_config)
+
+# --- КАРТКА 4: Державне значення ---
+colors_derzh = ["#8b5cf6", "#cbd5e1"] # Фіолетовий, Сірий
+total_derzh = int(df_summary['Державного значення'].sum())
+
+# Динамічно визначаємо, чи це предмети, чи це музеї (порівнюємо суму з кількістю музеїв)
+is_items = total_derzh > total_museums
+total_for_pie = total_items if is_items else total_museums
+other_val = max(0, total_for_pie - total_derzh)
+
+label_derzh = "Предмети держ. значення" if is_items else "Музеї держ. значення"
+label_other = "Інші предмети" if is_items else "Інші музеї"
+title_derzh = "Об'єкти державного значення" if is_items else "Музеї державного значення"
+
+with st.container(border=True):
+    top_left4, top_mid4, top_right4 = st.columns([1.8, 2.0, 1.2], vertical_alignment="top")
+    
+    with top_left4:
+        st.markdown(
+            f"""
+            <div class='left-stat-block'>
+                <div class='stat-title'>{title_derzh}</div>
+                <h1 class='big-number'>{total_derzh:,}</h1>
+                <div class='green-tag'>за відмітками в системі</div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+    with top_mid4:
+        st.markdown(
+            f"""
+            <ul class='sub-list'>
+                <li><span class='color-dot' style='background-color: {colors_derzh[0]};'></span>{label_derzh}: <b>{total_derzh:,}</b></li>
+                <li><span class='color-dot' style='background-color: {colors_derzh[1]};'></span>{label_other}: <b>{other_val:,}</b></li>
+            </ul>
+            """,
+            unsafe_allow_html=True,
+        )
+    with top_right4:
+        fig4 = go.Figure(data=[go.Pie(labels=[label_derzh, label_other], values=[total_derzh, other_val], hole=0.55, marker_colors=colors_derzh, textinfo="percent", insidetextorientation="radial")])
+        fig4 = clean_chart_layout(fig4)
+        st.plotly_chart(fig4, use_container_width=True, config=plot_config)
 
 st.divider()
 
