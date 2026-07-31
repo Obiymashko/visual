@@ -99,6 +99,7 @@ button[kind="headerNoPadding"] span {
     padding: 8px 12px;
     border-radius: 6px;
     line-height: 1.4;
+    text-transform: uppercase;
 }
 
 .sub-list {
@@ -158,7 +159,7 @@ def clean_chart_layout(fig, height=220):
             insidetextorientation="radial",
             textfont_size=15,
             textfont_color="white",
-            marker=dict(line=dict(color='#ffffff', width=2)) # Біла рамка між секторами
+            marker=dict(line=dict(color='#ffffff', width=2))
         )
     return fig
 
@@ -206,6 +207,13 @@ def load_rmfu_data(path):
             else:
                 m_df[col] = 0
 
+        # Пошук викрадених/зниклих (адаптивний)
+        stolen_col = next((c for c in m_df.columns if any(w in str(c).upper() for w in ["ВИКРАД", "ЗНИК", "ВТРАЧ"])), None)
+        if stolen_col:
+            m_df["ВИКРАДЕНІ_ЗНИКЛІ"] = pd.to_numeric(m_df[stolen_col], errors="coerce").fillna(0)
+        else:
+            m_df["ВИКРАДЕНІ_ЗНИКЛІ"] = 0
+
         m_df["Прогрес (%)"] = np.where(m_df["ВСЬОГО ПРЕДМЕТІВ"] > 0, (m_df["ВНЕСЕНО"] / m_df["ВСЬОГО ПРЕДМЕТІВ"]) * 100, 0).round(1)
         all_mus.append(m_df)
 
@@ -225,6 +233,7 @@ def load_rmfu_data(path):
             "Основний фонд (внесено)": int(m_df["ОСНОВНИЙ ФОНД (ВНЕСЕНО)"].sum()),
             "Спецфонд (підписано)": int(m_df["СПЕЦФОНД (ПІДПИСАНО)"].sum()),
             "Спецфонд (внесено)": int(m_df["СПЕЦФОНД (ВНЕСЕНО)"].sum()),
+            "Викрадені/зниклі": int(m_df["ВИКРАДЕНІ_ЗНИКЛІ"].sum()),
         })
 
     return pd.DataFrame(reg_sum), pd.concat(all_mus, ignore_index=True)
@@ -240,6 +249,8 @@ osn_vneseno = int(df_summary['Основний фонд (внесено)'].sum()
 osn_pidpysano = int(df_summary['Основний фонд (підписано)'].sum())
 spec_vneseno = int(df_summary['Спецфонд (внесено)'].sum())
 spec_pidpysano = int(df_summary['Спецфонд (підписано)'].sum())
+
+total_stolen = int(df_summary['Викрадені/зниклі'].sum())
 
 mus_completed = len(df_museums[df_museums["Прогрес (%)"] >= 99.9])
 mus_not_started = len(df_museums[df_museums["Прогрес (%)"] == 0])
@@ -261,7 +272,7 @@ with st.container(border=True):
             <div class='left-stat-block'>
                 <div class='stat-title'>Всього музейних предметів (за звітами)</div>
                 <h1 class='big-number'>{total_items:,}</h1>
-                <div class='green-tag'>↑ {perc_total:.1f}% загальний прогрес внесення</div>
+                <div class='green-tag'>↑ {perc_total:.1f}% загальний прогрес наповнення</div>
             </div>
             """, unsafe_allow_html=True
         )
@@ -278,7 +289,7 @@ with st.container(border=True):
         fig1 = go.Figure(data=[go.Pie(labels=["Внесено", "Залишилось"], values=[total_vneseno, total_potribno], hole=0.6, marker_colors=colors_items)])
         st.plotly_chart(clean_chart_layout(fig1), use_container_width=True, config=plot_config)
 
-# --- КАРТКА 2: Фонди (ВИПРАВЛЕНИЙ Bar Chart замість зламаного спідометра) ---
+# --- КАРТКА 2: Фонди (Bar Chart) ---
 colors_funds = ["#3b82f6", "#06b6d4"]
 with st.container(border=True):
     col1, col2, col3 = st.columns([1.8, 2.0, 1.2], vertical_alignment="center")
@@ -303,7 +314,6 @@ with st.container(border=True):
             """, unsafe_allow_html=True
         )
     with col3:
-        # Груповий графік, який коректно порівнює "Внесено" та "Підписано"
         fig2 = go.Figure()
         fig2.add_trace(go.Bar(
             y=['Осн. фонд', 'Спецфонд'], x=[osn_vneseno, spec_vneseno], 
@@ -330,8 +340,8 @@ with st.container(border=True):
         )
         st.plotly_chart(fig2, use_container_width=True, config=plot_config)
 
-# --- КАРТКА 3: Активність музеїв (Funnel / Воронка) ---
-colors_mus = ["#ef4444", "#3b82f6", "#10b981"] # Не розпочали -> В процесі -> Завершили
+# --- КАРТКА 3: Активність музеїв (Funnel) ---
+colors_mus = ["#ef4444", "#3b82f6", "#10b981"]
 with st.container(border=True):
     col1, col2, col3 = st.columns([1.8, 2.0, 1.2], vertical_alignment="center")
     with col1:
@@ -362,14 +372,10 @@ with st.container(border=True):
         ))
         st.plotly_chart(clean_chart_layout(fig3, height=180), use_container_width=True, config=plot_config)
 
-# --- КАРТКА 4: Державне значення (Horizontal Bar + ЧЕРВОНА ПЛАШКА) ---
+# --- КАРТКА 4: Державне значення (Bar Chart + ЧЕРВОНА ПЛАШКА) ---
 colors_derzh = ["#8b5cf6", "#cbd5e1"]
 total_derzh = 409
 other_val = max(0, total_museums - total_derzh)
-
-label_derzh = "Музеї держ. значення"
-label_other = "Інші музеї"
-title_derzh = "Музеї державного значення"
 
 with st.container(border=True):
     col1, col2, col3 = st.columns([1.8, 2.0, 1.2], vertical_alignment="center")
@@ -377,7 +383,7 @@ with st.container(border=True):
         st.markdown(
             f"""
             <div class='left-stat-block'>
-                <div class='stat-title'>{title_derzh}</div>
+                <div class='stat-title'>Музеї державного значення</div>
                 <h1 class='big-number'>{total_derzh:,}</h1>
             </div>
             """, unsafe_allow_html=True
@@ -386,8 +392,8 @@ with st.container(border=True):
         st.markdown(
             f"""
             <ul class='sub-list'>
-                <li><span class='color-dot' style='background-color: {colors_derzh[0]};'></span>{label_derzh}: <b>{total_derzh:,}</b></li>
-                <li><span class='color-dot' style='background-color: {colors_derzh[1]};'></span>{label_other}: <b>{other_val:,}</b></li>
+                <li><span class='color-dot' style='background-color: {colors_derzh[0]};'></span>Музеї держ. значення: <b>{total_derzh:,}</b></li>
+                <li><span class='color-dot' style='background-color: {colors_derzh[1]};'></span>Інші музеї: <b>{other_val:,}</b></li>
             </ul>
             <div class='red-alert-tag'>⚠️ 104 МУЗЕЙНІ УСТАНОВИ ДЕРЖАВНОГО ЗНАЧЕННЯ ПЕРЕБУВАЮТЬ НА ТИМЧАСОВО ОКУПОВАНИХ ТЕРИТОРІЯХ</div>
             """, unsafe_allow_html=True
@@ -395,7 +401,7 @@ with st.container(border=True):
     with col3:
         fig4 = go.Figure(go.Bar(
             x=[total_derzh, other_val],
-            y=[label_derzh, label_other],
+            y=["Музеї держ. значення", "Інші музеї"],
             orientation='h',
             marker_color=colors_derzh,
             text=[f"{total_derzh:,}", f"{other_val:,}"],
@@ -412,6 +418,52 @@ with st.container(border=True):
             yaxis=dict(title="")
         )
         st.plotly_chart(fig4, use_container_width=True, config=plot_config)
+
+# --- КАРТКА 5: Викрадені / Зниклі ---
+colors_stolen = ["#ef4444", "#e2e8f0"]
+other_items_stolen = max(0, total_items - total_stolen)
+
+with st.container(border=True):
+    col1, col2, col3 = st.columns([1.8, 2.0, 1.2], vertical_alignment="center")
+    with col1:
+        st.markdown(
+            f"""
+            <div class='left-stat-block'>
+                <div class='stat-title'>Викрадені / Зниклі предмети</div>
+                <h1 class='big-number'>{total_stolen:,}</h1>
+                <div class='red-alert-tag' style='margin-top: 0px; padding: 4px 10px; width:fit-content; background-color: #fef2f2; color: #991b1b; font-size:12px;'>Зафіксовані втрати</div>
+            </div>
+            """, unsafe_allow_html=True
+        )
+    with col2:
+        st.markdown(
+            f"""
+            <ul class='sub-list'>
+                <li><span class='color-dot' style='background-color: {colors_stolen[0]};'></span>Викрадені / зниклі: <b>{total_stolen:,}</b></li>
+                <li><span class='color-dot' style='background-color: {colors_stolen[1]};'></span>Збережені предмети: <b>{other_items_stolen:,}</b></li>
+            </ul>
+            """, unsafe_allow_html=True
+        )
+    with col3:
+        fig5 = go.Figure(go.Bar(
+            x=[total_stolen, other_items_stolen],
+            y=["Втрачено", "Збережено"],
+            orientation='h',
+            marker_color=colors_stolen,
+            text=[f"{total_stolen:,}", f"{other_items_stolen:,}"],
+            textposition="auto"
+        ))
+        fig5.update_layout(
+            height=160, 
+            margin=dict(l=0, r=0, t=10, b=10),
+            template="plotly_white",
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)",
+            font=dict(family="Montserrat, sans-serif", size=13),
+            xaxis=dict(visible=False), 
+            yaxis=dict(title="")
+        )
+        st.plotly_chart(fig5, use_container_width=True, config=plot_config)
 
 st.divider()
 
