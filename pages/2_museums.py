@@ -94,8 +94,7 @@ button[kind="headerNoPadding"] span {
     color: #b91c1c;
     font-size: 13px;
     font-weight: 800;
-    margin-top: 0px;
-    margin-bottom: 15px;
+    margin-top: 15px;
     background-color: #fee2e2;
     padding: 8px 12px;
     border-radius: 6px;
@@ -152,7 +151,7 @@ def clean_chart_layout(fig, height=220):
         font=dict(family="Montserrat, sans-serif", size=14),
         hoverlabel=dict(font_family="Montserrat, sans-serif", font_size=15),
     )
-    if fig.data and getattr(fig.data[0], 'type', None) == 'pie':
+    if fig.data and fig.data[0].type == 'pie':
         fig.update_traces(
             textposition="inside", 
             textinfo="percent", 
@@ -233,24 +232,26 @@ def load_rmfu_data(path):
 df_summary, df_museums = load_rmfu_data(file_path)
 
 total_museums = int(df_summary['Кількість музеїв'].sum())
+total_items = int(df_summary['Всього предметів'].sum())
 total_vneseno = int(df_summary['Внесено предметів'].sum())
-
-# Згідно ТЗ: фіксуємо кількість предметів, що залишилось внести
-total_potribno = 10898203
-# Перераховуємо загальну кількість, щоб діаграма та відсотки були на 100% точними
-total_items = total_vneseno + total_potribno
-perc_total = (total_vneseno / total_items * 100) if total_items > 0 else 0
+total_potribno = int(df_summary['Потрібно внести'].sum())
 
 osn_vneseno = int(df_summary['Основний фонд (внесено)'].sum())
 osn_pidpysano = int(df_summary['Основний фонд (підписано)'].sum())
 spec_vneseno = int(df_summary['Спецфонд (внесено)'].sum())
 spec_pidpysano = int(df_summary['Спецфонд (підписано)'].sum())
 
+mus_completed = len(df_museums[df_museums["Прогрес (%)"] >= 99.9])
+mus_not_started = len(df_museums[df_museums["Прогрес (%)"] == 0])
+mus_in_progress = total_museums - mus_completed - mus_not_started
+perc_total = (total_vneseno / total_items * 100) if total_items > 0 else 0
+
+
 # =====================================================================
-# 2. КАРТКИ ДАШБОРДУ
+# 2. КАРТКИ ДАШБОРДУ (РІЗНОМАНІТНІ ВІЗУАЛІЗАЦІЇ)
 # =====================================================================
 
-# --- КАРТКА 1: Загальний стан (Музеї + Предмети) ---
+# --- КАРТКА 1: Загальний стан (Pie Chart) ---
 colors_items = ["#16A34A", "#F59E0B"]
 with st.container(border=True):
     col1, col2, col3 = st.columns([1.8, 2.0, 1.2], vertical_alignment="center")
@@ -267,10 +268,7 @@ with st.container(border=True):
     with col2:
         st.markdown(
             f"""
-            <div class='red-alert-tag'>⚠️ 104 МУЗЕЙНІ УСТАНОВИ ДЕРЖАВНОГО ЗНАЧЕННЯ ПЕРЕБУВАЮТЬ НА ТИМЧАСОВО ОКУПОВАНИХ ТЕРИТОРІЯХ</div>
             <ul class='sub-list'>
-                <li><span class='color-dot' style='background-color: #8b5cf6;'></span>Музеї держ. значення: <b>409</b></li>
-                <li><span class='color-dot' style='background-color: #cbd5e1;'></span>Інші музеї: <b>44</b></li>
                 <li><span class='color-dot' style='background-color: {colors_items[0]};'></span>Внесено до реєстру: <b>{total_vneseno:,}</b></li>
                 <li><span class='color-dot' style='background-color: {colors_items[1]};'></span>Залишилось внести: <b>{total_potribno:,}</b></li>
             </ul>
@@ -331,7 +329,90 @@ with st.container(border=True):
         )
         st.plotly_chart(fig2, use_container_width=True, config=plot_config)
 
-# --- КАРТКА 3: Викрадені / зниклі предмети ---
+# --- КАРТКА 3: Активність музеїв (Funnel / Воронка) ---
+colors_mus = ["#ef4444", "#3b82f6", "#10b981"] # Не розпочали -> В процесі -> Завершили
+with st.container(border=True):
+    col1, col2, col3 = st.columns([1.8, 2.0, 1.2], vertical_alignment="center")
+    with col1:
+        st.markdown(
+            f"""
+            <div class='left-stat-block'>
+                <div class='stat-title'>Всього музейних установ У РЕЄСТРІ</div>
+                <h1 class='big-number'>{total_museums:,}</h1>
+            </div>
+            """, unsafe_allow_html=True
+        )
+    with col2:
+        st.markdown(
+            f"""
+            <ul class='sub-list'>
+                <li><span class='color-dot' style='background-color: {colors_mus[2]};'></span>Завершили наповнення (100%): <b>{mus_completed:,}</b></li>
+                <li><span class='color-dot' style='background-color: {colors_mus[1]};'></span>В процесі наповнення (1-99%): <b>{mus_in_progress:,}</b></li>
+                <li><span class='color-dot' style='background-color: {colors_mus[0]};'></span>Ще не розпочали (0%): <b>{mus_not_started:,}</b></li>
+            </ul>
+            """, unsafe_allow_html=True
+        )
+    with col3:
+        fig3 = go.Figure(go.Funnel(
+            y=["Не розпочали", "В процесі", "Завершили"],
+            x=[mus_not_started, mus_in_progress, mus_completed],
+            textinfo="value",
+            marker={"color": colors_mus}
+        ))
+        st.plotly_chart(clean_chart_layout(fig3, height=180), use_container_width=True, config=plot_config)
+
+# --- КАРТКА 4: Державне значення (Horizontal Bar + ЧЕРВОНА ПЛАШКА) ---
+colors_derzh = ["#8b5cf6", "#cbd5e1"]
+total_derzh = 409
+other_val = max(0, total_museums - total_derzh)
+
+label_derzh = "Музеї держ. значення"
+label_other = "Інші музеї"
+title_derzh = "Музеї державного значення"
+
+with st.container(border=True):
+    col1, col2, col3 = st.columns([1.8, 2.0, 1.2], vertical_alignment="center")
+    with col1:
+        st.markdown(
+            f"""
+            <div class='left-stat-block'>
+                <div class='stat-title'>{title_derzh}</div>
+                <h1 class='big-number'>{total_derzh:,}</h1>
+            </div>
+            """, unsafe_allow_html=True
+        )
+    with col2:
+        st.markdown(
+            f"""
+            <ul class='sub-list'>
+                <li><span class='color-dot' style='background-color: {colors_derzh[0]};'></span>{label_derzh}: <b>{total_derzh:,}</b></li>
+                <li><span class='color-dot' style='background-color: {colors_derzh[1]};'></span>{label_other}: <b>{other_val:,}</b></li>
+            </ul>
+            <div class='red-alert-tag'>⚠️ 104 МУЗЕЙНІ УСТАНОВИ ДЕРЖАВНОГО ЗНАЧЕННЯ ПЕРЕБУВАЮТЬ НА ТИМЧАСОВО ОКУПОВАНИХ ТЕРИТОРІЯХ</div>
+            """, unsafe_allow_html=True
+        )
+    with col3:
+        fig4 = go.Figure(go.Bar(
+            x=[total_derzh, other_val],
+            y=[label_derzh, label_other],
+            orientation='h',
+            marker_color=colors_derzh,
+            text=[f"{total_derzh:,}", f"{other_val:,}"],
+            textposition="auto"
+        ))
+        fig4.update_layout(
+            height=180, 
+            margin=dict(l=0, r=0, t=10, b=10),
+            template="plotly_white",
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)",
+            font=dict(family="Montserrat, sans-serif", size=13),
+            xaxis=dict(visible=False), 
+            yaxis=dict(title="")
+        )
+        st.plotly_chart(fig4, use_container_width=True, config=plot_config)
+
+# --- КАРТКА 5: Викрадені / зниклі предмети ---
 colors_missing = ["#dc2626", "#ea580c", "#f59e0b", "#94a3b8"]
 val_stolen = 448
 val_search = 471
@@ -371,28 +452,50 @@ with st.container(border=True):
 st.divider()
 
 # =====================================================================
-# 3. ГРАФІК ПО ОБЛАСТЯХ (На всю ширину)
+# 3. ГРАФІКИ ПО ОБЛАСТЯХ
 # =====================================================================
 
-st.subheader("Топ областей за кількістю внесених предметів")
-df_top = df_summary.sort_values(by="Внесено предметів", ascending=True)
-fig_top = px.bar(
-    df_top,
-    x="Внесено предметів",
-    y="Регіон",
-    orientation="h",
-    text=df_top["Внесено предметів"].apply(lambda x: f"{x:,}"),
-    color="Внесено предметів",
-    color_continuous_scale="Viridis",
-    height=800,
-)
-fig_top.update_traces(textposition="outside", textfont_size=13, textfont_family="Montserrat, sans-serif")
-fig_top.update_layout(
-    template="plotly_white",
-    margin=dict(l=0, r=60, t=30, b=0),
-    coloraxis_showscale=False,
-    font=dict(family="Montserrat, sans-serif", size=14),
-    xaxis_title="",
-    yaxis_title="",
-)
-st.plotly_chart(fig_top, use_container_width=True, config=plot_config)
+cg1, cg2 = st.columns(2)
+with cg1:
+    st.subheader("Топ областей за кількістю внесених предметів")
+    df_top = df_summary.sort_values(by="Внесено предметів", ascending=True)
+    fig_top = px.bar(
+        df_top,
+        x="Внесено предметів",
+        y="Регіон",
+        orientation="h",
+        text=df_top["Внесено предметів"].apply(lambda x: f"{x:,}"),
+        color="Внесено предметів",
+        color_continuous_scale="Viridis",
+        height=750,
+    )
+    fig_top.update_traces(textposition="outside", textfont_size=13, textfont_family="Montserrat, sans-serif")
+    fig_top.update_layout(
+        template="plotly_white",
+        margin=dict(l=0, r=60, t=30, b=0),
+        coloraxis_showscale=False,
+        font=dict(family="Montserrat, sans-serif", size=14),
+        xaxis_title="",
+        yaxis_title="",
+    )
+    st.plotly_chart(fig_top, use_container_width=True, config=plot_config)
+
+with cg2:
+    st.subheader("Співвідношення: Основний vs Спецфонд (внесено)")
+    df_f = df_summary.sort_values(by="Основний фонд (внесено)", ascending=False)
+    fig_fonds = go.Figure(
+        data=[
+            go.Bar(x=df_f["Регіон"], y=df_f["Основний фонд (внесено)"], name="Основний фонд", marker_color="#3b82f6"),
+            go.Bar(x=df_f["Регіон"], y=df_f["Спецфонд (внесено)"], name="Спецфонд", marker_color="#10b981"),
+        ]
+    )
+    fig_fonds.update_layout(
+        barmode="stack",
+        template="plotly_white",
+        height=750,
+        xaxis_tickangle=-45,
+        margin=dict(l=0, r=0, t=30, b=80),
+        font=dict(family="Montserrat, sans-serif", size=13),
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1, font_size=14),
+    )
+    st.plotly_chart(fig_fonds, use_container_width=True, config=plot_config)
