@@ -128,6 +128,7 @@ button[kind="headerNoPadding"] span {
     position: absolute;
     left: 0;
     top: 9px;
+    box-sizing: border-box; /* Ідеальне вирівнювання крапок з рамкою та без */
 }
 </style>
 """,
@@ -268,10 +269,7 @@ with st.container(border=True):
     with col2:
         st.markdown(
             f"""
-            <div class='red-alert-tag'>⚠️ 104 МУЗЕЙНІ УСТАНОВИ ДЕРЖАВНОГО ЗНАЧЕННЯ ПЕРЕБУВАЮТЬ НА ТИМЧАСОВО ОКУПОВАНИХ ТЕРИТОРІЯХ</div>
             <ul class='sub-list'>
-                <li><span class='color-dot' style='background-color: #8b5cf6;'></span>Музеї держ. значення: <b>409</b></li>
-                <li><span class='color-dot' style='background-color: #cbd5e1;'></span>Інші музеї: <b>{total_museums - 409}</b></li>
                 <li><span class='color-dot' style='background-color: {colors_items[0]};'></span>Внесено до реєстру: <b>{total_vneseno:,}</b></li>
                 <li><span class='color-dot' style='background-color: {colors_items[1]};'></span>Залишилось внести: <b>{total_potribno:,}</b></li>
             </ul>
@@ -299,9 +297,9 @@ with st.container(border=True):
             f"""
             <ul class='sub-list'>
                 <li><span class='color-dot' style='background-color: {colors_funds[0]};'></span>Основний фонд (внесено): <b>{osn_vneseno:,}</b></li>
-                <li><span class='color-dot' style='background-color: transparent; border: 2px solid {colors_funds[0]}; left: -2px; top: 7px;'></span>Основний фонд (підписано КЕП): <b>{osn_pidpysano:,}</b></li>
+                <li><span class='color-dot' style='background-color: transparent; border: 2px solid {colors_funds[0]};'></span>Основний фонд (підписано КЕП): <b>{osn_pidpysano:,}</b></li>
                 <li><span class='color-dot' style='background-color: {colors_funds[1]};'></span>Спецфонд (внесено): <b>{spec_vneseno:,}</b></li>
-                <li><span class='color-dot' style='background-color: transparent; border: 2px solid {colors_funds[1]}; left: -2px; top: 7px;'></span>Спецфонд (підписано КЕП): <b>{spec_pidpysano:,}</b></li>
+                <li><span class='color-dot' style='background-color: transparent; border: 2px solid {colors_funds[1]};'></span>Спецфонд (підписано КЕП): <b>{spec_pidpysano:,}</b></li>
             </ul>
             """, unsafe_allow_html=True
         )
@@ -324,10 +322,9 @@ with st.container(border=True):
             paper_bgcolor="rgba(0,0,0,0)",
             plot_bgcolor="rgba(0,0,0,0)",
             font=dict(family="Montserrat, sans-serif", size=13),
-            showlegend=True,
-            legend=dict(orientation="h", yanchor="bottom", y=1.05, xanchor="center", x=0.5, font_size=12),
+            showlegend=False, # Видалили легенду
             xaxis=dict(visible=False),
-            yaxis=dict(title="", tickfont=dict(size=14, weight="bold")) # Колір автоматичний під тему
+            yaxis=dict(title="", tickfont=dict(size=14, weight="bold"))
         )
         st.plotly_chart(fig2, use_container_width=True, config=plot_config)
 
@@ -345,9 +342,13 @@ with st.container(border=True):
             """, unsafe_allow_html=True
         )
     with col2:
-        # Два акуратні окремі списки, щоб уникнути зламів CSS
         st.markdown(
             f"""
+            <div class='red-alert-tag'>⚠️ 104 МУЗЕЙНІ УСТАНОВИ ДЕРЖАВНОГО ЗНАЧЕННЯ ПЕРЕБУВАЮТЬ НА ТИМЧАСОВО ОКУПОВАНИХ ТЕРИТОРІЯХ</div>
+            <ul class='sub-list' style='margin-bottom: 16px !important;'>
+                <li><span class='color-dot' style='background-color: #8b5cf6;'></span>Музеї держ. значення: <b>409</b></li>
+                <li><span class='color-dot' style='background-color: #cbd5e1;'></span>Інші музеї: <b>{total_museums - 409}</b></li>
+            </ul>
             <ul class='sub-list'>
                 <li><span class='color-dot' style='background-color: {colors_mus[2]};'></span>Завершили наповнення (100%): <b>{mus_completed:,}</b></li>
                 <li><span class='color-dot' style='background-color: {colors_mus[1]};'></span>В процесі наповнення (1-99%): <b>{mus_in_progress:,}</b></li>
