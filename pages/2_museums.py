@@ -328,7 +328,7 @@ with st.container(border=True):
         )
         st.plotly_chart(fig2, use_container_width=True, config=plot_config)
 
-# --- КАРТКА 3: Всього музеїв у реєстрі (Оновлена) ---
+# --- КАРТКА 3: Всього музеїв у реєстрі ---
 colors_mus = ["#ef4444", "#3b82f6", "#10b981"] # Не розпочали -> В процесі -> Завершили
 with st.container(border=True):
     col1, col2, col3 = st.columns([1.8, 2.0, 1.2], vertical_alignment="center")
@@ -342,13 +342,16 @@ with st.container(border=True):
             """, unsafe_allow_html=True
         )
     with col2:
+        # Два акуратні окремі списки, щоб уникнути зламів CSS
         st.markdown(
             f"""
             <div class='red-alert-tag'>⚠️ 104 МУЗЕЙНІ УСТАНОВИ ДЕРЖАВНОГО ЗНАЧЕННЯ ПЕРЕБУВАЮТЬ НА ТИМЧАСОВО ОКУПОВАНИХ ТЕРИТОРІЯХ</div>
-            <ul class='sub-list'>
+            <ul class='sub-list' style='margin-bottom: 12px !important;'>
                 <li><span class='color-dot' style='background-color: #8b5cf6;'></span>Музеї держ. значення: <b>409</b></li>
                 <li><span class='color-dot' style='background-color: #cbd5e1;'></span>Інші музеї: <b>{total_museums - 409}</b></li>
-                <li style="margin-top: 8px;"><span class='color-dot' style='background-color: {colors_mus[2]}; top: 17px;'></span>Завершили наповнення (100%): <b>{mus_completed:,}</b></li>
+            </ul>
+            <ul class='sub-list'>
+                <li><span class='color-dot' style='background-color: {colors_mus[2]};'></span>Завершили наповнення (100%): <b>{mus_completed:,}</b></li>
                 <li><span class='color-dot' style='background-color: {colors_mus[1]};'></span>В процесі наповнення (1-99%): <b>{mus_in_progress:,}</b></li>
                 <li><span class='color-dot' style='background-color: {colors_mus[0]};'></span>Ще не розпочали (0%): <b>{mus_not_started:,}</b></li>
             </ul>
