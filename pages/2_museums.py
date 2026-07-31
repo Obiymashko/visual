@@ -161,7 +161,7 @@ def clean_chart_layout(fig, height=220):
     return fig
 
 # --- ШАПКА ---
-st.title("РЕЄСТР МУЗЕЙНИХ ПРЕДМЕТІВ")
+st.title("Реєстр музейних предметів")
 st.caption("**Дані актуальні на 29.07.2026**")
 st.write("") # Додатковий відступ
 
