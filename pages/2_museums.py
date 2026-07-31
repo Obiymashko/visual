@@ -7,39 +7,29 @@ import streamlit as st
 
 st.set_page_config(page_title="Дашборд: Музейний реєстр", layout="wide")
 
-# Точне налаштування CSS: Montserrat для контенту та Plotly, нейтралізація текстових іконок
+# Точне налаштування CSS: Montserrat для контенту, збереження системних іконок Streamlit
 st.markdown(
     """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
+/* Підключаємо оригінальний шрифт іконок про всяк випадок, щоб браузер його не загубив */
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0');
 
-/* Глобальний Montserrat для контенту */
-.main, .stMarkdown, .stTable, .stDataFrame, h1, h2, h3, h4, h5, h6, p, div, span {
+/* 1. Глобальний Montserrat для всього контенту */
+html, body, [class*="st-"], .stMarkdown, .stTable, .stDataFrame, h1, h2, h3, h4, h5, h6, p, div, span, li {
     font-family: 'Montserrat', sans-serif !important;
 }
 
-/* Приховуємо вилазячий текст іконок Streamlit у сайдбарі та шапці */
-[data-testid="stSidebarCollapseButton"] [data-testid="stIconMaterial"],
-[data-testid="stExpandSidebarButton"] [data-testid="stIconMaterial"],
-[data-testid="stSidebarNavSeparator"] {
-    font-size: 0px !important;
-    visibility: hidden !important;
+/* 2. 🔥 РЯТУЄМО ВСІ СИСТЕМНІ ІКОНКИ STREAMLIT 🔥 */
+/* Повертаємо шрифт Material Symbols спеціально для іконок меню, теми та сайдбару */
+span[data-testid="stIconMaterial"], 
+span[translate="no"], 
+i.material-icons,
+.material-symbols-rounded {
+    font-family: 'Material Symbols Rounded', 'Material Icons', sans-serif !important;
 }
 
-/* Системний шрифт для кнопок управління, щоб зберегти базові іконки */
-[data-testid="stSidebarCollapseButton"] button,
-[data-testid="stExpandSidebarButton"] button,
-button[data-testid="stHeaderIconButton"], 
-[data-testid="stHeader"] * {
-    font-family: Source Sans Pro, -apple-system, BlinkMacSystemFont, Roboto, sans-serif !important;
-}
-
-/* Назви пунктів меню в сайдбарі залишаємо Montserrat */
-[data-testid="stSidebarNav"] span {
-    font-family: 'Montserrat', sans-serif !important;
-}
-
-/* Montserrat для графіків Plotly */
+/* 3. Montserrat для графіків Plotly */
 .js-plotly-plot .plotly text,
 .js-plotly-plot .plotly .hovertext,
 .js-plotly-plot .plotly .gtitle,
@@ -48,7 +38,7 @@ button[data-testid="stHeaderIconButton"],
     font-family: 'Montserrat', sans-serif !important;
 }
 
-/* Контейнер для лівого блоку */
+/* --- ВАШІ КАСТОМНІ СТИЛІ КАРТОК --- */
 .left-stat-block {
     display: flex;
     flex-direction: column;
@@ -56,7 +46,6 @@ button[data-testid="stHeaderIconButton"],
     align-items: flex-start;
 }
 
-/* Заголовок картки */
 .stat-title {
     color: #8c92a4;
     font-weight: 600;
@@ -65,7 +54,6 @@ button[data-testid="stHeaderIconButton"],
     line-height: 1.3;
 }
 
-/* Великі числа */
 .big-number {
     font-family: 'Montserrat', sans-serif !important;
     font-size: 3.5rem !important;
@@ -74,7 +62,6 @@ button[data-testid="stHeaderIconButton"],
     line-height: 1 !important;
 }
 
-/* Зелені підписи */
 .green-tag {
     font-family: 'Montserrat', sans-serif !important;
     color: #00d26a;
@@ -83,7 +70,6 @@ button[data-testid="stHeaderIconButton"],
     margin-top: 2px;
 }
 
-/* Підпункти списку */
 .sub-list {
     font-family: 'Montserrat', sans-serif !important;
     font-size: 14px !important;
@@ -102,7 +88,6 @@ button[data-testid="stHeaderIconButton"],
     font-weight: 900 !important;
 }
 
-/* Кольорові маркери */
 .color-dot {
     height: 10px;
     width: 10px;
