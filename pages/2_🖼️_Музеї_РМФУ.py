@@ -319,103 +319,59 @@ with st.container(border=True):
 st.divider()
 
 # =====================================================================
-# 3. ТАБЛИЦІ ТА ГРАФІКИ ПО ОБЛАСТЯХ І МУЗЕЯХ
+# 3. ГРАФІКИ ПО ОБЛАСТЯХ
 # =====================================================================
-tab1, tab2 = st.tabs(["Зведення по областях", "Помузейна деталізація"])
 
-with tab1:
-    st.subheader("Зведена таблиця по регіонах України")
-    st.dataframe(
-        df_summary.sort_values(by="Внесено предметів", ascending=False),
-        use_container_width=True,
-        hide_index=True,
-        column_config={
-            "Прогрес (%)": st.column_config.ProgressColumn(
-                "Прогрес (%)",
-                format="%.1f%%",
-                min_value=0,
-                max_value=(100 if df_summary["Прогрес (%)"].max() <= 100 else int(df_summary["Прогрес (%)"].max())),
-            )
-        },
+cg1, cg2 = st.columns(2)
+with cg1:
+    st.subheader("Топ областей за кількістю внесених предметів")
+    df_top = df_summary.sort_values(by="Внесено предметів", ascending=True)
+    fig_top = px.bar(
+        df_top,
+        x="Внесено предметів",
+        y="Регіон",
+        orientation="h",
+        text=df_top["Внесено предметів"].apply(lambda x: f"{x:,}"),
+        color="Внесено предметів",
+        color_continuous_scale="Blues",
+        height=700,
     )
-    st.divider()
+    fig_top.update_traces(textposition="outside")
+    fig_top.update_layout(
+        template="plotly_white",
+        margin=dict(l=0, r=50, t=30, b=0),
+        coloraxis_showscale=False,
+        font=dict(family="Montserrat, sans-serif"),
+        hoverlabel=dict(font_family="Montserrat, sans-serif"),
+    )
+    st.plotly_chart(fig_top, use_container_width=True, config=plot_config)
 
-    cg1, cg2 = st.columns(2)
-    with cg1:
-        st.subheader("Топ областей за кількістю внесених предметів")
-        df_top = df_summary.sort_values(by="Внесено предметів", ascending=True)
-        fig_top = px.bar(
-            df_top,
-            x="Внесено предметів",
-            y="Регіон",
-            orientation="h",
-            text=df_top["Внесено предметів"].apply(lambda x: f"{x:,}"),
-            color="Внесено предметів",
-            color_continuous_scale="Blues",
-            height=700,
-        )
-        fig_top.update_traces(textposition="outside")
-        fig_top.update_layout(
-            template="plotly_white",
-            margin=dict(l=0, r=50, t=30, b=0),
-            coloraxis_showscale=False,
-            font=dict(family="Montserrat, sans-serif"),
-            hoverlabel=dict(font_family="Montserrat, sans-serif"),
-        )
-        st.plotly_chart(fig_top, use_container_width=True, config=plot_config)
-
-    with cg2:
-        st.subheader("Співвідношення: Основний vs Спецфонд (внесено)")
-        df_f = df_summary.sort_values(by="Основний фонд (внесено)", ascending=False)
-        fig_fonds = go.Figure(
-            data=[
-                go.Bar(
-                    x=df_f["Регіон"],
-                    y=df_f["Основний фонд (внесено)"],
-                    name="Основний фонд",
-                    marker_color="#3b82f6",
-                ),
-                go.Bar(
-                    x=df_f["Регіон"],
-                    y=df_f["Спецфонд (внесено)"],
-                    name="Спецфонд",
-                    marker_color="#10b981",
-                ),
-            ]
-        )
-        fig_fonds.update_layout(
-            barmode="stack",
-            template="plotly_white",
-            height=700,
-            xaxis_tickangle=-45,
-            font=dict(family="Montserrat, sans-serif"),
-            hoverlabel=dict(font_family="Montserrat, sans-serif"),
-            legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
-        )
-        st.plotly_chart(fig_fonds, use_container_width=True, config=plot_config)
-
-with tab2:
-    st.subheader("Пошук та детальний аналіз по музеях")
-    cf1, cf2 = st.columns([1, 2])
-    reg = cf1.selectbox("Фільтр по області:", ["Усі області"] + list(df_summary["Регіон"].unique()))
-    q = cf2.text_input("Пошук музею (за назвою або ЄДРПОУ):", "").lower().strip()
-
-    df_filt = df_museums.copy()
-    if reg != "Усі області":
-        df_filt = df_filt[df_filt["Регіон"] == reg]
-    if q:
-        df_filt = df_filt[
-            df_filt["НАЗВА МУЗЕЮ"].astype(str).str.lower().str.contains(q)
-            | df_filt["ЄДРПОУ"].astype(str).str.contains(q)
+with cg2:
+    st.subheader("Співвідношення: Основний vs Спецфонд (внесено)")
+    df_f = df_summary.sort_values(by="Основний фонд (внесено)", ascending=False)
+    fig_fonds = go.Figure(
+        data=[
+            go.Bar(
+                x=df_f["Регіон"],
+                y=df_f["Основний фонд (внесено)"],
+                name="Основний фонд",
+                marker_color="#3b82f6",
+            ),
+            go.Bar(
+                x=df_f["Регіон"],
+                y=df_f["Спецфонд (внесено)"],
+                name="Спецфонд",
+                marker_color="#10b981",
+            ),
         ]
-
-    st.markdown(f"**Знайдено музеїв: {len(df_filt)}**")
-    st.dataframe(
-        df_filt[[
-            "Регіон", "ЄДРПОУ", "НАЗВА МУЗЕЮ", "ВСЬОГО ПРЕДМЕТІВ", "ВНЕСЕНО",
-            "ПОТРІБНО ВНЕСТИ", "Прогрес (%)", "ОСНОВНИЙ ФОНД (ПІДПИСАНО)",
-            "ОСНОВНИЙ ФОНД (ВНЕСЕНО)", "СПЕЦФОНД (ПІДПИСАНО)", "СПЕЦФОНД (ВНЕСЕНО)",
-        ]],
-        use_container_width=True,
-        hide_index=True,
     )
+    fig_fonds.update_layout(
+        barmode="stack",
+        template="plotly_white",
+        height=700,
+        xaxis_tickangle=-45,
+        font=dict(family="Montserrat, sans-serif"),
+        hoverlabel=dict(font_family="Montserrat, sans-serif"),
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+    )
+    st.plotly_chart(fig_fonds, use_container_width=True, config=plot_config)
