@@ -145,18 +145,21 @@ def clean_chart_layout(fig, height=220):
         font=dict(family="Montserrat, sans-serif", size=14),
         hoverlabel=dict(font_family="Montserrat, sans-serif", font_size=15),
     )
-    fig.update_traces(
-        textposition="inside", 
-        textinfo="percent", 
-        insidetextorientation="radial",
-        textfont_size=15,
-        textfont_color="white",
-        marker=dict(line=dict(color='#ffffff', width=2)) # Біла рамка між секторами
-    )
+    if fig.data and fig.data[0].type == 'pie':
+        fig.update_traces(
+            textposition="inside", 
+            textinfo="percent", 
+            insidetextorientation="radial",
+            textfont_size=15,
+            textfont_color="white",
+            marker=dict(line=dict(color='#ffffff', width=2))
+        )
     return fig
 
 # --- ШАПКА ---
 st.title("Музейний реєстр")
+
+st.write("") # Додатковий відступ
 
 # =====================================================================
 # 1. ЗАВАНТАЖЕННЯ ДАНИХ
@@ -237,7 +240,6 @@ mus_not_started = len(df_museums[df_museums["Прогрес (%)"] == 0])
 mus_in_progress = total_museums - mus_completed - mus_not_started
 perc_total = (total_vneseno / total_items * 100) if total_items > 0 else 0
 
-st.write("") # Додатковий відступ зверху
 
 # =====================================================================
 # 2. КАРТКИ ДАШБОРДУ
@@ -342,7 +344,6 @@ with st.container(border=True):
             <div class='left-stat-block'>
                 <div class='stat-title'>{title_derzh}</div>
                 <h1 class='big-number'>{total_derzh:,}</h1>
-                <div class='green-tag' style='background-color: #f1f5f9; color: #64748b;'>за відмітками в системі</div>
             </div>
             """, unsafe_allow_html=True
         )
@@ -376,15 +377,20 @@ with cg1:
         orientation="h",
         text=df_top["Внесено предметів"].apply(lambda x: f"{x:,}"),
         color="Внесено предметів",
-        color_continuous_scale="Blues",
+        color_continuous_scale="Viridis", # Змінили палітру на яскравішу
         height=750,
     )
-    fig_top.update_traces(textposition="outside", textfont_size=13, textfont_family="Montserrat, sans-serif")
+    fig_top.update_traces(
+        textposition="outside", 
+        textfont=dict(size=14, family="Montserrat, sans-serif", color="#0f172a"),
+        marker_line_width=0
+    )
     fig_top.update_layout(
         template="plotly_white",
         margin=dict(l=0, r=60, t=30, b=0),
         coloraxis_showscale=False,
         font=dict(family="Montserrat, sans-serif", size=14),
+        hoverlabel=dict(font_family="Montserrat, sans-serif", font_size=15),
         xaxis_title="",
         yaxis_title="",
     )
@@ -395,8 +401,18 @@ with cg2:
     df_f = df_summary.sort_values(by="Основний фонд (внесено)", ascending=False)
     fig_fonds = go.Figure(
         data=[
-            go.Bar(x=df_f["Регіон"], y=df_f["Основний фонд (внесено)"], name="Основний фонд", marker_color="#3b82f6"),
-            go.Bar(x=df_f["Регіон"], y=df_f["Спецфонд (внесено)"], name="Спецфонд", marker_color="#10b981"),
+            go.Bar(
+                x=df_f["Регіон"], 
+                y=df_f["Основний фонд (внесено)"], 
+                name="Основний фонд", 
+                marker_color="#3b82f6"
+            ),
+            go.Bar(
+                x=df_f["Регіон"], 
+                y=df_f["Спецфонд (внесено)"], 
+                name="Спецфонд", 
+                marker_color="#10b981"
+            ),
         ]
     )
     fig_fonds.update_layout(
