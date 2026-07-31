@@ -1,14 +1,20 @@
 import streamlit as st
 
+# Підключаємо сторінки за їхніми новими простими системними іменами,
+# але в title та icon задаємо красиве відображення для бічного меню!
 page1 = st.Page(
-    "pages/1_🏛️_Нерухомі_пам'ятки.py",
-    title="Нерухомі пам'ятки",
-    default=True,
-)
-page2 = st.Page(
-    "pages/2_🖼️_Музеї_РМФУ.py",
-    title="Музейний реєстр",
+    "pages/1_monuments.py", 
+    title="Нерухомі пам'ятки", 
+    icon="🏛️", 
+    default=True
 )
 
+page2 = st.Page(
+    "pages/2_museums.py", 
+    title="Музейний реєстр", 
+    icon="🖼️"
+)
+
+# Запускаємо навігацію
 pg = st.navigation([page1, page2])
 pg.run()
