@@ -94,6 +94,19 @@ button[kind="headerNoPadding"] span {
     border-radius: 6px;
 }
 
+.red-alert-tag {
+    font-family: 'Montserrat', sans-serif !important;
+    color: #ef4444;
+    font-size: 13px;
+    font-weight: 800;
+    margin-top: 0px;
+    margin-bottom: 15px;
+    background-color: rgba(239, 68, 68, 0.15);
+    padding: 8px 12px;
+    border-radius: 6px;
+    line-height: 1.4;
+}
+
 .sub-list {
     font-family: 'Montserrat', sans-serif !important;
     font-size: 15px !important;
@@ -467,7 +480,7 @@ st.plotly_chart(fig_users, use_container_width=True, config=plot_config)
 st.divider()
 
 # =====================================================================
-# АВТОМАТИЧНЕ ЗАВАНТАЖЕННЯ ФАЙЛУ ДЛЯ НИЖНЬОГО ГРАФІКУ
+# АВТОМАТИЧНЕ ЗАВАНТАЖЕННЯ ФАЙЛУ ДЛЯ НИЖНІХ ГРАФІКІВ
 # =====================================================================
 current_dir = os.getcwd()
 parent_dir = os.path.dirname(current_dir) if os.path.basename(current_dir) == "pages" else current_dir
@@ -524,8 +537,10 @@ if df.empty:
     st.warning("Не знайдено даних.")
     st.stop()
 
-# 3. Вертикальний графік: Об'єкти нац. значення (З ОБМЕЖЕННЯМ ВИСОТИ СИНЬОГО СТОВПЧИКА)
-st.subheader("Об'єкти національного значення в єПам'ятці")
+# ---------------------------------------------------------------------
+# 3. Вертикальний графік: Об'єкти нац. значення (Подвійний з обмеженням)
+# ---------------------------------------------------------------------
+st.subheader("Об'єкти національного значення в єПам'ятці (порівняння з реєстром)")
 df_sorted = df.sort_values(by=col_reestr, ascending=False)
 
 # Візуальне обмеження: якщо внесено більше ніж є в реєстрі, стовпчик малюється не вище сірого
@@ -542,10 +557,10 @@ fig_comp = go.Figure(
         ),
         go.Bar(
             x=df_sorted["Регіон"],
-            y=df_sorted["Внесено_візуально"], # Використовуємо обмежену висоту для візуалу
+            y=df_sorted["Внесено_візуально"], # Обмежена висота для візуалу
             name="Внесено в єПам'ятку",
             marker_color="#2563eb", # Синій
-            customdata=df_sorted[col_cards], # Але зберігаємо реальні дані для підказки (hover)
+            customdata=df_sorted[col_cards], # Реальні дані для підказки (hover)
             hovertemplate="%{x}<br>Внесено в єПам'ятку: %{customdata}<extra></extra>"
         ),
     ]
@@ -563,3 +578,38 @@ fig_comp.update_layout(
     bargap=0.15,
 )
 st.plotly_chart(fig_comp, use_container_width=True, config=plot_config)
+
+st.divider()
+
+# ---------------------------------------------------------------------
+# 4. Вертикальний графік: ТІЛЬКИ "Внесено в єПам'ятку"
+# ---------------------------------------------------------------------
+st.subheader("Внесено об'єктів національного значення в єПам'ятку (за кількістю)")
+
+# Сортуємо саме за кількістю внесених об'єктів, щоб графік виглядав як красива драбинка
+df_sorted_blue = df.sort_values(by=col_cards, ascending=False)
+
+fig_single = go.Figure(
+    data=[
+        go.Bar(
+            x=df_sorted_blue["Регіон"],
+            y=df_sorted_blue[col_cards],
+            name="Внесено в єПам'ятку",
+            marker_color="#2563eb",
+            text=df_sorted_blue[col_cards].apply(lambda x: f"{x:,}" if x > 0 else ""),
+            textposition="outside"
+        )
+    ]
+)
+
+fig_single.update_layout(
+    height=600,
+    xaxis_tickangle=-45,
+    margin=dict(l=0, r=0, t=30, b=80),
+    paper_bgcolor="rgba(0,0,0,0)",
+    plot_bgcolor="rgba(0,0,0,0)",
+    font=dict(family="Montserrat, sans-serif", size=14),
+    hoverlabel=dict(font_family="Montserrat, sans-serif", font_size=15),
+    showlegend=False
+)
+st.plotly_chart(fig_single, use_container_width=True, config=plot_config)
