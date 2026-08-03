@@ -596,8 +596,7 @@ fig_single = go.Figure(
             y=df_sorted_blue[col_cards],
             name="Внесено в єПам'ятку",
             marker_color="#2563eb",
-            text=df_sorted_blue[col_cards].apply(lambda x: f"{x:,}" if x > 0 else ""),
-            textposition="outside"
+            # Текст та textposition прибрано
         )
     ]
 )
