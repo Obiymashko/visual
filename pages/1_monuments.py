@@ -617,7 +617,7 @@ fig_single = go.Figure(
             x=df_selection["Регіон"],
             y=df_selection["Об'єкти"],
             name="Об'єкти в єПам'ятці",
-            marker_color="#2563eb",
+            marker_color="#8aa893",
             hovertemplate="%{x}<br>Внесено об'єктів: <b>%{y:,}</b><extra></extra>"
             # Текст над стовпчиками повністю прибрано
         )
